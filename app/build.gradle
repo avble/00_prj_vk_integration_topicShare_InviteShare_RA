@@ -1,0 +1,29 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        applicationId "remote.service.verik.com.remoteaccess"
+        minSdkVersion 19
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    debugCompile files('libs/org.eclipse.paho.android.service-1.0.3-20150715.040728-116.jar')
+    debugCompile files('libs/org.eclipse.paho.client.mqttv3-1.0.3-20150715.040214-169.jar')
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.pubnub:pubnub-android:3.7.4'
+    compile 'com.android.support:design:22.2.1'
+}
