@@ -1,8 +1,11 @@
 package remote.service.verik.com.remoteaccess;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +16,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.alljoyn.bus.BusAttachment;
+import org.alljoyn.bus.BusException;
+import org.alljoyn.bus.BusListener;
+import org.alljoyn.bus.Mutable;
+import org.alljoyn.bus.ProxyBusObject;
+import org.alljoyn.bus.SessionListener;
+import org.alljoyn.bus.SessionOpts;
+import org.alljoyn.bus.Status;
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -20,6 +31,7 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -27,10 +39,16 @@ import remote.service.verik.com.remoteaccess.model.Adapter;
 import remote.service.verik.com.remoteaccess.model.Device;
 
 //TODO:
-// 1)
+// 1) The Json format is used to communicate instead of xml
 // 2)
 
 public class MainActivity extends ActionBarActivity implements MqttCallback, IMqttActionListener {
+
+
+    /* Load the native alljoyn_java library. */
+    static {
+        System.loadLibrary("alljoyn_java");
+    }
 
     public ArrayList<Device> devices;
 
@@ -57,8 +75,53 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
 
     private String inviteSRV = "52.88.81.183:8100";
     private String mqttSRV = "52.88.81.183:1883";
+    // TODO:
     public static String topic = "/VEriK/1234567890";
+    //public static String topic = "remote/access";
+
     private String pincode = "02f7";
+
+
+
+    // Alljoyn handler
+    AlljoynWrapper alljoyn_wrapper;
+    private ProgressDialog mDialog;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case AlljoynWrapper.MESSAGE_PING:
+                    String cat = (String) msg.obj;
+                    //mListViewArrayAdapter.clear();
+                    //mListViewArrayAdapter.add("The receied Topic:  " + cat);
+                    break;
+
+                case AlljoynWrapper.MESSAGE_PING_REPLY:
+                    String ret = (String) msg.obj;
+                    //mListViewArrayAdapter.add("Reply:  " + ret);
+                    //mEditText.setText("");
+                    break;
+
+                case AlljoynWrapper.MESSAGE_POST_TOAST:
+                    Toast.makeText(getApplicationContext(), (String) msg.obj, Toast.LENGTH_LONG).show();
+                    break;
+                case AlljoynWrapper.MESSAGE_START_PROGRESS_DIALOG:
+                    mDialog = ProgressDialog.show(MainActivity.this,
+                            "",
+                            "Finding GetTopic Service.\nPlease wait...",
+                            true,
+                            true);
+                    break;
+                case AlljoynWrapper.MESSAGE_STOP_PROGRESS_DIALOG:
+                    mDialog.dismiss();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +147,9 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
         } catch (MqttException e) {
             Log.d(TAG, "Error when connect to server " + URI + ", error code:  " + e.getReasonCode());
         }
+
+
+        alljoyn_wrapper = new AlljoynWrapper();
     }
 
     @Override
@@ -99,6 +165,17 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
         // Handle item selection
 
         switch (item.getItemId()) {
+            case R.id.option_menu_searching:
+                alljoyn_wrapper.mBusHandler.sendEmptyMessage(alljoyn_wrapper.mBusHandler.CONNECT);
+                mHandler.sendEmptyMessage(alljoyn_wrapper.MESSAGE_START_PROGRESS_DIALOG);
+                return true;
+
+            case R.id.option_menu_get_topic:
+                Message msg = alljoyn_wrapper.mBusHandler.obtainMessage(AlljoynWrapper.BusHandler.GET_TOPIC,
+                        alljoyn_wrapper.keyValue);
+                alljoyn_wrapper.mBusHandler.sendMessage(msg);
+                return true;
+
             case R.id.option_menu_setting:
                 Intent intent1 = new Intent(this, SettingActivity.class);
                 intent1.putExtra(share_invite_srv, inviteSRV);
@@ -107,8 +184,21 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                 intent1.putExtra(share_pin, pincode);
                 startActivity(intent1);
                 return true;
-            case R.id.option_menu_help:
+            case R.id.option_menu_get_list: //Get list of menu item
+                MqttMessage message = null;
+                try {
+                    message = MQTTMessageWrapper.CreateGetListMsg();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    MainActivity.client.publish(MainActivity.topic, message);
+                } catch (MqttException e) {
+                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+                }
 
+                return true;
+            case R.id.option_menu_help:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -122,8 +212,37 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
     }
 
     @Override
-    public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
-        Log.d(TAG,"Received data from topic: "+s+", Mqtt message: "+mqttMessage.toString());
+    public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+
+
+        if (MQTTMessageWrapper.isMyMessage(mqttMessage.toString()))
+            return;
+
+        String command = MQTTMessageWrapper.getCommand(mqttMessage.toString());
+        switch (command)
+        {
+            case MQTTMessageWrapper.RcommandGetListDevice:
+                // fine-tuning the GUI
+
+                adapter.clear();
+                devices = new ArrayList<>();
+                devices.add(new Device(1, "Z-Wave Light Bulb 1", false, true));
+                devices.add(new Device(1, "Z-Wave Light Bulb 1", false, true));
+
+                ListView list = (ListView) findViewById(R.id.list);
+                adapter = new Adapter(this, devices);
+                list.setAdapter(adapter);
+
+                break;
+            case MQTTMessageWrapper.RcommandAddDevice:
+                // Add new device
+                break;
+            default:
+                break;
+        }
+
+
+        Log.d(TAG,"Received data from topic: "+topic+", Mqtt message: "+mqttMessage.toString());
         if(adapter != null){
             Device device = adapter.getItem(0);
             if(mqttMessage.toString().equals("on")){
@@ -162,4 +281,277 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
     public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
         Log.d(TAG,"Connect fail ");
     }
+
+
+
+    class AlljoynWrapper{
+
+
+        private static final int MESSAGE_PING = 1;
+        private static final int MESSAGE_PING_REPLY = 2;
+        private static final int MESSAGE_POST_TOAST = 3;
+        private static final int MESSAGE_START_PROGRESS_DIALOG = 4;
+        private static final int MESSAGE_STOP_PROGRESS_DIALOG = 5;
+
+        private static final String TAG = "GetTopic";
+
+        public static final String key = "key";
+        public String keyValue = "0123456789";
+
+        public  String topic = "/VERiK/topic0123456789";
+        /*
+            private EditText mEditText;
+          */
+        private ArrayAdapter<String> mListViewArrayAdapter;
+        private ListView mListView;
+        private Menu menu;
+
+        /* Handler used to make calls to AllJoyn methods. See onCreate(). */
+        private BusHandler mBusHandler;
+
+        private ProgressDialog mDialog;
+
+        AlljoynWrapper(){
+            HandlerThread busThread = new HandlerThread("BusHandler");
+            busThread.start();
+            mBusHandler = new BusHandler(busThread.getLooper());
+        }
+
+
+
+
+    /* This class will handle all AllJoyn calls. See onCreate(). */
+
+        class BusHandler extends Handler {
+            /*
+             * Name used as the well-known name and the advertised name of the service this client is
+             * interested in.  This name must be a unique name both to the bus and to the network as a
+             * whole.
+             *
+             * The name uses reverse URL style of naming, and matches the name used by the service.
+             */
+            private static final String SERVICE_NAME = "org.alljoyn.Bus.VEriK.GetTopic";
+            private static final String OBJ_PATH = "/GetTopic";
+            private static final short CONTACT_PORT=25;
+
+            private BusAttachment mBus;
+            private ProxyBusObject mProxyObj;
+            private BasicInterface mBasicInterface;
+
+            private int 	mSessionId;
+            private boolean mIsInASession;
+            private boolean mIsConnected;
+            private boolean mIsStoppingDiscovery;
+
+            /* These are the messages sent to the BusHandler from the UI. */
+            public static final int CONNECT = 1;
+            public static final int JOIN_SESSION = 2;
+            public static final int DISCONNECT = 3;
+            public static final int GET_TOPIC = 4;
+
+            public BusHandler(Looper looper) {
+                super(looper);
+
+                mIsInASession = false;
+                mIsConnected = false;
+                mIsStoppingDiscovery = false;
+            }
+
+            @Override
+            public void handleMessage(Message msg) {
+                switch(msg.what) {
+            /* Connect to a remote instance of an object implementing the BasicInterface. */
+                    case CONNECT: {
+                        org.alljoyn.bus.alljoyn.DaemonInit.PrepareDaemon(getApplicationContext());
+                /*
+                 * All communication through AllJoyn begins with a BusAttachment.
+                 *
+                 * A BusAttachment needs a name. The actual name is unimportant except for internal
+                 * security. As a default we use the class name as the name.
+                 *
+                 * By default AllJoyn does not allow communication between devices (i.e. bus to bus
+                 * communication). The second argument must be set to Receive to allow communication
+                 * between devices.
+                 */
+                        mBus = new BusAttachment(getPackageName(), BusAttachment.RemoteMessage.Receive);
+
+                /*
+                 * Create a bus listener class
+                 */
+                        mBus.registerBusListener(new BusListener() {
+                            @Override
+                            public void foundAdvertisedName(String name, short transport, String namePrefix) {
+                                logInfo(String.format("MyBusListener.foundAdvertisedName(%s, 0x%04x, %s)", name, transport, namePrefix));
+                    	/*
+                    	 * This client will only join the first service that it sees advertising
+                    	 * the indicated well-known name.  If the program is already a member of
+                    	 * a session (i.e. connected to a service) we will not attempt to join
+                    	 * another session.
+                    	 * It is possible to join multiple session however joining multiple
+                    	 * sessions is not shown in this sample.
+                    	 */
+                                if(!mIsConnected) {
+                                    Message msg = obtainMessage(JOIN_SESSION);
+                                    msg.arg1 = transport;
+                                    msg.obj = name;
+                                    sendMessage(msg);
+                                }
+                            }
+                        });
+
+                /* To communicate with AllJoyn objects, we must connect the BusAttachment to the bus. */
+                        Status status = mBus.connect();
+                        logStatus("BusAttachment.connect()", status);
+                        if (Status.OK != status) {
+                            finish();
+                            return;
+                        }
+
+                /*
+                 * Now find an instance of the AllJoyn object we want to call.  We start by looking for
+                 * a name, then connecting to the device that is advertising that name.
+                 *
+                 * In this case, we are looking for the well-known SERVICE_NAME.
+                 */
+                        status = mBus.findAdvertisedName(SERVICE_NAME);
+                        logStatus(String.format("BusAttachement.findAdvertisedName(%s)", SERVICE_NAME), status);
+                        if (Status.OK != status) {
+                            finish();
+                            return;
+                        }
+
+                        break;
+                    }
+                    case (JOIN_SESSION): {
+            	/*
+                 * If discovery is currently being stopped don't join to any other sessions.
+                 */
+                        if (mIsStoppingDiscovery) {
+                            break;
+                        }
+
+                /*
+                 * In order to join the session, we need to provide the well-known
+                 * contact port.  This is pre-arranged between both sides as part
+                 * of the definition of the chat service.  As a result of joining
+                 * the session, we get a session identifier which we must use to
+                 * identify the created session communication channel whenever we
+                 * talk to the remote side.
+                 */
+                        short contactPort = CONTACT_PORT;
+                        SessionOpts sessionOpts = new SessionOpts();
+                        sessionOpts.transports = (short)msg.arg1;
+                        Mutable.IntegerValue sessionId = new Mutable.IntegerValue();
+
+                        Status status = mBus.joinSession((String) msg.obj, contactPort, sessionId, sessionOpts, new SessionListener() {
+                            @Override
+                            public void sessionLost(int sessionId, int reason) {
+                                mIsConnected = false;
+                                logInfo(String.format("MyBusListener.sessionLost(sessionId = %d, reason = %d)", sessionId,reason));
+                                mHandler.sendEmptyMessage(MESSAGE_START_PROGRESS_DIALOG);
+                            }
+                        });
+                        logStatus("BusAttachment.joinSession() - sessionId: " + sessionId.value, status);
+
+                        if (status == Status.OK) {
+                	/*
+                     * To communicate with an AllJoyn object, we create a ProxyBusObject.
+                     * A ProxyBusObject is composed of a name, path, sessionID and interfaces.
+                     *
+                     * This ProxyBusObject is located at the well-known SERVICE_NAME, under path
+                     * "/sample", uses sessionID of CONTACT_PORT, and implements the BasicInterface.
+                     */
+                            mProxyObj =  mBus.getProxyBusObject(SERVICE_NAME,
+                                    OBJ_PATH,
+                                    sessionId.value,
+                                    new Class<?>[] { BasicInterface.class });
+
+                	/* We make calls to the methods of the AllJoyn object through one of its interfaces. */
+                            mBasicInterface =  mProxyObj.getInterface(BasicInterface.class);
+
+                            mSessionId = sessionId.value;
+                            mIsConnected = true;
+                            mHandler.sendEmptyMessage(MESSAGE_STOP_PROGRESS_DIALOG);
+                        }
+                        break;
+                    }
+
+            /* Release all resources acquired in the connect. */
+                    case DISCONNECT: {
+                        mIsStoppingDiscovery = true;
+                        if (mIsConnected) {
+                            Status status = mBus.leaveSession(mSessionId);
+                            logStatus("BusAttachment.leaveSession()", status);
+                        }
+                        mBus.disconnect();
+                        getLooper().quit();
+                        break;
+                    }
+
+            /*
+             * Call the service's Cat method through the ProxyBusObject.
+             *
+             * This will also print the String that was sent to the service and the String that was
+             * received from the service to the user interface.
+             */
+                    case GET_TOPIC: {
+                        try {
+                            if (mBasicInterface != null) {
+                                //sendUiMessage(MESSAGE_PING, msg.obj + " and " + msg.obj);
+                                //String reply = mBasicInterface.cat((String) msg.obj, (String) msg.obj);
+                                String reply = mBasicInterface.get_topic((String)msg.obj);
+                                sendUiMessage(MESSAGE_PING_REPLY, reply);
+                            }
+                        } catch (BusException ex) {
+                            logException("BasicInterface.cat()", ex);
+                        }
+                        break;
+                    }
+                    default:
+                        break;
+                }
+            }
+
+            /* Helper function to send a message to the UI thread. */
+            private void sendUiMessage(int what, Object obj) {
+                mHandler.sendMessage(mHandler.obtainMessage(what, obj));
+            }
+        }
+
+        private void logStatus(String msg, Status status) {
+            String log = String.format("%s: %s", msg, status);
+            if (status == Status.OK) {
+                Log.i(TAG, log);
+            } else {
+                //Message toastMsg = mHandler.obtainMessage(MESSAGE_POST_TOAST, log);
+                //mHandler.sendMessage(toastMsg);
+                Log.e(TAG, log);
+            }
+        }
+
+        private void logException(String msg, BusException ex) {
+            String log = String.format("%s: %s", msg, ex);
+            //Message toastMsg = mHandler.obtainMessage(MESSAGE_POST_TOAST, log);
+            //mHandler.sendMessage(toastMsg);
+            Log.e(TAG, log, ex);
+        }
+
+        /*
+         * print the status or result to the Android log. If the result is the expected
+         * result only print it to the log.  Otherwise print it to the error log and
+         * Sent a Toast to the users screen.
+         */
+        private void logInfo(String msg) {
+            Log.i(TAG, msg);
+        }
+
+
+        void handleSendText(Intent intent) {
+            String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+            if (sharedText != null) {
+                // Update UI to reflect text being shared
+            }
+        }
+    }
+
 }

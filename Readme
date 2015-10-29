@@ -1,0 +1,7 @@
+Notes on compilation 
+====================
+1) How to load shared library (.so) in Gradle-based project
++ Put the the shared library to every sub-folder of ./lib folder 
++ zip the ./lib folder and change the file extension to .jar 
++ Copy this newly created .jar file to ./app/libs folder 
++ Note that there is string line as "compile fileTree(dir: 'libs', include: ['*.jar'])" in build.gradle 

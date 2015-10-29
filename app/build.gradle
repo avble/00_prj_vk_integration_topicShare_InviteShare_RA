@@ -26,4 +26,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'com.pubnub:pubnub-android:3.7.4'
     compile 'com.android.support:design:22.2.1'
+    compile files('libs/alljoyn.jar')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
 }
