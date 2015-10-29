@@ -51,7 +51,7 @@ public class Adapter extends ArrayAdapter<Device> {
                         message.setQos(0);
                         message.setRetained(false);
                         try {
-                            MainActivity.client.publish(MainActivity.topic, message);
+                            MainActivity.client.publish(MainActivity.getTopic(), message);
                         } catch (MqttException e) {
                             Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
                         }
@@ -66,7 +66,7 @@ public class Adapter extends ArrayAdapter<Device> {
                         message.setQos(0);
                         message.setRetained(false);
                         try {
-                            MainActivity.client.publish(MainActivity.topic, message);
+                            MainActivity.client.publish(MainActivity.getTopic(), message);
                         } catch (MqttException e) {
                             Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
                         }

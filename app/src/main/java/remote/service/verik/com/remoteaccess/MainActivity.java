@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -73,7 +72,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
     // FIXME: there are 2 variables mqttSRV + URI.
     // Should remove either of them
     private String mqttSRV = "52.88.81.183:1883";
-    public static String topic = "";
+    private static String topic = "";
     public static final String TAG = "MQTT";
     public static final String URI = "tcp://52.88.81.183:1883";
     public static final String CLIENT_ID = "02";
@@ -93,13 +92,12 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
             switch (msg.what) {
                 case AlljoynWrapper.MESSAGE_ALLJOYN_GETTOPIC_REPLY:
                     String ret = (String) msg.obj;
-                    if (ret.length() > 0)
+                    if (ret.length() > 0) {
                         Toast.makeText(getApplicationContext(), "Just received a topic with key " + alljoyn_wrapper.keyValue + ": " + (String) msg.obj, Toast.LENGTH_LONG).show();
-                    else
+                        setTopic((String)msg.obj);
+                    }else
                         Toast.makeText(getApplicationContext(), "Can not find the topic for key " + alljoyn_wrapper.keyValue , Toast.LENGTH_LONG).show();
 
-                    // Set topic to MQTT
-                    topic = (String)msg.obj;
                     break;
 
                 case AlljoynWrapper.MESSAGE_POST_TOAST:
@@ -123,6 +121,34 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
     };
 
 
+    public void setTopic(String new_topic) {
+        if (!new_topic.equals(topic)) {
+            topic = new_topic;
+
+            if (topic.length() > 0) {
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if (client.isConnected()) {
+                                client.subscribe(topic, 0);
+                            }
+                        } catch (MqttException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+
+            }
+        }
+    }
+
+    public static String getTopic()
+    {
+        return topic;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +204,8 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                 Message msg = alljoyn_wrapper.mBusHandler.obtainMessage(AlljoynWrapper.BusHandler.GET_TOPIC,
                         alljoyn_wrapper.keyValue);
                 alljoyn_wrapper.mBusHandler.sendMessage(msg);
+
+
                 return true;
 
             case R.id.option_menu_inviteShare_genTopic: {
@@ -211,7 +239,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                 intent1.putExtra(share_key, alljoyn_wrapper.keyValue);
                 startActivityForResult(intent1, INTENT_SETTING_RESULT_CODE);
                 return true;
-            case R.id.option_menu_get_list: //Get list of menu item
+            case R.id.option_menu_remoteAccess_get_list: //Get list of menu item
                 MqttMessage message = null;
                 try {
                     message = MQTTMessageWrapper.CreateGetListMsg();
@@ -219,12 +247,13 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                     e.printStackTrace();
                 }
                 try {
-                    MainActivity.client.publish(MainActivity.topic, message);
+                    MainActivity.client.publish(topic, message);
                 } catch (MqttException e) {
                     Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
                 }
 
                 return true;
+
             case R.id.option_menu_help:
                 return true;
             default:
@@ -254,7 +283,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                 adapter.clear();
                 devices = new ArrayList<>();
                 devices.add(new Device(1, "Z-Wave Light Bulb 1", false, true));
-                devices.add(new Device(1, "Z-Wave Light Bulb 1", false, true));
+                devices.add(new Device(1, "Z-Wave Light Bulb 2", false, true));
 
                 ListView list = (ListView) findViewById(R.id.list);
                 adapter = new Adapter(this, devices);
@@ -290,18 +319,22 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
     public void onSuccess(IMqttToken iMqttToken) {
         Log.d(TAG,"Connect success");
         Toast.makeText(this,"Connect to server "+URI+" successful",Toast.LENGTH_LONG).show();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (client.isConnected()) {
-                        client.subscribe(topic, 0);
+
+        if (topic.length() > 0) {
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (client.isConnected()) {
+                            client.subscribe(topic, 0);
+                        }
+                    } catch (MqttException e) {
+                        e.printStackTrace();
                     }
-                } catch (MqttException e) {
-                    e.printStackTrace();
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
@@ -322,8 +355,21 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
 
         }
         else if (SettingActivity.cur_command == SettingActivity.COMMAND_INVITESHARE_GET_TOPIC) {
-            topic = s;
+            setTopic(s);
             Toast.makeText(getApplicationContext(), "[InviteShare] just received the topic ( " + topic + " ) for pincode " + pincode , Toast.LENGTH_LONG).show();
+
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        if (client.isConnected()) {
+                            client.subscribe(topic, 0);
+                        }
+                    } catch (MqttException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
         }
     }
@@ -340,7 +386,8 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
 
                     alljoyn_wrapper.keyValue = data.getStringExtra(MainActivity.share_key);
 
-                    topic = data.getStringExtra(MainActivity.share_topic);
+                    String topic_tmp = data.getStringExtra(MainActivity.share_topic);
+                    setTopic(topic_tmp);
 
                     pincode = data.getStringExtra(MainActivity.share_pin);
 

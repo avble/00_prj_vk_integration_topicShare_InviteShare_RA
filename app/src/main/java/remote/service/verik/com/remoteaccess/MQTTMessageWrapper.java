@@ -30,7 +30,7 @@ public class MQTTMessageWrapper {
     public final static String uuid  = UUID.randomUUID().toString();
 
     public final static String commandGetListDevice = "list_devices";
-    public final static String RcommandGetListDevice = "GetListDeviceR";
+    public final static String RcommandGetListDevice = "list_devicesR";
     public final static String commandAddDevice = "AddDevice";
     public final static String RcommandAddDevice = "AddDeviceR";
 
@@ -80,15 +80,16 @@ public class MQTTMessageWrapper {
 
     public static boolean isMyMessage(String messsage)
     {
-        Document doc = getDomElement(messsage);
-        NodeList nodeList = doc.getElementsByTagName("uuid");
-        for (int i = 0; i < nodeList.getLength(); i++)
-        {
-            Node e = nodeList.item(i);
-            if (getElementValue(e).equals(MQTTMessageWrapper.uuid))
+        try {
+            JSONObject jason = new JSONObject(messsage);
+            String uuid = (String) jason.get("uuid");
+            if (uuid.equals(MQTTMessageWrapper.uuid))
                 return true;
-        }
 
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return false;
+        }
         return false;
     }
     //public static
@@ -117,19 +118,16 @@ public class MQTTMessageWrapper {
     }
 
 
-    public static String getCommand(String command)
-    {
+    public static String getCommand(String command) {
         try {
             JSONObject jason = new JSONObject(command);
             String method = (String) jason.get("method");
-            if (method.equals(MQTTMessageWrapper.commandGetListDevice))
-                return method;
+            return method;
 
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
-        return null;
     }
 
 
