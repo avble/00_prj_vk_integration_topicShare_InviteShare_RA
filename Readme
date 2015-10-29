@@ -5,3 +5,10 @@ Notes on compilation
 + zip the ./lib folder and change the file extension to .jar 
 + Copy this newly created .jar file to ./app/libs folder 
 + Note that there is string line as "compile fileTree(dir: 'libs', include: ['*.jar'])" in build.gradle 
+
+
+Todo
+====
++ Copy the InviteShare to server folder 
++ Copy the RemoteAccess, alljoyn-topic to firmware folder 
+

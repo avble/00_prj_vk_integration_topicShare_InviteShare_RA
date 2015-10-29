@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -42,7 +43,7 @@ import remote.service.verik.com.remoteaccess.model.Device;
 // 1) The Json format is used to communicate instead of xml
 // 2)
 
-public class MainActivity extends ActionBarActivity implements MqttCallback, IMqttActionListener {
+public class MainActivity extends ActionBarActivity implements MqttCallback, IMqttActionListener, httpWrapperInterface {
 
 
     /* Load the native alljoyn_java library. */
@@ -50,16 +51,9 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
         System.loadLibrary("alljoyn_java");
     }
 
+    private final int INTENT_SETTING_RESULT_CODE = 1;
+
     public ArrayList<Device> devices;
-
-    public static final String TAG = "MQTT";
-
-//    public static final String URI = "tcp://10.0.0.120:1883";
-    public static final String URI = "tcp://52.88.81.183:1883";
-
-    public static final String CLIENT_ID = "02";
-
-//    public static final String TOPIC = "remoteAccess/bulb";
 
     public static MqttAndroidClient client;
 
@@ -71,49 +65,56 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
     public static String share_mqtt_srv = "share_mqtt_srv";
     public static String share_topic = "topic";
     public static String share_pin = "pincode";
+    public static String share_key = "key";
 
 
-    private String inviteSRV = "52.88.81.183:8100";
+
+    // MQTT related data member
+    // FIXME: there are 2 variables mqttSRV + URI.
+    // Should remove either of them
     private String mqttSRV = "52.88.81.183:1883";
-    // TODO:
-    public static String topic = "/VEriK/1234567890";
-    //public static String topic = "remote/access";
-
-    private String pincode = "02f7";
-
+    public static String topic = "";
+    public static final String TAG = "MQTT";
+    public static final String URI = "tcp://52.88.81.183:1883";
+    public static final String CLIENT_ID = "02";
 
 
-    // Alljoyn handler
+    // MQTT InviteShare related data member
+    private String pincode = "";
+    private String inviteSRV = "52.88.81.183:8100";
+
+
+    // AllJoyn related data member
     AlljoynWrapper alljoyn_wrapper;
     private ProgressDialog mDialog;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case AlljoynWrapper.MESSAGE_PING:
-                    String cat = (String) msg.obj;
-                    //mListViewArrayAdapter.clear();
-                    //mListViewArrayAdapter.add("The receied Topic:  " + cat);
-                    break;
-
-                case AlljoynWrapper.MESSAGE_PING_REPLY:
+                case AlljoynWrapper.MESSAGE_ALLJOYN_GETTOPIC_REPLY:
                     String ret = (String) msg.obj;
-                    //mListViewArrayAdapter.add("Reply:  " + ret);
-                    //mEditText.setText("");
+                    if (ret.length() > 0)
+                        Toast.makeText(getApplicationContext(), "Just received a topic with key " + alljoyn_wrapper.keyValue + ": " + (String) msg.obj, Toast.LENGTH_LONG).show();
+                    else
+                        Toast.makeText(getApplicationContext(), "Can not find the topic for key " + alljoyn_wrapper.keyValue , Toast.LENGTH_LONG).show();
+
+                    // Set topic to MQTT
+                    topic = (String)msg.obj;
                     break;
 
                 case AlljoynWrapper.MESSAGE_POST_TOAST:
                     Toast.makeText(getApplicationContext(), (String) msg.obj, Toast.LENGTH_LONG).show();
                     break;
-                case AlljoynWrapper.MESSAGE_START_PROGRESS_DIALOG:
+                case AlljoynWrapper.MESSAGE_ALLJOYN_START_PROGRESS_DIALOG:
                     mDialog = ProgressDialog.show(MainActivity.this,
                             "",
                             "Finding GetTopic Service.\nPlease wait...",
                             true,
                             true);
                     break;
-                case AlljoynWrapper.MESSAGE_STOP_PROGRESS_DIALOG:
+                case AlljoynWrapper.MESSAGE_ALLJOYN_STOP_PROGRESS_DIALOG:
                     mDialog.dismiss();
+                    Toast.makeText(getApplicationContext(), (String) "Successfully connect to board", Toast.LENGTH_LONG).show();
                     break;
                 default:
                     break;
@@ -137,6 +138,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
         adapter = new Adapter(this, devices);
         list.setAdapter(adapter);
 
+        // MQTT initialization
         Log.d(TAG,"Start to connect to MQTT server.");
         //connect to server
         try {
@@ -148,8 +150,12 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
             Log.d(TAG, "Error when connect to server " + URI + ", error code:  " + e.getReasonCode());
         }
 
-
+        // Alljoyn initialzation
         alljoyn_wrapper = new AlljoynWrapper();
+
+        //InviteShare Initialzation
+        HttpWrapper.disableSSLCertificateChecking();
+
     }
 
     @Override
@@ -162,18 +168,38 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-
         switch (item.getItemId()) {
-            case R.id.option_menu_searching:
+            case R.id.option_menu_shareTopic_searching:
                 alljoyn_wrapper.mBusHandler.sendEmptyMessage(alljoyn_wrapper.mBusHandler.CONNECT);
-                mHandler.sendEmptyMessage(alljoyn_wrapper.MESSAGE_START_PROGRESS_DIALOG);
+                mHandler.sendEmptyMessage(alljoyn_wrapper.MESSAGE_ALLJOYN_START_PROGRESS_DIALOG);
                 return true;
 
-            case R.id.option_menu_get_topic:
+            case R.id.option_menu_shareTopic_get_topic:
                 Message msg = alljoyn_wrapper.mBusHandler.obtainMessage(AlljoynWrapper.BusHandler.GET_TOPIC,
                         alljoyn_wrapper.keyValue);
                 alljoyn_wrapper.mBusHandler.sendMessage(msg);
+                return true;
+
+            case R.id.option_menu_inviteShare_genTopic: {
+                HttpWrapper http_request = new HttpWrapper();
+                http_request.topic = topic;
+                http_request.setOutputListener(this);
+                SettingActivity.cur_command = SettingActivity.COMMAND_INVITESHARE_GEN_PINCODE;
+                String url = new String("https://");
+                url += inviteSRV + "/generateInvite";
+                http_request.execute(url);
+            }
+                return true;
+
+            case R.id.option_menu_inviteShare_getTopic: {
+                HttpWrapper http_request = new HttpWrapper();
+                http_request.setOutputListener(this);
+                SettingActivity.cur_command = SettingActivity.COMMAND_INVITESHARE_GET_TOPIC;
+
+                String url = new String("https://");
+                url += inviteSRV + "/getTopic/" + pincode;
+                http_request.execute(url);
+            }
                 return true;
 
             case R.id.option_menu_setting:
@@ -182,7 +208,8 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                 intent1.putExtra(share_mqtt_srv, mqttSRV);
                 intent1.putExtra(share_topic, topic);
                 intent1.putExtra(share_pin, pincode);
-                startActivity(intent1);
+                intent1.putExtra(share_key, alljoyn_wrapper.keyValue);
+                startActivityForResult(intent1, INTENT_SETTING_RESULT_CODE);
                 return true;
             case R.id.option_menu_get_list: //Get list of menu item
                 MqttMessage message = null;
@@ -282,23 +309,61 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
         Log.d(TAG,"Connect fail ");
     }
 
+    @Override
+    public void onOutputPostExecute(String s) {
 
+        if (SettingActivity.cur_command == SettingActivity.COMMAND_INVITESHARE_UNKNOWN) {
+            // TODO: Just send a Toast
+            Toast.makeText(getApplicationContext(), "[InviteShare] Unknown response from server " , Toast.LENGTH_LONG).show();
+
+        }else if (SettingActivity.cur_command == SettingActivity.COMMAND_INVITESHARE_GEN_PINCODE) {
+            pincode = s;
+            Toast.makeText(getApplicationContext(), "[InviteShare] just received the pincode ( " + pincode + " ) for topic " + topic , Toast.LENGTH_LONG).show();
+
+        }
+        else if (SettingActivity.cur_command == SettingActivity.COMMAND_INVITESHARE_GET_TOPIC) {
+            topic = s;
+            Toast.makeText(getApplicationContext(), "[InviteShare] just received the topic ( " + topic + " ) for pincode " + pincode , Toast.LENGTH_LONG).show();
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch(requestCode) {
+            case (INTENT_SETTING_RESULT_CODE) : {
+                if (resultCode == SettingActivity.INTENT_RESULT_OK && data != null) {
+
+                    //inviteSRV =  data.getStringExtra(MainActivity.share_invite_srv);
+                    //mqttSRV = data.getStringExtra(MainActivity.share_mqtt_srv);
+
+                    alljoyn_wrapper.keyValue = data.getStringExtra(MainActivity.share_key);
+
+                    topic = data.getStringExtra(MainActivity.share_topic);
+
+                    pincode = data.getStringExtra(MainActivity.share_pin);
+
+                }
+                break;
+            }
+        }
+    }
 
     class AlljoynWrapper{
 
 
-        private static final int MESSAGE_PING = 1;
-        private static final int MESSAGE_PING_REPLY = 2;
+        private static final int MESSAGE_ALLJOYN_GETTOPIC_REPLY = 2;
         private static final int MESSAGE_POST_TOAST = 3;
-        private static final int MESSAGE_START_PROGRESS_DIALOG = 4;
-        private static final int MESSAGE_STOP_PROGRESS_DIALOG = 5;
+        private static final int MESSAGE_ALLJOYN_START_PROGRESS_DIALOG = 4;
+        private static final int MESSAGE_ALLJOYN_STOP_PROGRESS_DIALOG = 5;
 
         private static final String TAG = "GetTopic";
 
-        public static final String key = "key";
-        public String keyValue = "0123456789";
+//        public static final String key = "key";
+        public String keyValue = "";
 
-        public  String topic = "/VERiK/topic0123456789";
+        //public  String topic = "/VERiK/topic0123456789";
         /*
             private EditText mEditText;
           */
@@ -448,7 +513,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                             public void sessionLost(int sessionId, int reason) {
                                 mIsConnected = false;
                                 logInfo(String.format("MyBusListener.sessionLost(sessionId = %d, reason = %d)", sessionId,reason));
-                                mHandler.sendEmptyMessage(MESSAGE_START_PROGRESS_DIALOG);
+                                mHandler.sendEmptyMessage(MESSAGE_ALLJOYN_START_PROGRESS_DIALOG);
                             }
                         });
                         logStatus("BusAttachment.joinSession() - sessionId: " + sessionId.value, status);
@@ -471,7 +536,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
 
                             mSessionId = sessionId.value;
                             mIsConnected = true;
-                            mHandler.sendEmptyMessage(MESSAGE_STOP_PROGRESS_DIALOG);
+                            mHandler.sendEmptyMessage(MESSAGE_ALLJOYN_STOP_PROGRESS_DIALOG);
                         }
                         break;
                     }
@@ -500,7 +565,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                                 //sendUiMessage(MESSAGE_PING, msg.obj + " and " + msg.obj);
                                 //String reply = mBasicInterface.cat((String) msg.obj, (String) msg.obj);
                                 String reply = mBasicInterface.get_topic((String)msg.obj);
-                                sendUiMessage(MESSAGE_PING_REPLY, reply);
+                                sendUiMessage(MESSAGE_ALLJOYN_GETTOPIC_REPLY, reply);
                             }
                         } catch (BusException ex) {
                             logException("BasicInterface.cat()", ex);

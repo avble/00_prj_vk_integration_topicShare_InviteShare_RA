@@ -37,7 +37,7 @@ interface  httpWrapperInterface {
  class HttpWrapper extends AsyncTask<String, Void, String> {
 
     public httpWrapperInterface listener;
-    public Editable topic;
+    public String topic;
 
 
     @Override

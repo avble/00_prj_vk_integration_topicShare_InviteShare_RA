@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/option_menu_searching"
+    <item android:id="@+id/option_menu_shareTopic_searching"
         android:title="[ShareTopic] Searching" />
-    <item android:id="@+id/option_menu_get_topic"
+    <item android:id="@+id/option_menu_shareTopic_get_topic"
         android:title="[ShareTopic] Get topic" />
-    <item android:id="@+id/option_menu_invite_get"
-        android:title="[Invite] Get" />
+    <item android:id="@+id/option_menu_inviteShare_genTopic"
+        android:title="[InviteShare] Generate pincode" />
+    <item android:id="@+id/option_menu_inviteShare_getTopic"
+        android:title="[InviteShare] Get Topic" />
     <item android:id="@+id/option_menu_get_list"
-        android:title="[Device] Get List" />
+        android:title="[RemoteAccess] Get List of device" />
+    <!--
     <item android:id="@+id/option_menu_add_device"
-        android:title="[Device] Add" />
+        android:title="[RemoteAccess] Add" />
     <item android:id="@+id/option_menu_remove_device"
-        android:title="[Device] Remove" />
-    <item android:id="@+id/option_menu_invite_share"
-        android:title="[Invite] Share" />
+        android:title="[RemoteAccess] Remove" />
+        -->
     <item android:id="@+id/option_menu_setting"
         android:title="Setting"
         android:showAsAction="ifRoom"/>
