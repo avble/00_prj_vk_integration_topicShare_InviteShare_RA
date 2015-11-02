@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -35,8 +36,16 @@ public class Adapter extends ArrayAdapter<Device> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.device, parent, false);
         }
 
+
         ImageView bulb = (ImageView) convertView.findViewById(R.id.bulb);
-        Button button = (Button) convertView.findViewById(R.id.button);
+        TextView tw = (TextView)convertView.findViewById(R.id.device_name);
+        if (tw != null)
+            tw.setText(device.getName());
+
+        // FIXME
+        //Button button = (Button) convertView.findViewById(R.id.button);
+        // FIXME: Do not support onClick event
+        /*
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -76,18 +85,25 @@ public class Adapter extends ArrayAdapter<Device> {
             }
         });
 
+
+ */
+
         if (device.isAvailable()) {
             if (device.isTurnOn()) {
                 bulb.setImageResource(R.drawable.bulb_on);
-                button.setText("Turn Off");
+                // FIXME
+                // button.setText("Turn Off");
             } else {
                 bulb.setImageResource(R.drawable.bulb_off);
-                button.setText("Turn On");
+                // FIXME
+                // button.setText("Turn On");
             }
             return convertView;
         } else {
             return super.getView(position, convertView, parent);
         }
+
+
 
     }
 

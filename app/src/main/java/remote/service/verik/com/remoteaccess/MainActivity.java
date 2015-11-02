@@ -31,7 +31,9 @@ import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -112,7 +114,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                     break;
                 case AlljoynWrapper.MESSAGE_ALLJOYN_STOP_PROGRESS_DIALOG:
                     mDialog.dismiss();
-                    Toast.makeText(getApplicationContext(), (String) "Successfully connect to board", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), (String) "Successfully connect to board", Toast.LENGTH_SHORT).show();
                     break;
                 default:
                     break;
@@ -157,12 +159,14 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
 
         handler = new Handler(Looper.getMainLooper());
 
+
         devices = new ArrayList<>();
-        devices.add(new Device(1, "Z-Wave Light Bulb", false, true));
+        //devices.add(new Device(1, "Z-Wave Light Bulb", false, true));
 
         ListView list = (ListView) findViewById(R.id.list);
         adapter = new Adapter(this, devices);
         list.setAdapter(adapter);
+
 
         // MQTT initialization
         Log.d(TAG,"Start to connect to MQTT server.");
@@ -279,11 +283,35 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
         {
             case MQTTMessageWrapper.RcommandGetListDevice:
                 // fine-tuning the GUI
+                JSONObject jason = new JSONObject(mqttMessage.toString());
 
-                adapter.clear();
+                JSONArray deviceList = jason.getJSONArray("devicesList");
+
                 devices = new ArrayList<>();
-                devices.add(new Device(1, "Z-Wave Light Bulb 1", false, true));
-                devices.add(new Device(1, "Z-Wave Light Bulb 2", false, true));
+                adapter.clear();
+
+                for(int i = 0; i < deviceList.length(); i++)
+                {
+                    JSONObject device = deviceList.getJSONObject(i);
+
+                    String friendlyName = (String) device.get("FriendlyName");
+                    //String index = new String(i + 1);
+
+                    devices.add(new Device(i + 1, friendlyName + " " + String.valueOf( i + 1) , false, true));
+
+
+                    //Iterate through the elements of the array i.
+                    //Get thier value.
+                    //Get the value for the first element and the value for the last element.
+                }
+
+
+//                String friendlyName = (String) jason.get("FriendlyName");
+
+
+
+                //devices.add(new Device(1, "Z-Wave Light Bulb 1", false, true));
+                //devices.add(new Device(1, "Z-Wave Light Bulb 2", false, true));
 
                 ListView list = (ListView) findViewById(R.id.list);
                 adapter = new Adapter(this, devices);
@@ -339,7 +367,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
 
     @Override
     public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-        Log.d(TAG,"Connect fail ");
+        Log.d(TAG, "Connect fail ");
     }
 
     @Override
