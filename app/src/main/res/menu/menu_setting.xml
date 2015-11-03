@@ -10,6 +10,9 @@
         android:title="[InviteShare] Get Topic" />
     <item android:id="@+id/option_menu_remoteAccess_get_list"
         android:title="[RemoteAccess] Get List of device" />
+    <item android:id="@+id/option_menu_wifi_setup_scan"
+        android:title="[WifiSetup] Scan" />
+
     <!--
     <item android:id="@+id/option_menu_add_device"
         android:title="[RemoteAccess] Add" />

@@ -16,7 +16,11 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.ArrayList;
 
 import remote.service.verik.com.remoteaccess.MainActivity;
+
+//import remote.service.verik.com.remoteaccess.R;
+
 import remote.service.verik.com.remoteaccess.R;
+
 
 /**
  * Created by congngale on 7/16/15.

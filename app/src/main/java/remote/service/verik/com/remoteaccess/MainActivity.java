@@ -35,10 +35,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import java.util.ArrayList;
+
+import remote.service.verik.com.remoteaccess.R;
+
 
 import remote.service.verik.com.remoteaccess.model.Adapter;
 import remote.service.verik.com.remoteaccess.model.Device;
+import remote.service.verik.com.remoteaccess.org.alljoyn.onboarding.test.DeviceListActivity;
+import remote.service.verik.com.remoteaccess.org.alljoyn.onboarding.test.ScanWIFIActivity;
 
 //TODO:
 // 1) The Json format is used to communicate instead of xml
@@ -259,6 +265,13 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                 return true;
 
             case R.id.option_menu_help:
+                return true;
+
+            case R.id.option_menu_wifi_setup_scan:
+                Intent intent2 = new Intent(this, ScanWIFIActivity.class);
+
+                startActivity(intent2);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -15,6 +15,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import remote.service.verik.com.remoteaccess.R;
+
 
 public class SettingActivity extends AppCompatActivity implements httpWrapperInterface {
 
