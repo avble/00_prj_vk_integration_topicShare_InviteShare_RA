@@ -42,52 +42,6 @@ public class Adapter extends ArrayAdapter<Device> {
         if (tw != null)
             tw.setText(device.getName());
 
-        // FIXME
-        //Button button = (Button) convertView.findViewById(R.id.button);
-        // FIXME: Do not support onClick event
-        /*
-        button.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (device.isTurnOn()) {
-                    device.setTurnOn(false);
-                    if (MainActivity.client != null && MainActivity.client.isConnected()) {
-                        //publish message
-                        MqttMessage message = new MqttMessage();
-                        message.setId(1);
-                        message.setPayload("off".getBytes());
-                        message.setQos(0);
-                        message.setRetained(false);
-                        try {
-                            MainActivity.client.publish(MainActivity.getTopic(), message);
-                        } catch (MqttException e) {
-                            Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                        }
-                    }
-                } else {
-                    device.setTurnOn(true);
-                    if (MainActivity.client != null && MainActivity.client.isConnected()) {
-                        //publish message
-                        MqttMessage message = new MqttMessage();
-                        message.setId(1);
-                        message.setPayload("on".getBytes());
-                        message.setQos(0);
-                        message.setRetained(false);
-                        try {
-                            MainActivity.client.publish(MainActivity.getTopic(), message);
-                        } catch (MqttException e) {
-                            Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                        }
-                    }
-                }
-                notifyDataSetChanged();
-            }
-        });
-
-
- */
-
         if (device.isAvailable()) {
             if (device.isTurnOn()) {
                 bulb.setImageResource(R.drawable.bulb_on);

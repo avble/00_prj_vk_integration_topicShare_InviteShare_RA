@@ -94,6 +94,7 @@
     <orderEntry type="library" exported="" name="alljoyn" level="project" />
     <orderEntry type="library" exported="" name="org.eclipse.paho.client.mqttv3-1.0.3-20150715.040214-169" level="project" />
     <orderEntry type="library" exported="" name="pubnub-android-3.7.4" level="project" />
+    <orderEntry type="library" exported="" name="lib" level="project" />
     <orderEntry type="library" exported="" name="support-v4-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.2.1" level="project" />
     <orderEntry type="library" exported="" name="org.eclipse.paho.android.service-1.0.3-20150715.040728-116" level="project" />

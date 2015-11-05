@@ -412,7 +412,6 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                     //inviteSRV =  data.getStringExtra(MainActivity.share_invite_srv);
                     //mqttSRV = data.getStringExtra(MainActivity.share_mqtt_srv);
 
-                    alljoyn_wrapper.keyValue = data.getStringExtra(MainActivity.share_key);
 
                     String topic_tmp = data.getStringExtra(MainActivity.share_topic);
                     setTopic(topic_tmp);
@@ -436,7 +435,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
         private static final String TAG = "GetTopic";
 
 //        public static final String key = "key";
-        public String keyValue = "";
+        final public String keyValue;
 
         //public  String topic = "/VERiK/topic0123456789";
         /*
@@ -455,6 +454,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
             HandlerThread busThread = new HandlerThread("BusHandler");
             busThread.start();
             mBusHandler = new BusHandler(busThread.getLooper());
+            keyValue = VUtility.getMAC(getApplicationContext());
         }
 
 
