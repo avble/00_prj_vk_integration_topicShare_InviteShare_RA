@@ -34,11 +34,17 @@ public class Adapter extends ArrayAdapter<Device> {
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.device, parent, false);
+            convertView.setLongClickable(true);
         }
 
 
         ImageView bulb = (ImageView) convertView.findViewById(R.id.bulb);
+
+        bulb.setOnClickListener(MainActivity.bulbOnClickListener);
+        bulb.setTag(device);
+
         TextView tw = (TextView)convertView.findViewById(R.id.device_name);
+
         if (tw != null)
             tw.setText(device.getName());
 
@@ -52,6 +58,7 @@ public class Adapter extends ArrayAdapter<Device> {
                 // FIXME
                 // button.setText("Turn On");
             }
+            convertView.setTag("ID_01");
             return convertView;
         } else {
             return super.getView(position, convertView, parent);

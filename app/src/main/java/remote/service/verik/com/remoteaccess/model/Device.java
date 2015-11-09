@@ -5,7 +5,7 @@ package remote.service.verik.com.remoteaccess.model;
  */
 public class Device {
 
-    private int id;
+    private String id;
     private String name;
     private boolean turnOn;
     private boolean available;
@@ -14,14 +14,14 @@ public class Device {
 
     }
 
-    public Device(int id, String name, boolean turnOn, boolean available) {
+    public Device(String id, String name, boolean turnOn, boolean available) {
         this.id = id;
         this.name = name;
         this.turnOn = turnOn;
         this.available = available;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -37,7 +37,7 @@ public class Device {
         return available;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -62,4 +62,5 @@ public class Device {
                 ", available=" + available +
                 '}';
     }
+
 }

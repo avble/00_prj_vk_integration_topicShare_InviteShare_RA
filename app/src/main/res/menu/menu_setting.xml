@@ -8,17 +8,16 @@
         android:title="[InviteShare] Generate pincode" />
     <item android:id="@+id/option_menu_inviteShare_getTopic"
         android:title="[InviteShare] Get Topic" />
-    <item android:id="@+id/option_menu_remoteAccess_get_list"
-        android:title="[RemoteAccess] Get List of device" />
-    <!--
-    <item android:id="@+id/option_menu_add_device"
-        android:title="[RemoteAccess] Add" />
-    <item android:id="@+id/option_menu_remove_device"
-        android:title="[RemoteAccess] Remove" />
-        -->
+    <item android:id="@+id/option_menu_remoteAccess_zwave_get_list"
+        android:title="[RemoteAccess][Zwave] Get List of device" />
+    <item android:id="@+id/option_menu_remoteAccess_zwave_add_device"
+        android:title="[RemoteAccess][Zwave] Add" />
+    <item android:id="@+id/option_menu_remoteAccess_zwave_remove_device"
+        android:title="[RemoteAccess][Zwave] Remove" />
     <item android:id="@+id/option_menu_setting"
-        android:title="Setting"
-        android:showAsAction="ifRoom"/>
+        android:title="Setting"/>
+
+        <!--android:showAsAction="ifRoom"/>-->
     <item android:id="@+id/option_menu_help"
         android:title="About" />
 

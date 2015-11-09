@@ -4,4 +4,17 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_setting">SettingActivity</string>
+
+
+
+
+    <!-- Main context menu -->
+    <string name="context_menu_get_binary">Get binary</string>
+    <string name="context_menu_get_specification">Get specification</string>
+    <string name="context_menu_get_secure_spec">Get secure spec</string>
+
+    <string name="context_menu_announce">Get secure spec</string>
+
+
+
 </resources>

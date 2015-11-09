@@ -9,10 +9,14 @@ import android.os.Message;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,11 +44,8 @@ import java.util.ArrayList;
 import remote.service.verik.com.remoteaccess.model.Adapter;
 import remote.service.verik.com.remoteaccess.model.Device;
 
-//TODO:
-// 1) The Json format is used to communicate instead of xml
-// 2)
 
-public class MainActivity extends ActionBarActivity implements MqttCallback, IMqttActionListener, httpWrapperInterface {
+public class MainActivity extends ActionBarActivity implements View.OnCreateContextMenuListener, MqttCallback, IMqttActionListener, httpWrapperInterface {
 
 
     /* Load the native alljoyn_java library. */
@@ -55,8 +56,6 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
     private final int INTENT_SETTING_RESULT_CODE = 1;
 
     public ArrayList<Device> devices;
-
-    public static MqttAndroidClient client;
 
     public static Handler handler;
 
@@ -73,14 +72,45 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
     // MQTT related data member
     // FIXME: there are 2 variables mqttSRV + URI.
     // Should remove either of them
+
+    public static MqttAndroidClient client;
     private String mqttSRV = "52.88.81.183:1883";
     private static String topic = "";
     public static final String TAG = "MQTT";
     public static final String URI = "tcp://52.88.81.183:1883";
     public static final String CLIENT_ID = "02";
 
+    public static View.OnClickListener bulbOnClickListener = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            Device device = (Device) v.getTag();
+            MqttMessage message = null;
+            try {
+                int value = 1;
+                if (device.isTurnOn())
+                    value = 0;
+                message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(device.getId(), value);
 
-    // MQTT InviteShare related data member
+                boolean on = true;
+                if (value == 0)
+                    on = false;
+
+                device.setTurnOn(on);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                MainActivity.client.publish(topic, message);
+            } catch (MqttException e) {
+                Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+            }
+
+        }
+    };
+
+
+    // InviteShare related data member
     private String pincode = "";
     private String inviteSRV = "52.88.81.183:8100";
 
@@ -163,10 +193,12 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
         devices = new ArrayList<>();
         //devices.add(new Device(1, "Z-Wave Light Bulb", false, true));
 
+        // List view
         ListView list = (ListView) findViewById(R.id.list);
         adapter = new Adapter(this, devices);
         list.setAdapter(adapter);
-
+        // Context menu
+        registerForContextMenu(list);
 
         // MQTT initialization
         Log.d(TAG,"Start to connect to MQTT server.");
@@ -186,6 +218,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
         //InviteShare Initialzation
         HttpWrapper.disableSSLCertificateChecking();
 
+
     }
 
     @Override
@@ -198,6 +231,7 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        MqttMessage message;
         switch (item.getItemId()) {
             case R.id.option_menu_shareTopic_searching:
                 alljoyn_wrapper.mBusHandler.sendEmptyMessage(alljoyn_wrapper.mBusHandler.CONNECT);
@@ -243,10 +277,11 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                 intent1.putExtra(share_key, alljoyn_wrapper.keyValue);
                 startActivityForResult(intent1, INTENT_SETTING_RESULT_CODE);
                 return true;
-            case R.id.option_menu_remoteAccess_get_list: //Get list of menu item
-                MqttMessage message = null;
+
+            case R.id.option_menu_remoteAccess_zwave_get_list: //Get list of menu item
+                message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateGetListMsg();
+                    message = MQTTMessageWrapper.CreateGetListDevicesMsg();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -258,10 +293,90 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
 
                 return true;
 
+            case R.id.option_menu_remoteAccess_zwave_add_device:
+                message = null;
+                try {
+                    message = MQTTMessageWrapper.CreateAddDeviceMsg();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    MainActivity.client.publish(topic, message);
+                } catch (MqttException e) {
+                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+                }
+
+                return true;
+
+
+            case R.id.option_menu_remoteAccess_zwave_remove_device:
+                message = null;
+                try {
+                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    MainActivity.client.publish(topic, message);
+                } catch (MqttException e) {
+                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+                }
+
+                return true;
+
+
             case R.id.option_menu_help:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    //    Context menu
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.device_context_menu, menu);
+
+        ListView list = (ListView)v;
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+
+        Device device = (Device)list.getItemAtPosition(info.position);
+        menu.setHeaderTitle(device.getId());
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        MqttMessage message;
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        Device device = (Device)adapter.getItem(info.position);
+
+        switch (item.getItemId())
+        {
+            case R.id.context_menu_get_binary:
+                message = null;
+                try {
+                    message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(device.getId());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    MainActivity.client.publish(topic, message);
+                } catch (MqttException e) {
+                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+                }
+
+                return true;
+            case R.id.context_menu_get_specification:
+                return true;
+            case R.id.context_menu_get_secure_spec:
+                return true;
+            default:
+                return super.onContextItemSelected(item);
         }
 
     }
@@ -275,13 +390,16 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
     public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
 
 
+        Log.d(TAG,"Received data from topic: "+topic+", Mqtt message: "+mqttMessage.toString());
+
+
         if (MQTTMessageWrapper.isMyMessage(mqttMessage.toString()))
             return;
 
         String command = MQTTMessageWrapper.getCommand(mqttMessage.toString());
         switch (command)
         {
-            case MQTTMessageWrapper.RcommandGetListDevice:
+            case MQTTMessageWrapper.commandGetListDeviceR:
                 // fine-tuning the GUI
                 JSONObject jason = new JSONObject(mqttMessage.toString());
 
@@ -295,47 +413,58 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
                     JSONObject device = deviceList.getJSONObject(i);
 
                     String friendlyName = (String) device.get("FriendlyName");
-                    //String index = new String(i + 1);
+                    String ID =  (String) device.get("ID");
+                    devices.add(new Device(ID, friendlyName + " " + String.valueOf( i + 1) , false, true));
 
-                    devices.add(new Device(i + 1, friendlyName + " " + String.valueOf( i + 1) , false, true));
-
-
-                    //Iterate through the elements of the array i.
-                    //Get thier value.
-                    //Get the value for the first element and the value for the last element.
                 }
-
-
-//                String friendlyName = (String) jason.get("FriendlyName");
-
-
-
-                //devices.add(new Device(1, "Z-Wave Light Bulb 1", false, true));
-                //devices.add(new Device(1, "Z-Wave Light Bulb 2", false, true));
 
                 ListView list = (ListView) findViewById(R.id.list);
                 adapter = new Adapter(this, devices);
                 list.setAdapter(adapter);
 
                 break;
-            case MQTTMessageWrapper.RcommandAddDevice:
+            case MQTTMessageWrapper.commandAddDeviceR:
                 // Add new device
                 break;
+
+            case MQTTMessageWrapper.commandRemoveDeviceR:
+                break;
+
+            case MQTTMessageWrapper.commandSetBinaryR:
+                break;
+
+            case MQTTMessageWrapper.commandGetBinaryR:
+                break;
+
+            case MQTTMessageWrapper.commandGetSecureSpecR:
+                break;
+
+            case MQTTMessageWrapper.commandSetSecureSpecR:
+                break;
+
+            case MQTTMessageWrapper.commandSetSpecification:
+                break;
+
+            case MQTTMessageWrapper.commandGetSpecification:
+                break;
+
+            case MQTTMessageWrapper.commandResetR:
+                break;
+
             default:
                 break;
         }
 
 
-        Log.d(TAG,"Received data from topic: "+topic+", Mqtt message: "+mqttMessage.toString());
-        if(adapter != null){
-            Device device = adapter.getItem(0);
-            if(mqttMessage.toString().equals("on")){
-                device.setTurnOn(true);
-            }else if(mqttMessage.toString().equals("off")){
-                device.setTurnOn(false);
-            }
-            adapter.notifyDataSetChanged();
-        }
+//        if(adapter != null){
+//            Device device = adapter.getItem(0);
+//            if(mqttMessage.toString().equals("on")){
+//                device.setTurnOn(true);
+//            }else if(mqttMessage.toString().equals("off")){
+//                device.setTurnOn(false);
+//            }
+//            adapter.notifyDataSetChanged();
+//        }
     }
 
     @Override
@@ -437,13 +566,6 @@ public class MainActivity extends ActionBarActivity implements MqttCallback, IMq
 //        public static final String key = "key";
         final public String keyValue;
 
-        //public  String topic = "/VERiK/topic0123456789";
-        /*
-            private EditText mEditText;
-          */
-        private ArrayAdapter<String> mListViewArrayAdapter;
-        private ListView mListView;
-        private Menu menu;
 
         /* Handler used to make calls to AllJoyn methods. See onCreate(). */
         private BusHandler mBusHandler;
