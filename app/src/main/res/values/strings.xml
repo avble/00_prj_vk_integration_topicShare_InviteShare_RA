@@ -15,6 +15,7 @@
 
     <string name="context_menu_announce">Get secure spec</string>
     <string name="title_activity_activity_dimmer">ActivityDimmer</string>
+    <string name="title_activity_device_type_heavy_duty_smart">DeviceTypeHeavyDutySmart</string>
 
 
 

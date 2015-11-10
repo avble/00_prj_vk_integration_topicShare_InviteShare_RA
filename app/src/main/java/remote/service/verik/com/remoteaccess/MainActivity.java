@@ -84,7 +84,17 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         public void onClick(View v) {
             Device device = (Device) v.getTag();
 
-            if (device.getCapabilityID().contains("SWITCH_MULTILEVEL"))
+
+            if (device.getName().toLowerCase().contains("Heavy Duty Smart".toLowerCase()))
+            {
+                Intent intent1 = new Intent(v.getContext(), DeviceTypeHeavyDutySmart.class);
+                DeviceTypeHeavyDutySmart.device = device;
+                //Intent intent1 = new Intent(this, DeviceTypeDimmerActivity.this);
+
+                v.getContext().startActivity(intent1);
+
+            }
+            else if (device.getCapabilityID().contains("SWITCH_MULTILEVEL"))
             {
                 Intent intent1 = new Intent(v.getContext(), DeviceTypeDimmerActivity.class);
                 DeviceTypeDimmerActivity.device = device;
@@ -531,70 +541,58 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             return;
 
         String command = MQTTMessageWrapper.getCommand(mqttMessage.toString());
-        switch (command)
+
+        if (command != null) {
+            switch (command) {
+                case MQTTMessageWrapper.commandGetListDeviceR:
+                    // fine-tuning the GUI
+                    JSONObject jason = new JSONObject(mqttMessage.toString());
+
+                    JSONArray deviceList = jason.getJSONArray("devicesList");
+
+                    devices = new ArrayList<>();
+                    adapter.clear();
+
+                    for (int i = 0; i < deviceList.length(); i++) {
+                        JSONObject device = deviceList.getJSONObject(i);
+
+                        String friendlyName = (String) device.get("FriendlyName");
+
+                        String ID = (String) device.get("ID");
+                        // FIXME
+                        //String type = (String) device.get("type");
+                        String type = "zwave";
+
+                        Device new_device = new Device(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                        String capabilityID = (String) device.get("Capability");
+                        new_device.setCapabilityID(capabilityID);
+                        devices.add(new_device);
+
+                    }
+
+                    ListView list = (ListView) findViewById(R.id.list);
+                    adapter = new Adapter(this, devices);
+                    list.setAdapter(adapter);
+
+                    break;
+                case MQTTMessageWrapper.commandAddDeviceR:
+                case MQTTMessageWrapper.commandRemoveDeviceR:
+                case MQTTMessageWrapper.commandSetBinaryR:
+                case MQTTMessageWrapper.commandGetBinaryR:
+                case MQTTMessageWrapper.commandGetSecureSpecR:
+                case MQTTMessageWrapper.commandSetSecureSpecR:
+                case MQTTMessageWrapper.commandSetSpecification:
+                case MQTTMessageWrapper.commandGetSpecification:
+                case MQTTMessageWrapper.commandResetR:
+                default:
+                    Toast.makeText(getApplicationContext(), "Just Received a MQTT message: " + command, Toast.LENGTH_LONG).show();
+
+                    break;
+            }
+        }else
         {
-            case MQTTMessageWrapper.commandGetListDeviceR:
-                // fine-tuning the GUI
-                JSONObject jason = new JSONObject(mqttMessage.toString());
+            Toast.makeText(getApplicationContext(), "Just Received a MQTT message: " + mqttMessage.toString(), Toast.LENGTH_LONG).show();
 
-                JSONArray deviceList = jason.getJSONArray("devicesList");
-
-                devices = new ArrayList<>();
-                adapter.clear();
-
-                for(int i = 0; i < deviceList.length(); i++)
-                {
-                    JSONObject device = deviceList.getJSONObject(i);
-
-                    String friendlyName = (String) device.get("FriendlyName");
-
-                    String ID =  (String) device.get("ID");
-                    // FIXME
-                    //String type = (String) device.get("type");
-                    String type = "zwave";
-
-                    Device new_device = new Device(ID, friendlyName + " " + String.valueOf( i + 1) , false, true, type);
-                    String capabilityID = (String) device.get("Capability");
-                    new_device.setCapabilityID(capabilityID);
-                    devices.add(new_device);
-
-                }
-
-                ListView list = (ListView) findViewById(R.id.list);
-                adapter = new Adapter(this, devices);
-                list.setAdapter(adapter);
-
-                break;
-            case MQTTMessageWrapper.commandAddDeviceR:
-                // Add new device
-                break;
-
-            case MQTTMessageWrapper.commandRemoveDeviceR:
-                break;
-
-            case MQTTMessageWrapper.commandSetBinaryR:
-                break;
-
-            case MQTTMessageWrapper.commandGetBinaryR:
-                break;
-
-            case MQTTMessageWrapper.commandGetSecureSpecR:
-                break;
-
-            case MQTTMessageWrapper.commandSetSecureSpecR:
-                break;
-
-            case MQTTMessageWrapper.commandSetSpecification:
-                break;
-
-            case MQTTMessageWrapper.commandGetSpecification:
-                break;
-
-            case MQTTMessageWrapper.commandResetR:
-                break;
-
-            default:
-                break;
         }
 
 

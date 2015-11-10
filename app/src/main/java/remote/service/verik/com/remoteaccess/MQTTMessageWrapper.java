@@ -215,16 +215,26 @@ public class MQTTMessageWrapper {
         return message;
     }
 
-    public static MqttMessage CreateGetSpecificationMsg() throws JSONException {
+    public static MqttMessage CreateGetSpecificationMsg(DeviceType device_type, String id, String klass, String cmd, String type, String scale, String force) throws JSONException {
         MqttMessage message = new MqttMessage();
         message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
         jason_get_list.put("method", MQTTMessageWrapper.commandGetSpecification);
-        jason_get_list.put("type", "zwave");
         jason_get_list.put("uuid", uuid);
-        // TODO: add more field
+        jason_get_list.put("type", "zwave");
+        if (device_type == DeviceType.ZIGBEE)
+            jason_get_list.put("type", "zigbee");
+        else if (device_type == DeviceType.UPNP)
+            jason_get_list.put("type", "upnp");
+
+        jason_get_list.put("id", id);
+        jason_get_list.put("class", klass);
+        jason_get_list.put("cmd", cmd);
+        jason_get_list.put("type_par", type);
+        jason_get_list.put("scale", scale);
+        jason_get_list.put("force", force);
 
         message.setPayload(jason_get_list.toString().getBytes());
         return message;

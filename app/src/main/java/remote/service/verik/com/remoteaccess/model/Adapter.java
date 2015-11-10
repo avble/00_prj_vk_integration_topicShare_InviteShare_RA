@@ -42,29 +42,6 @@ public class Adapter extends ArrayAdapter<Device> {
         tw.setTag(device);
         tw.setOnClickListener(MainActivity.deviceOnClick);
 
-//        tw.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Device device = (Device) v.getTag();
-//
-//                if (device.getCapabilityID().contains("SWITCH_MULTILEVEL"))
-//                {
-//                    Intent intent1 = new Intent(v.getContext(), DeviceTypeDimmerActivity.class);
-//                    //Intent intent1 = new Intent(this, DeviceTypeDimmerActivity.this);
-//
-//                    v.getContext().startActivity(intent1);
-//
-//                    //startActivity(intent1);
-//
-//
-//                    //startActivityForResult(intent1, null);
-//                }
-//
-//
-//            }
-//        });
-
-        //tw.setOnClickListener(MainActivity.deviceOnClick);
 
         if (tw != null)
             tw.setText(device.getName());
