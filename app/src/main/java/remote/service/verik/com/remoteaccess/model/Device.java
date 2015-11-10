@@ -9,16 +9,37 @@ public class Device {
     private String name;
     private boolean turnOn;
     private boolean available;
+    public String type;
+    private String capabilityID;
 
     public Device(){
 
     }
 
-    public Device(String id, String name, boolean turnOn, boolean available) {
+    public Device(String id, String name, boolean turnOn, boolean available, String device_type) {
         this.id = id;
         this.name = name;
         this.turnOn = turnOn;
         this.available = available;
+        type = "zwave";
+        capabilityID = "";
+
+        if (device_type.contentEquals("zigbee"))
+            type = "zigbee";
+        else if (device_type.contentEquals("upnp"))
+            type = "upnp";
+
+
+    }
+
+    public void setCapabilityID(String capability_ID)
+    {
+        capabilityID = capability_ID;
+    }
+
+    public String getCapabilityID()
+    {
+        return capabilityID;
     }
 
     public String getId() {

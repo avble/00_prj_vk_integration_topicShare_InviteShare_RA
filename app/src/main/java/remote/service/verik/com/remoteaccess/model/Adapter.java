@@ -1,17 +1,12 @@
 package remote.service.verik.com.remoteaccess.model;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
 
@@ -40,10 +35,36 @@ public class Adapter extends ArrayAdapter<Device> {
 
         ImageView bulb = (ImageView) convertView.findViewById(R.id.bulb);
 
-        bulb.setOnClickListener(MainActivity.bulbOnClickListener);
+        bulb.setOnClickListener(MainActivity.BinarySwitchButton);
         bulb.setTag(device);
 
         TextView tw = (TextView)convertView.findViewById(R.id.device_name);
+        tw.setTag(device);
+        tw.setOnClickListener(MainActivity.deviceOnClick);
+
+//        tw.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Device device = (Device) v.getTag();
+//
+//                if (device.getCapabilityID().contains("SWITCH_MULTILEVEL"))
+//                {
+//                    Intent intent1 = new Intent(v.getContext(), DeviceTypeDimmerActivity.class);
+//                    //Intent intent1 = new Intent(this, DeviceTypeDimmerActivity.this);
+//
+//                    v.getContext().startActivity(intent1);
+//
+//                    //startActivity(intent1);
+//
+//
+//                    //startActivityForResult(intent1, null);
+//                }
+//
+//
+//            }
+//        });
+
+        //tw.setOnClickListener(MainActivity.deviceOnClick);
 
         if (tw != null)
             tw.setText(device.getName());

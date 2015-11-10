@@ -14,6 +14,7 @@
     <string name="context_menu_get_secure_spec">Get secure spec</string>
 
     <string name="context_menu_announce">Get secure spec</string>
+    <string name="title_activity_activity_dimmer">ActivityDimmer</string>
 
 
 

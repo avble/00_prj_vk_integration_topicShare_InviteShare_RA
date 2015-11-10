@@ -15,8 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -75,12 +73,31 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
     public static MqttAndroidClient client;
     private String mqttSRV = "52.88.81.183:1883";
-    private static String topic = "";
+    public static String topic = "";
     public static final String TAG = "MQTT";
     public static final String URI = "tcp://52.88.81.183:1883";
     public static final String CLIENT_ID = "02";
 
-    public static View.OnClickListener bulbOnClickListener = new View.OnClickListener(){
+
+    public static View.OnClickListener deviceOnClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Device device = (Device) v.getTag();
+
+            if (device.getCapabilityID().contains("SWITCH_MULTILEVEL"))
+            {
+                Intent intent1 = new Intent(v.getContext(), DeviceTypeDimmerActivity.class);
+                DeviceTypeDimmerActivity.device = device;
+                //Intent intent1 = new Intent(this, DeviceTypeDimmerActivity.this);
+
+                v.getContext().startActivity(intent1);
+
+            }
+
+        }
+    };
+
+    public static View.OnClickListener BinarySwitchButton = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
             Device device = (Device) v.getTag();
@@ -89,7 +106,13 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 int value = 1;
                 if (device.isTurnOn())
                     value = 0;
-                message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(device.getId(), value);
+
+                if (device.type.contentEquals("zwave"))
+                    message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceType.ZWAVE, device.getId(), value);
+                else if (device.type.contains("zigbee"))
+                    message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceType.ZIGBEE, device.getId(), value);
+                else if (device.type.contains("upnp"))
+                    message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceType.UPNP, device.getId(), value);
 
                 boolean on = true;
                 if (value == 0)
@@ -106,7 +129,11 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
             }
 
+
+
         }
+
+
     };
 
 
@@ -281,7 +308,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zwave_get_list: //Get list of menu item
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateGetListDevicesMsg();
+                    message = MQTTMessageWrapper.CreateGetListDevicesMsg(DeviceType.ZWAVE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -292,11 +319,46 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 }
 
                 return true;
+
+
+
+
+            case R.id.option_menu_remoteAccess_zigbee_get_list: //Get list of menu item
+                message = null;
+                try {
+                    message = MQTTMessageWrapper.CreateGetListDevicesMsg(DeviceType.ZIGBEE);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    MainActivity.client.publish(topic, message);
+                } catch (MqttException e) {
+                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+                }
+
+                return true;
+
+            case R.id.option_menu_remoteAccess_upnp_get_list: //Get list of menu item
+                message = null;
+                try {
+                    message = MQTTMessageWrapper.CreateGetListDevicesMsg(DeviceType.UPNP);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    MainActivity.client.publish(topic, message);
+                } catch (MqttException e) {
+                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+                }
+
+                return true;
+
+
 
             case R.id.option_menu_remoteAccess_zwave_add_device:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateAddDeviceMsg();
+                    message = MQTTMessageWrapper.CreateAddDeviceMsg(DeviceType.ZWAVE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -307,12 +369,44 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 }
 
                 return true;
+
+
+            case R.id.option_menu_remoteAccess_zigbee_add_device:
+                message = null;
+                try {
+                    message = MQTTMessageWrapper.CreateAddDeviceMsg(DeviceType.ZIGBEE);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    MainActivity.client.publish(topic, message);
+                } catch (MqttException e) {
+                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+                }
+
+                return true;
+
+            case R.id.option_menu_remoteAccess_upnp_add_device:
+                message = null;
+                try {
+                    message = MQTTMessageWrapper.CreateAddDeviceMsg(DeviceType.UPNP);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    MainActivity.client.publish(topic, message);
+                } catch (MqttException e) {
+                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+                }
+
+                return true;
+
 
 
             case R.id.option_menu_remoteAccess_zwave_remove_device:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg();
+                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg(DeviceType.ZWAVE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -325,7 +419,40 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 return true;
 
 
+            case R.id.option_menu_remoteAccess_zigbee_remove_device:
+                message = null;
+                try {
+                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg(DeviceType.ZIGBEE);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    MainActivity.client.publish(topic, message);
+                } catch (MqttException e) {
+                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+                }
+
+                return true;
+
+
+//            case R.id.option_menu_remoteAccess_upnp_remove_device:
+//                message = null;
+//                try {
+//                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg(DeviceType.UPNP);
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+//                try {
+//                    MainActivity.client.publish(topic, message);
+//                } catch (MqttException e) {
+//                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                }
+//
+//                return true;
+
+
             case R.id.option_menu_help:
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -360,7 +487,14 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.context_menu_get_binary:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(device.getId());
+
+                    if (device.type.contentEquals("zwave"))
+                        message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(DeviceType.ZWAVE, device.getId());
+                    else if (device.type.contains("zigbee"))
+                        message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(DeviceType.ZIGBEE, device.getId());
+                    else if (device.type.contains("upnp"))
+                        message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(DeviceType.UPNP, device.getId());
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -413,8 +547,16 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                     JSONObject device = deviceList.getJSONObject(i);
 
                     String friendlyName = (String) device.get("FriendlyName");
+
                     String ID =  (String) device.get("ID");
-                    devices.add(new Device(ID, friendlyName + " " + String.valueOf( i + 1) , false, true));
+                    // FIXME
+                    //String type = (String) device.get("type");
+                    String type = "zwave";
+
+                    Device new_device = new Device(ID, friendlyName + " " + String.valueOf( i + 1) , false, true, type);
+                    String capabilityID = (String) device.get("Capability");
+                    new_device.setCapabilityID(capabilityID);
+                    devices.add(new_device);
 
                 }
 
