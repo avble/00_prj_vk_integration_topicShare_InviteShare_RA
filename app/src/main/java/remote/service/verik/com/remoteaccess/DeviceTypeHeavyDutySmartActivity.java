@@ -16,7 +16,7 @@ import org.json.JSONException;
 
 import remote.service.verik.com.remoteaccess.model.Device;
 
-public class DeviceTypeHeavyDutySmart extends AppCompatActivity {
+public class DeviceTypeHeavyDutySmartActivity extends AppCompatActivity {
 
 
     public static Device device;
@@ -61,11 +61,11 @@ public class DeviceTypeHeavyDutySmart extends AppCompatActivity {
                 MqttMessage message = null;
                 try {
                     if (device.type.contentEquals("zwave"))
-                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.ZWAVE, device.getId(), DeviceTypeHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceTypeHeavyDutySmart.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
+                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.ZWAVE, device.getId(), DeviceTypeHeavyDutySmartActivity.klass_SENSOR_MULTILEVEL, "GET", DeviceTypeHeavyDutySmartActivity.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
                     else if (device.type.contains("zigbee"))
-                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.ZIGBEE, device.getId(), DeviceTypeHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceTypeHeavyDutySmart.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
+                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.ZIGBEE, device.getId(), DeviceTypeHeavyDutySmartActivity.klass_SENSOR_MULTILEVEL, "GET", DeviceTypeHeavyDutySmartActivity.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
                     else if (device.type.contains("upnp"))
-                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.UPNP, device.getId(), DeviceTypeHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceTypeHeavyDutySmart.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
+                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.UPNP, device.getId(), DeviceTypeHeavyDutySmartActivity.klass_SENSOR_MULTILEVEL, "GET", DeviceTypeHeavyDutySmartActivity.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -91,11 +91,11 @@ public class DeviceTypeHeavyDutySmart extends AppCompatActivity {
                 MqttMessage message = null;
                 try {
                     if (device.type.contentEquals("zwave"))
-                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.ZWAVE, device.getId(), DeviceTypeHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceTypeHeavyDutySmart.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
+                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.ZWAVE, device.getId(), DeviceTypeHeavyDutySmartActivity.klass_SENSOR_MULTILEVEL, "GET", DeviceTypeHeavyDutySmartActivity.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
                     else if (device.type.contains("zigbee"))
-                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.ZIGBEE, device.getId(), DeviceTypeHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceTypeHeavyDutySmart.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
+                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.ZIGBEE, device.getId(), DeviceTypeHeavyDutySmartActivity.klass_SENSOR_MULTILEVEL, "GET", DeviceTypeHeavyDutySmartActivity.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
                     else if (device.type.contains("upnp"))
-                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.UPNP, device.getId(), DeviceTypeHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceTypeHeavyDutySmart.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
+                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.UPNP, device.getId(), DeviceTypeHeavyDutySmartActivity.klass_SENSOR_MULTILEVEL, "GET", DeviceTypeHeavyDutySmartActivity.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -121,11 +121,11 @@ public class DeviceTypeHeavyDutySmart extends AppCompatActivity {
                 MqttMessage message = null;
                 try {
                     if (device.type.contentEquals("zwave"))
-                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.ZWAVE, device.getId(), DeviceTypeHeavyDutySmart.klass_METER, "GET", DeviceTypeHeavyDutySmart.type_METER_POWER, "2A", "1/10");
+                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.ZWAVE, device.getId(), DeviceTypeHeavyDutySmartActivity.klass_METER, "GET", DeviceTypeHeavyDutySmartActivity.type_METER_POWER, "2A", "1/10");
                     else if (device.type.contains("zigbee"))
-                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.ZIGBEE, device.getId(), DeviceTypeHeavyDutySmart.klass_METER, "GET", DeviceTypeHeavyDutySmart.type_METER_POWER, "2A", "1/10");
+                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.ZIGBEE, device.getId(), DeviceTypeHeavyDutySmartActivity.klass_METER, "GET", DeviceTypeHeavyDutySmartActivity.type_METER_POWER, "2A", "1/10");
                     else if (device.type.contains("upnp"))
-                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.UPNP, device.getId(), DeviceTypeHeavyDutySmart.klass_METER, "GET", DeviceTypeHeavyDutySmart.type_METER_POWER, "2A", "1/10");
+                        message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceType.UPNP, device.getId(), DeviceTypeHeavyDutySmartActivity.klass_METER, "GET", DeviceTypeHeavyDutySmartActivity.type_METER_POWER, "2A", "1/10");
 
                 } catch (JSONException e) {
                     e.printStackTrace();

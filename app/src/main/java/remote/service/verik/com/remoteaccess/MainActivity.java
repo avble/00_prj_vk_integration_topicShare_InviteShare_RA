@@ -84,17 +84,24 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         public void onClick(View v) {
             Device device = (Device) v.getTag();
 
-
             if (device.getName().toLowerCase().contains("Heavy Duty Smart".toLowerCase()))
             {
-                Intent intent1 = new Intent(v.getContext(), DeviceTypeHeavyDutySmart.class);
-                DeviceTypeHeavyDutySmart.device = device;
+                Intent intent1 = new Intent(v.getContext(), DeviceTypeHeavyDutySmartActivity.class);
+                DeviceTypeHeavyDutySmartActivity.device = device;
                 //Intent intent1 = new Intent(this, DeviceTypeDimmerActivity.this);
 
                 v.getContext().startActivity(intent1);
 
             }
-            else if (device.getCapabilityID().contains("SWITCH_MULTILEVEL"))
+            else if (device.getName().toLowerCase().contains("Z-wave Sensor Multilevel 6".toLowerCase()))
+            {
+                Intent intent1 = new Intent(v.getContext(), DeviceTypeSensorMultilevel6.class);
+                DeviceTypeSensorMultilevel6.device = device;
+                //Intent intent1 = new Intent(this, DeviceTypeDimmerActivity.this);
+
+                v.getContext().startActivity(intent1);
+
+            }else if (device.getCapabilityID().contains("SWITCH_MULTILEVEL"))
             {
                 Intent intent1 = new Intent(v.getContext(), DeviceTypeDimmerActivity.class);
                 DeviceTypeDimmerActivity.device = device;

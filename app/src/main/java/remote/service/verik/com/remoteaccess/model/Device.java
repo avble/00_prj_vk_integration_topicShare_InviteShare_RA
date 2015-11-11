@@ -5,7 +5,29 @@ package remote.service.verik.com.remoteaccess.model;
  */
 public class Device {
 
-    private String id;
+//
+//    Manu_product_type_t product_type_id_t[] = {
+//            {.product_type_name = "Z-wave Door/Windown Sensor",                 .product_type_id_number = 0x01020059}, /**/
+//        {.product_type_name = "Z-wave Door/Windown Sensor",                 .product_type_id_number = 0x0002001D},
+//        {.product_type_name = "Z-wave Sensor Multilevel 6",                 .product_type_id_number = 0x01020064}, /**/
+//        {.product_type_name = "Z-wave Smart Outlet",                        .product_type_id_number = 0x49523031},/**/
+//        {.product_type_name = "Z-wave Smart Dimmer",                        .product_type_id_number = 0x49443031},/**/
+//        {.product_type_name = "Z-wave Heavy Duty Smart Switch",             .product_type_id_number = 0x0103004E},/**/
+//        {.product_type_name = "Z-wave Led",                                 .product_type_id_number = 0x00040001},/**/
+//        {.product_type_name = "Z-wave Outlet Lamp Module",                  .product_type_id_number = 0x44503030},/**/
+//        {.product_type_name = "Z-wave Motion Sensor (Ecolink)",             .product_type_id_number = 0x00010001},/**/
+//        {.product_type_name = "Z-wave Sensor Multilevel Gen5",              .product_type_id_number = 0x0102004A},/**/
+//        {.product_type_name = "Z-wave Siren Alarm Sensor",                  .product_type_id_number = 0x01040050},/**/
+//        {.product_type_name = "Z-wave Aeotec Smartdimmer",                  .product_type_id_number = 0x00030019},/**/
+//        {.product_type_name = "Z-wave Door/Windown Fibaro Systems Sensor",  .product_type_id_number = 0x07002000},/**/
+//        {.product_type_name = "Z-wave Door/Windown Sensor (DWZ)",           .product_type_id_number = 0x00010002},/**/
+//        {.product_type_name = "Z-wave Smart Switch",                        .product_type_id_number = 0x4F503031},/**/
+//        {.product_type_name = "Z-wave Door Lock",                           .product_type_id_number = 0x63495044},/**/
+//        {.product_type_name = "Z-wave Hue Bulb",                            .product_type_id_number = 0x00020002},/**/
+//        };
+//
+
+private String id;
     private String name;
     private boolean turnOn;
     private boolean available;

@@ -42,6 +42,11 @@
             android:label="@string/title_activity_device_type_heavy_duty_smart"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
+        <activity
+            android:name=".DeviceTypeSensorMultilevel6"
+            android:label="@string/title_activity_device_type_sensor_multilevel6"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
     </application>
 
 </manifest>
