@@ -33,19 +33,11 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
         <activity
-            android:name=".DeviceTypeDimmerActivity"
-            android:label="@string/title_activity_activity_dimmer"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
-        <activity
             android:name=".DeviceTypeHeavyDutySmart"
             android:label="@string/title_activity_device_type_heavy_duty_smart"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
-        <activity
-            android:name=".DeviceTypeSensorMultilevel6"
-            android:label="@string/title_activity_device_type_sensor_multilevel6"
-            android:theme="@style/AppTheme.NoActionBar" >
+        <activity android:name=".DeviceDetailActivity" >
         </activity>
     </application>
 

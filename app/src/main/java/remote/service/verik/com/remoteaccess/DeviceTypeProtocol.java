@@ -5,6 +5,6 @@ package remote.service.verik.com.remoteaccess;
  */
 
 
-public enum DeviceType{
+public enum DeviceTypeProtocol {
     ZWAVE, ZIGBEE, UPNP
 }

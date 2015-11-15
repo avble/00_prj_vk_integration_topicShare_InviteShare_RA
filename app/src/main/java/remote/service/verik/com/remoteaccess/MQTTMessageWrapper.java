@@ -1,6 +1,5 @@
 package remote.service.verik.com.remoteaccess;
 
-import android.renderscript.Element;
 import android.util.Log;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -8,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -40,10 +38,11 @@ public class MQTTMessageWrapper {
     public final static String commandGetBinaryR = "get_binaryR";
 
     public final static String commandGetSpecification = "get_specification";
-    public final static String commandGetSpecificationR = "get_specificationR";
+    //public final static String commandGetSpecificationR = "get_specificationR";
+    public final static String commandGetSpecificationR = "read_specR";
 
     public final static String commandSetSpecification = "set_specification";
-    public final static String commandSetSpecificationR = "set_specificationR";
+    public final static String commandSetSpecificationR = "write_specR";
 
     public final static String commandSetSecureSpec = "set_secure_spec";
     public final static String commandSetSecureSpecR = "set_secure_specR";
@@ -117,7 +116,7 @@ public class MQTTMessageWrapper {
     }
     //public static
 
-    public static MqttMessage CreateGetListDevicesMsg(DeviceType device_type) throws JSONException {
+    public static MqttMessage CreateGetListDevicesMsg(DeviceTypeProtocol device_type) throws JSONException {
         MqttMessage message = new MqttMessage();
         message.setId(1);
         message.setQos(0);
@@ -125,9 +124,9 @@ public class MQTTMessageWrapper {
         JSONObject jason_get_list = new JSONObject();
         jason_get_list.put("method", MQTTMessageWrapper.commandGetListDevice);
         jason_get_list.put("type", "zwave");
-        if (device_type == DeviceType.ZIGBEE)
+        if (device_type == DeviceTypeProtocol.ZIGBEE)
             jason_get_list.put("type", "zigbee");
-        else if (device_type == DeviceType.UPNP)
+        else if (device_type == DeviceTypeProtocol.UPNP)
             jason_get_list.put("type", "upnp");
 
         jason_get_list.put("uuid", uuid);
@@ -136,7 +135,7 @@ public class MQTTMessageWrapper {
         return message;
     }
 
-    public static MqttMessage CreateAddDeviceMsg(DeviceType device_type) throws JSONException {
+    public static MqttMessage CreateAddDeviceMsg(DeviceTypeProtocol device_type) throws JSONException {
         MqttMessage message = new MqttMessage();
         message.setId(1);
         message.setQos(0);
@@ -144,9 +143,9 @@ public class MQTTMessageWrapper {
         JSONObject jason_get_list = new JSONObject();
         jason_get_list.put("method", MQTTMessageWrapper.commandAddDevice);
         jason_get_list.put("type", "zwave");
-        if (device_type == DeviceType.ZIGBEE)
+        if (device_type == DeviceTypeProtocol.ZIGBEE)
             jason_get_list.put("type", "zigbee");
-        else if (device_type == DeviceType.UPNP)
+        else if (device_type == DeviceTypeProtocol.UPNP)
             jason_get_list.put("type", "upnp");
 
         jason_get_list.put("uuid", uuid);
@@ -156,7 +155,7 @@ public class MQTTMessageWrapper {
         return message;
     }
 
-    public static MqttMessage CreateRemoveDeviceMsg(DeviceType device_type) throws JSONException {
+    public static MqttMessage CreateRemoveDeviceMsg(DeviceTypeProtocol device_type) throws JSONException {
         MqttMessage message = new MqttMessage();
         message.setId(1);
         message.setQos(0);
@@ -164,9 +163,9 @@ public class MQTTMessageWrapper {
         JSONObject jason_get_list = new JSONObject();
         jason_get_list.put("method", MQTTMessageWrapper.commandRemoveDevice);
         jason_get_list.put("type", "zwave");
-        if (device_type == DeviceType.ZIGBEE)
+        if (device_type == DeviceTypeProtocol.ZIGBEE)
             jason_get_list.put("type", "zigbee");
-        else if (device_type == DeviceType.UPNP)
+        else if (device_type == DeviceTypeProtocol.UPNP)
             jason_get_list.put("type", "upnp");
         jason_get_list.put("uuid", uuid);
         // TODO: add more field
@@ -175,7 +174,7 @@ public class MQTTMessageWrapper {
         return message;
     }
 
-    public static MqttMessage CreateZwaveSetBinaryMsg(DeviceType device_type, String id, int value) throws JSONException {
+    public static MqttMessage CreateZwaveSetBinaryMsg(DeviceTypeProtocol device_type, String id, int value) throws JSONException {
         MqttMessage message = new MqttMessage();
         message.setId(1);
         message.setQos(0);
@@ -183,9 +182,9 @@ public class MQTTMessageWrapper {
         JSONObject jason_get_list = new JSONObject();
         jason_get_list.put("method", MQTTMessageWrapper.commandSetBinary);
         jason_get_list.put("type", "zwave");
-        if (device_type == DeviceType.ZIGBEE)
+        if (device_type == DeviceTypeProtocol.ZIGBEE)
             jason_get_list.put("type", "zigbee");
-        else if (device_type == DeviceType.UPNP)
+        else if (device_type == DeviceTypeProtocol.UPNP)
             jason_get_list.put("type", "upnp");
         jason_get_list.put("uuid", uuid);
         jason_get_list.put("id", id);
@@ -196,7 +195,7 @@ public class MQTTMessageWrapper {
     }
 
 
-    public static MqttMessage CreateZwaveGetBinaryMsg(DeviceType device_type, String id) throws JSONException {
+    public static MqttMessage CreateZwaveGetBinaryMsg(DeviceTypeProtocol device_type, String id) throws JSONException {
         MqttMessage message = new MqttMessage();
         message.setId(1);
         message.setQos(0);
@@ -204,9 +203,9 @@ public class MQTTMessageWrapper {
         JSONObject jason_get_list = new JSONObject();
         jason_get_list.put("method", MQTTMessageWrapper.commandGetBinary);
         jason_get_list.put("type", "zwave");
-        if (device_type == DeviceType.ZIGBEE)
+        if (device_type == DeviceTypeProtocol.ZIGBEE)
             jason_get_list.put("type", "zigbee");
-        else if (device_type == DeviceType.UPNP)
+        else if (device_type == DeviceTypeProtocol.UPNP)
             jason_get_list.put("type", "upnp");
         jason_get_list.put("uuid", uuid);
         jason_get_list.put("id", id);
@@ -215,7 +214,7 @@ public class MQTTMessageWrapper {
         return message;
     }
 
-    public static MqttMessage CreateGetSpecificationMsg(DeviceType device_type, String id, String klass, String cmd, String type, String scale, String force) throws JSONException {
+    public static MqttMessage CreateGetSpecificationMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String type, String scale, String force) throws JSONException {
         MqttMessage message = new MqttMessage();
         message.setId(1);
         message.setQos(0);
@@ -224,71 +223,100 @@ public class MQTTMessageWrapper {
         jason_get_list.put("method", MQTTMessageWrapper.commandGetSpecification);
         jason_get_list.put("uuid", uuid);
         jason_get_list.put("type", "zwave");
-        if (device_type == DeviceType.ZIGBEE)
+        if (device_type == DeviceTypeProtocol.ZIGBEE)
             jason_get_list.put("type", "zigbee");
-        else if (device_type == DeviceType.UPNP)
+        else if (device_type == DeviceTypeProtocol.UPNP)
             jason_get_list.put("type", "upnp");
 
         jason_get_list.put("id", id);
         jason_get_list.put("class", klass);
         jason_get_list.put("cmd", cmd);
-        jason_get_list.put("type_par", type);
-        jason_get_list.put("scale", scale);
-        jason_get_list.put("force", force);
+        jason_get_list.put("data0", type);
+        jason_get_list.put("data1", scale);
+        jason_get_list.put("data2", force);
 
         message.setPayload(jason_get_list.toString().getBytes());
         return message;
     }
 
 
-    public static MqttMessage CreateSetSpecificationMsg() throws JSONException {
+    public static MqttMessage CreateSetSpecificationMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2) throws JSONException {
         MqttMessage message = new MqttMessage();
         message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
         jason_get_list.put("method", MQTTMessageWrapper.commandSetSpecification);
-        jason_get_list.put("type", "zwave");
+
         jason_get_list.put("uuid", uuid);
-        // TODO: add more field
+        jason_get_list.put("type", "zwave");
+        if (device_type == DeviceTypeProtocol.ZIGBEE)
+            jason_get_list.put("type", "zigbee");
+        else if (device_type == DeviceTypeProtocol.UPNP)
+            jason_get_list.put("type", "upnp");
+
+        jason_get_list.put("id", id);
+        jason_get_list.put("class", klass);
+        jason_get_list.put("cmd", cmd);
+        jason_get_list.put("data0", data0);
+        jason_get_list.put("data1", data1);
+        jason_get_list.put("data2", data2);
 
         message.setPayload(jason_get_list.toString().getBytes());
         return message;
     }
 
 
-    public static MqttMessage CreateSetSecureMsg() throws JSONException {
+    public static MqttMessage CreateSetSecureMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2) throws JSONException  {
         MqttMessage message = new MqttMessage();
         message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
         jason_get_list.put("method", MQTTMessageWrapper.commandSetSecureSpec);
-        jason_get_list.put("type", "zwave");
         jason_get_list.put("uuid", uuid);
-        // TODO: add more field
+        jason_get_list.put("type", "zwave");
+        if (device_type == DeviceTypeProtocol.ZIGBEE)
+            jason_get_list.put("type", "zigbee");
+        else if (device_type == DeviceTypeProtocol.UPNP)
+            jason_get_list.put("type", "upnp");
+
+        jason_get_list.put("id", id);
+        jason_get_list.put("class", klass);
+        jason_get_list.put("cmd", cmd);
+        jason_get_list.put("data0", data0);
+        jason_get_list.put("data1", data1);
+        jason_get_list.put("data2", data2);
 
         message.setPayload(jason_get_list.toString().getBytes());
         return message;
     }
 
 
-    public static MqttMessage CreateGetSecureMsg() throws JSONException {
+    public static MqttMessage CreateGetSecureMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0)  throws JSONException {
         MqttMessage message = new MqttMessage();
         message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
         jason_get_list.put("method", MQTTMessageWrapper.commandGetSecureSpec);
-        jason_get_list.put("type", "zwave");
         jason_get_list.put("uuid", uuid);
-        // TODO: add more field
+        jason_get_list.put("type", "zwave");
+        if (device_type == DeviceTypeProtocol.ZIGBEE)
+            jason_get_list.put("type", "zigbee");
+        else if (device_type == DeviceTypeProtocol.UPNP)
+            jason_get_list.put("type", "upnp");
+
+        jason_get_list.put("id", id);
+        jason_get_list.put("class", klass);
+        jason_get_list.put("cmd", cmd);
+        jason_get_list.put("data0", data0);
 
         message.setPayload(jason_get_list.toString().getBytes());
         return message;
     }
 
-    public static MqttMessage CreateResetMsg(DeviceType device_type) throws JSONException {
+    public static MqttMessage CreateResetMsg(DeviceTypeProtocol device_type) throws JSONException {
         MqttMessage message = new MqttMessage();
         message.setId(1);
         message.setQos(0);
@@ -296,7 +324,7 @@ public class MQTTMessageWrapper {
         JSONObject jason_get_list = new JSONObject();
         jason_get_list.put("method", MQTTMessageWrapper.commandReset);
         jason_get_list.put("type", "zwave");
-        if (device_type == DeviceType.ZIGBEE)
+        if (device_type == DeviceTypeProtocol.ZIGBEE)
             jason_get_list.put("type", "zigbee");
         jason_get_list.put("uuid", uuid);
         // TODO: add more field

@@ -41,6 +41,9 @@ import java.util.ArrayList;
 
 import remote.service.verik.com.remoteaccess.model.Adapter;
 import remote.service.verik.com.remoteaccess.model.Device;
+import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
+import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor6;
+import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnCreateContextMenuListener, MqttCallback, IMqttActionListener, httpWrapperInterface {
@@ -73,10 +76,10 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
     public static MqttAndroidClient client;
     private String mqttSRV = "52.88.81.183:1883";
-    public static String topic = "";
+    public static String topic = "/VEriK/topic01234567890";
     public static final String TAG = "MQTT";
     public static final String URI = "tcp://52.88.81.183:1883";
-    public static final String CLIENT_ID = "02";
+    public static final String CLIENT_ID = "Android-01";
 
 
     public static View.OnClickListener deviceOnClick = new View.OnClickListener() {
@@ -84,32 +87,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         public void onClick(View v) {
             Device device = (Device) v.getTag();
 
-            if (device.getName().toLowerCase().contains("Heavy Duty Smart".toLowerCase()))
-            {
-                Intent intent1 = new Intent(v.getContext(), DeviceTypeHeavyDutySmartActivity.class);
-                DeviceTypeHeavyDutySmartActivity.device = device;
-                //Intent intent1 = new Intent(this, DeviceTypeDimmerActivity.this);
-
-                v.getContext().startActivity(intent1);
-
-            }
-            else if (device.getName().toLowerCase().contains("Z-wave Sensor Multilevel 6".toLowerCase()))
-            {
-                Intent intent1 = new Intent(v.getContext(), DeviceTypeSensorMultilevel6.class);
-                DeviceTypeSensorMultilevel6.device = device;
-                //Intent intent1 = new Intent(this, DeviceTypeDimmerActivity.this);
-
-                v.getContext().startActivity(intent1);
-
-            }else if (device.getCapabilityID().contains("SWITCH_MULTILEVEL"))
-            {
-                Intent intent1 = new Intent(v.getContext(), DeviceTypeDimmerActivity.class);
-                DeviceTypeDimmerActivity.device = device;
-                //Intent intent1 = new Intent(this, DeviceTypeDimmerActivity.this);
-
-                v.getContext().startActivity(intent1);
-
-            }
+            device.showDetailActivity(v);
 
         }
     };
@@ -125,11 +103,11 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                     value = 0;
 
                 if (device.type.contentEquals("zwave"))
-                    message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceType.ZWAVE, device.getId(), value);
+                    message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
                 else if (device.type.contains("zigbee"))
-                    message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceType.ZIGBEE, device.getId(), value);
+                    message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), value);
                 else if (device.type.contains("upnp"))
-                    message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceType.UPNP, device.getId(), value);
+                    message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId(), value);
 
                 boolean on = true;
                 if (value == 0)
@@ -325,7 +303,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zwave_get_list: //Get list of menu item
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateGetListDevicesMsg(DeviceType.ZWAVE);
+                    message = MQTTMessageWrapper.CreateGetListDevicesMsg(DeviceTypeProtocol.ZWAVE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -343,7 +321,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zigbee_get_list: //Get list of menu item
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateGetListDevicesMsg(DeviceType.ZIGBEE);
+                    message = MQTTMessageWrapper.CreateGetListDevicesMsg(DeviceTypeProtocol.ZIGBEE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -358,9 +336,9 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_upnp_get_list: //Get list of menu item
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateGetListDevicesMsg(DeviceType.UPNP);
+                    message = MQTTMessageWrapper.CreateGetListDevicesMsg(DeviceTypeProtocol.UPNP);
                 } catch (JSONException e) {
-                    e.printStackTrace();
+
                 }
                 try {
                     MainActivity.client.publish(topic, message);
@@ -375,7 +353,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zwave_add_device:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateAddDeviceMsg(DeviceType.ZWAVE);
+                    message = MQTTMessageWrapper.CreateAddDeviceMsg(DeviceTypeProtocol.ZWAVE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -391,7 +369,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zigbee_add_device:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateAddDeviceMsg(DeviceType.ZIGBEE);
+                    message = MQTTMessageWrapper.CreateAddDeviceMsg(DeviceTypeProtocol.ZIGBEE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -406,7 +384,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_upnp_add_device:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateAddDeviceMsg(DeviceType.UPNP);
+                    message = MQTTMessageWrapper.CreateAddDeviceMsg(DeviceTypeProtocol.UPNP);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -423,7 +401,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zwave_remove_device:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg(DeviceType.ZWAVE);
+                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg(DeviceTypeProtocol.ZWAVE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -439,7 +417,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zigbee_remove_device:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg(DeviceType.ZIGBEE);
+                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg(DeviceTypeProtocol.ZIGBEE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -455,7 +433,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 //            case R.id.option_menu_remoteAccess_upnp_remove_device:
 //                message = null;
 //                try {
-//                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg(DeviceType.UPNP);
+//                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg(DeviceTypeProtocol.UPNP);
 //                } catch (JSONException e) {
 //                    e.printStackTrace();
 //                }
@@ -506,11 +484,11 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 try {
 
                     if (device.type.contentEquals("zwave"))
-                        message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(DeviceType.ZWAVE, device.getId());
+                        message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId());
                     else if (device.type.contains("zigbee"))
-                        message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(DeviceType.ZIGBEE, device.getId());
+                        message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId());
                     else if (device.type.contains("upnp"))
-                        message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(DeviceType.UPNP, device.getId());
+                        message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId());
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -549,11 +527,13 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
         String command = MQTTMessageWrapper.getCommand(mqttMessage.toString());
 
+        JSONObject jason;
+
         if (command != null) {
             switch (command) {
                 case MQTTMessageWrapper.commandGetListDeviceR:
                     // fine-tuning the GUI
-                    JSONObject jason = new JSONObject(mqttMessage.toString());
+                    jason = new JSONObject(mqttMessage.toString());
 
                     JSONArray deviceList = jason.getJSONArray("devicesList");
 
@@ -566,11 +546,33 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                         String friendlyName = (String) device.get("FriendlyName");
 
                         String ID = (String) device.get("ID");
-                        // FIXME
-                        //String type = (String) device.get("type");
+                        String serialNumber = (String)device.get("Serial");
+
                         String type = "zwave";
 
-                        Device new_device = new Device(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                        Device new_device;
+
+                        if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Aeotec_Smartdimmer))
+                        {
+                            new_device = new DeviceGenericDimmer(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+
+                        } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Heavy_Duty_Smart_Switch))
+                        {
+                            new_device = new DeviceAEON_LABSHeavyDutySmart(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+
+                        } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Sensor_Multilevel_6) ||
+                                Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Sensor_Multilevel_Gen5))
+                        {
+
+                            new_device = new DeviceAEON_LABSMultilevelSensor6(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                        }
+                        else {
+
+                            new_device = new Device(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+
+                        }
+                        new_device.serialNumber = serialNumber;
+
                         String capabilityID = (String) device.get("Capability");
                         new_device.setCapabilityID(capabilityID);
                         devices.add(new_device);
@@ -588,12 +590,29 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 case MQTTMessageWrapper.commandGetBinaryR:
                 case MQTTMessageWrapper.commandGetSecureSpecR:
                 case MQTTMessageWrapper.commandSetSecureSpecR:
-                case MQTTMessageWrapper.commandSetSpecification:
-                case MQTTMessageWrapper.commandGetSpecification:
+                case MQTTMessageWrapper.commandSetSpecificationR:
+                case MQTTMessageWrapper.commandGetSpecificationR:
+                    // fine-tuning the GUI
+                    jason = new JSONObject(mqttMessage.toString());
+                    // get NodeID
+                    String node_id = jason.getString("deviceid");
+
+                    for (int i = 0; i < devices.size(); i++) {
+                        Device device_tmp = devices.get(i);
+                        if (device_tmp.getId().equals(node_id))
+                        {
+                            device_tmp.Update(mqttMessage.toString());
+                            break;
+
+                        }
+                    }
+
+                    break;
+
+
                 case MQTTMessageWrapper.commandResetR:
                 default:
-                    Toast.makeText(getApplicationContext(), "Just Received a MQTT message: " + command, Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(), "Just Received a MQTT message: " + mqttMessage.toString(), Toast.LENGTH_LONG).show();
                     break;
             }
         }else
@@ -661,19 +680,19 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         else if (SettingActivity.cur_command == SettingActivity.COMMAND_INVITESHARE_GET_TOPIC) {
             setTopic(s);
             Toast.makeText(getApplicationContext(), "[InviteShare] just received the topic ( " + topic + " ) for pincode " + pincode , Toast.LENGTH_LONG).show();
-
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        if (client.isConnected()) {
-                            client.subscribe(topic, 0);
-                        }
-                    } catch (MqttException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+//
+//            handler.post(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        if (client.isConnected()) {
+//                            client.subscribe(topic, 0);
+//                        }
+//                    } catch (MqttException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            });
 
         }
     }
