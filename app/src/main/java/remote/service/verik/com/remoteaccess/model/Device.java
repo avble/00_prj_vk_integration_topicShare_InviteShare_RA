@@ -19,7 +19,7 @@ public class Device {
 	public static String DEVICE_TYPE_Zwave_Door_Window_Sensor3                  = "00010002";/**/
 	public static String DEVICE_TYPE_Zwave_Sensor_Multilevel_6                  = "008601020064"; /**/
 	public static String DEVICE_TYPE_Zwave_Smart_Outlet                         = "49523031";/**/
-	public static String DEVICE_TYPE_Zwave_Smart_Dimmer                         = "49443031";/**/
+	public static String DEVICE_TYPE_Zwave_Smart_Dimmer                         = "006349443031";/**/
 	public static String DEVICE_TYPE_Zwave_Heavy_Duty_Smart_Switch              = "00860103004E";/**/
 	public static String DEVICE_TYPE_Zwave_Led                                  = "00040001";/**/
 	public static String DEVICE_TYPE_Zwave_Outlet_Lamp_Module                   = "44503030";/**/
