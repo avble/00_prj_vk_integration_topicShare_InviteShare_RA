@@ -561,14 +561,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
             });
 
 
-            RadioButton radio_button_humi = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_humidity);
+            final RadioButton radio_button_humi = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_humidity);
             radio_button_humi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
 
                     String value = "00";
-                    if (radio_button_temp.isChecked())
+                    if (radio_button_humi.isChecked())
                         value = "40";
 
                     MqttMessage message = null;
@@ -597,14 +597,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
             });
 
 
-            RadioButton radio_button_lumi = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_luminance);
+            final RadioButton radio_button_lumi = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_luminance);
             radio_button_lumi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
 
                     String value = "00";
-                    if (radio_button_temp.isChecked())
+                    if (radio_button_lumi.isChecked())
                         value = "80";
 
                     MqttMessage message = null;
@@ -634,14 +634,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
             });
 
 
-            RadioButton radio_button_ultra = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_ultra_violet);
+            final RadioButton radio_button_ultra = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_ultra_violet);
             radio_button_ultra.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
 
                     String value = "00";
-                    if (radio_button_temp.isChecked())
+                    if (radio_button_ultra.isChecked())
                         value = "02";
 
                     MqttMessage message = null;
@@ -669,14 +669,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 }
             });
 
-            RadioButton radio_button_battery = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_battery);
+            final RadioButton radio_button_battery = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_battery);
             radio_button_battery.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
 
                     String value = "00";
-                    if (radio_button_temp.isChecked())
+                    if (radio_button_battery.isChecked())
                         value = "01";
 
                     MqttMessage message = null;
@@ -706,14 +706,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
 
             // Configuration class, Motion command class
-            RadioButton radio_button_motion_level1 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level1);
+            final RadioButton radio_button_motion_level1 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level1);
             radio_button_motion_level1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
 
                     String value = "00";
-                    if (radio_button_temp.isChecked())
+                    if (radio_button_motion_level1.isChecked())
                         value = "1";
 
                     MqttMessage message = null;
@@ -742,14 +742,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
             });
 
 
-            RadioButton radio_button_motion_level2 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level2);
+            final RadioButton radio_button_motion_level2 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level2);
             radio_button_motion_level2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
 
                     String value = "00";
-                    if (radio_button_temp.isChecked())
+                    if (radio_button_motion_level2.isChecked())
                         value = "2";
 
                     MqttMessage message = null;
@@ -778,14 +778,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
             });
 
 
-            RadioButton radio_button_motion_level3 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level3);
+            final RadioButton radio_button_motion_level3 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level3);
             radio_button_motion_level3.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
 
                     String value = "00";
-                    if (radio_button_temp.isChecked())
+                    if (radio_button_motion_level3.isChecked())
                         value = "3";
 
                     MqttMessage message = null;
@@ -814,14 +814,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
             });
 
 
-            RadioButton radio_button_motion_level4 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level4);
+            final RadioButton radio_button_motion_level4 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level4);
             radio_button_motion_level4.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
 
                     String value = "00";
-                    if (radio_button_temp.isChecked())
+                    if (radio_button_motion_level4.isChecked())
                         value = "4";
 
                     MqttMessage message = null;
@@ -850,14 +850,14 @@ public class DeviceDetailActivity extends AppCompatActivity {
             });
 
 
-            RadioButton radio_button_motion_level5 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level5);
+            final RadioButton radio_button_motion_level5 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level5);
             radio_button_motion_level5.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
 
                     String value = "00";
-                    if (radio_button_temp.isChecked())
+                    if (radio_button_motion_level5.isChecked())
                         value = "5";
 
                     MqttMessage message = null;
@@ -893,7 +893,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
                     String value = "00";
                     if (radio_button_temp.isChecked())
-                        value = "0";
+                        value = "00";
 
                     MqttMessage message = null;
                     try {
@@ -1060,6 +1060,12 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 device_mutilevel.viewer_tw_multilevel5_temp.setText(Double.toString(device_mutilevel.multilevel_sensor_temp));
             }
 
+            device_mutilevel.viewer_tw_sensor_battery = (TextView)findViewById(R.id.sensor_multilevel5_tw_battery);
+            if (device_mutilevel.viewer_tw_sensor_battery != null)
+            {
+                device_mutilevel.viewer_tw_sensor_battery.setText(device_mutilevel.battery_level);
+            }
+
 
 
             // Configuration class
@@ -1147,9 +1153,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
 
 
-
-
-
             Button button_lumi = (Button) findViewById(R.id.sensor_multilevel5_button_lumi);
 
             button_lumi.setOnClickListener(new View.OnClickListener() {
@@ -1177,6 +1180,33 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
                 }
             });
+
+
+
+            Button button_battery = (Button) findViewById(R.id.sensor_multilevel5_button_battery);
+
+            button_battery.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    MqttMessage message = null;
+                    try {
+                        if (device.type.contentEquals("zwave"))
+                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_BATTERY, "GET", "", "", "");
+                       
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        MainActivity.client.publish(MainActivity.topic, message);
+                    } catch (MqttException e) {
+                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+                    }
+
+
+                }
+            });
+
 
 //            // configuration class
 //
@@ -1317,9 +1347,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor5 device_multilevel5 = (DeviceAEON_LABSMultilevelSensor5) device;
 
+                    RadioButton rb_tmp = (RadioButton)v;
                     String value = "00";
-                    if (radio_button_temp.isChecked())
+                    if (rb_tmp.isChecked())
                         value = "40";
+
 
                     MqttMessage message = null;
                     try {
@@ -1353,8 +1385,9 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor5 device_multilevel5 = (DeviceAEON_LABSMultilevelSensor5) device;
 
+                    RadioButton rb_tmp = (RadioButton)v;
                     String value = "00";
-                    if (radio_button_temp.isChecked())
+                    if (rb_tmp.isChecked())
                         value = "80";
 
                     MqttMessage message = null;
@@ -1390,8 +1423,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor5 device_multilevel5 = (DeviceAEON_LABSMultilevelSensor5) device;
 
+
+                    RadioButton rb_tmp = (RadioButton)v;
+
                     String value = "00";
-                    if (radio_button_temp.isChecked())
+                    if (rb_tmp.isChecked())
                         value = "01";
 
                     MqttMessage message = null;

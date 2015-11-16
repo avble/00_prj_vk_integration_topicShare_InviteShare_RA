@@ -8,7 +8,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import remote.service.verik.com.remoteaccess.MQTTMessageWrapper;
-import remote.service.verik.com.remoteaccess.R;
 
 public class DeviceAEON_LABSMultilevelSensor5 extends Device {
 
@@ -21,6 +20,8 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
     public int configuration_timer = 10; // minimun value
     public int configuration_auto_timer = Integer.parseInt(cmd_klass_CONFIGURATION_AUTO_TIMER_MIN, 16);
 
+
+    public String battery_level =  "";
 
 
     // multilevel class
@@ -72,14 +73,22 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
     final public static String cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID = "1";
 
 
+    // Battery class
+    final public static String klass_SENSOR_BATTERY = "BATTERY";
+
+
+
+
     // For Viewer
     public TextView viewer_tw_multilevel5_humi;
     public TextView viewer_tw_multilevel5_temp;
     public TextView viewer_tw_multilevel5_lumi;
-    public TextView viewer_tw_multilevel5_uv;
+    public TextView viewer_tw_sensor_battery;
 
     public CheckBox viwer_cb_configuration_lock;
     public SeekBar viewer_seekBar_configuration_timer;
+
+
 
 
     public DeviceAEON_LABSMultilevelSensor5(String id, String name, boolean turnOn, boolean available, String device_type)
@@ -163,6 +172,16 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                 }else if (klass.equals(klass_SENSOR_CONFIGURATION)) {
                     // TODO
 
+                }else if (klass.equals(klass_SENSOR_BATTERY)) {
+                    if (command.equals("GET")) {
+                        battery_level = jason.getString("batterylevel");
+
+                        if (viewer_tw_sensor_battery != null) {
+                            viewer_tw_sensor_battery.setText(battery_level);
+                        }
+
+
+                    }
                 }
             }else if (method.equals(MQTTMessageWrapper.commandSetSpecificationR))
             {

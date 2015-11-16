@@ -117,6 +117,30 @@
 
         </TableRow>
 
+        <TableRow
+            android:id="@+id/tableRow31"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1px" >
+
+            <TextView
+                android:id="@+id/sensor_multilevel5_tw_battery"
+                android:layout_width="500px"
+                android:layout_height="wrap_content"
+                android:text="BATTERY"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <Button
+                android:id="@+id/sensor_multilevel5_button_battery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="1px"
+                android:text="GET BATTERY"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                />
+
+        </TableRow>
+
 
         <TableRow
             android:id="@+id/tableRow5"
