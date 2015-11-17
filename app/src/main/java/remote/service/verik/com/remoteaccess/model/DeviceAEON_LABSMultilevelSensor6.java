@@ -53,7 +53,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device {
     final public static String cmd_klass_CONFIGURATION_REPORT_VALUE_TEMP= "20";
     final public static String cmd_klass_CONFIGURATION_REPORT_VALUE_HUMI= "40";
     final public static String cmd_klass_CONFIGURATION_REPORT_VALUE_LUMI= "80";
-    final public static String cmd_klass_CONFIGURATION_REPORT_VALUE_ULTRA= "02";
+    final public static String cmd_klass_CONFIGURATION_REPORT_VALUE_ULTRA= "10";
     final public static String cmd_klass_CONFIGURATION_REPORT_VALUE_BATTERY= "01";
     final public static String cmd_klass_CONFIGURATION_REPORT_VALUE_DISABLE= "00";
 

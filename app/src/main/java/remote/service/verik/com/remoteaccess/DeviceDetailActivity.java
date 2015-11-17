@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
@@ -525,15 +526,65 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 });
             }
 
-            final RadioButton radio_button_temp = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_temperature);
-            radio_button_temp.setOnClickListener(new View.OnClickListener() {
+
+            View.OnClickListener checkbox_report_configuration = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+                    CheckBox cb_tmp = (CheckBox)v;
 
-                    String value = "00";
-                    if (radio_button_temp.isChecked())
-                        value = "20";
+                    int configuration_report = device_multilevel6.configuration_report;
+
+                    switch(v.getId()) {
+                        case R.id.sensor_multilevel6_cb_temperature:
+                            if (cb_tmp.isChecked()) {
+                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_TEMP, 16);
+                            }else {
+                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_TEMP, 16);
+                            }
+                            break;
+
+                        case R.id.sensor_multilevel6_cb_battery:
+                            if (cb_tmp.isChecked()) {
+                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_BATTERY, 16);
+                            }else {
+                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_BATTERY, 16);
+                            }
+
+                            break;
+
+                        case R.id.sensor_multilevel6_cb_luminance:
+                            if (cb_tmp.isChecked()) {
+                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_LUMI, 16);
+                            }else {
+                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_LUMI, 16);
+                            }
+
+                            break;
+
+                        case R.id.sensor_multilevel6_cb_ultra_violet:
+                            if (cb_tmp.isChecked()) {
+                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_ULTRA, 16);
+                            }else {
+                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_ULTRA, 16);
+                            }
+                            break;
+
+                        case R.id.sensor_multilevel6_cb_humidity:
+                            if (cb_tmp.isChecked()) {
+                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_HUMI, 16);
+                            }else {
+                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_HUMI, 16);
+                            }
+                            break;
+
+                    }
+
+                    device_multilevel6.configuration_report = configuration_report;
+
+                    String value = Integer.toHexString(configuration_report);
+
+
 
                     MqttMessage message = null;
                     try {
@@ -558,151 +609,24 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     }
 
                 }
-            });
+            };
 
 
-            final RadioButton radio_button_humi = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_humidity);
-            radio_button_humi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+            CheckBox checkbox_report_temp = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_temperature);
+            checkbox_report_temp.setOnClickListener(checkbox_report_configuration);
 
-                    String value = "00";
-                    if (radio_button_humi.isChecked())
-                        value = "40";
+            CheckBox checkbox_report_humi = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_humidity);
+            checkbox_report_humi.setOnClickListener(checkbox_report_configuration);
 
-                    MqttMessage message = null;
-                    try {
+            CheckBox checkbox_report_uv = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_ultra_violet);
+            checkbox_report_uv.setOnClickListener(checkbox_report_configuration);
 
-                        if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-                        else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-                        else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
+            CheckBox checkbox_report_battery = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_battery);
+            checkbox_report_battery.setOnClickListener(checkbox_report_configuration);
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-                }
+            CheckBox checkbox_report_lum = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_luminance);
+            checkbox_report_lum.setOnClickListener(checkbox_report_configuration);
 
-            });
-
-
-            final RadioButton radio_button_lumi = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_luminance);
-            radio_button_lumi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-
-                    String value = "00";
-                    if (radio_button_lumi.isChecked())
-                        value = "80";
-
-                    MqttMessage message = null;
-                    try {
-
-                        if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-                        else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-                        else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-                }
-
-
-            });
-
-
-            final RadioButton radio_button_ultra = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_ultra_violet);
-            radio_button_ultra.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-
-                    String value = "00";
-                    if (radio_button_ultra.isChecked())
-                        value = "02";
-
-                    MqttMessage message = null;
-                    try {
-
-                        if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-                        else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-                        else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-                }
-            });
-
-            final RadioButton radio_button_battery = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_battery);
-            radio_button_battery.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-
-                    String value = "00";
-                    if (radio_button_battery.isChecked())
-                        value = "01";
-
-                    MqttMessage message = null;
-                    try {
-
-                        if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-                        else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-                        else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-                }
-            });
 
 
             // Configuration class, Motion command class
@@ -890,6 +814,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+
+                    RadioButton radio_button_temp = (RadioButton)v;
 
                     String value = "00";
                     if (radio_button_temp.isChecked())

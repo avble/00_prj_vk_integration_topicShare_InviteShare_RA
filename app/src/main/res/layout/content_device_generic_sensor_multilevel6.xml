@@ -245,42 +245,36 @@
                     android:text="Report configuration"
                     android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-                <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" >
 
-                        <RadioButton android:id="@+id/sensor_multilevel6_radio_temperature"
+                        <CheckBox android:id="@+id/sensor_multilevel6_cb_temperature"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Temperature"
                             />
 
-                        <RadioButton android:id="@+id/sensor_multilevel6_radio_humidity"
+                        <CheckBox android:id="@+id/sensor_multilevel6_cb_humidity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Humidity"
                             />
 
-                        <RadioButton android:id="@+id/sensor_multilevel6_radio_luminance"
+                        <CheckBox android:id="@+id/sensor_multilevel6_cb_luminance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Luminance"
                             />
 
-                        <RadioButton android:id="@+id/sensor_multilevel6_radio_ultra_violet"
+                        <CheckBox android:id="@+id/sensor_multilevel6_cb_ultra_violet"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Ultra Violet"
                             />
 
-                        <RadioButton android:id="@+id/sensor_multilevel6_radio_battery"
+                        <CheckBox android:id="@+id/sensor_multilevel6_cb_battery"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Battery"
                             />
-
-                </RadioGroup>
 
             </LinearLayout>
 
