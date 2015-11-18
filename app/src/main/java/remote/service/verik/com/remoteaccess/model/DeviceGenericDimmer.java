@@ -1,13 +1,9 @@
 package remote.service.verik.com.remoteaccess.model;
 
-import android.content.Intent;
-import android.view.View;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import remote.service.verik.com.remoteaccess.DeviceDetailActivity;
-import remote.service.verik.com.remoteaccess.MQTTMessageWrapper;
+import remote.service.verik.com.remoteaccess.RemoteAccessMsg;
 
 /**
  * Created by huyle on 11/11/15.
@@ -34,7 +30,7 @@ public class DeviceGenericDimmer extends  Device{
 
             String method = jason.getString("method");
 
-            if (method.equals(MQTTMessageWrapper.commandSetBinaryR))
+            if (method.equals(RemoteAccessMsg.commandSetBinaryR))
             {
 
             }

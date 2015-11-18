@@ -28,7 +28,7 @@ public class Device {
 	public static String DEVICE_TYPE_Zwave_Siren_Alarm_Sensor                   = "01040050";/**/
 	public static String DEVICE_TYPE_Zwave_Aeotec_Smartdimmer                   = "008600030019";/**/
 	public static String DEVICE_TYPE_Zwave_Smart_Switch                         = "4F503031";/**/
-	public static String DEVICE_TYPE_Zwave_Door_Lock                            = "63495044";/**/
+	public static String DEVICE_TYPE_Zwave_Door_Lock                            = "003b63495044";/**/
 	public static String DEVICE_TYPE_Zwave_Hue_Bulb                             = "00020002";/**/
 
 

@@ -5,7 +5,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import remote.service.verik.com.remoteaccess.MQTTMessageWrapper;
+import remote.service.verik.com.remoteaccess.RemoteAccessMsg;
 
 /**
  * Created by huyle on 11/12/15.
@@ -56,7 +56,7 @@ public class DeviceAEON_LABSHeavyDutySmart extends  Device {
             if (method == null || commandinfo == null)
                 return; // do nothing
 
-            if (method.equals(MQTTMessageWrapper.commandGetSpecificationR))
+            if (method.equals(RemoteAccessMsg.commandGetSpecificationR))
             {
                 JSONObject jason_command_info = new JSONObject(commandinfo);
                 String klass = jason_command_info.getString("class");
@@ -116,7 +116,7 @@ public class DeviceAEON_LABSHeavyDutySmart extends  Device {
 
 
 
-            }else if (method.equals(MQTTMessageWrapper.commandSetSpecificationR))
+            }else if (method.equals(RemoteAccessMsg.commandSetSpecificationR))
             {
 //                JSONObject jason_command_info = new JSONObject(commandinfo);
 //                String klass = jason_command_info.getString("class");

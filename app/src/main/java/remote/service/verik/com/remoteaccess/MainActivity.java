@@ -45,6 +45,7 @@ import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSens
 import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor6;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
+import remote.service.verik.com.remoteaccess.model.DeviceIR_SEC_SAFETYDoorLock;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnCreateContextMenuListener, MqttCallback, IMqttActionListener, httpWrapperInterface {
@@ -104,11 +105,11 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                     value = 0;
 
                 if (device.type.contentEquals("zwave"))
-                    message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
+                    message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
                 else if (device.type.contains("zigbee"))
-                    message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), value);
+                    message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), value);
                 else if (device.type.contains("upnp"))
-                    message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId(), value);
+                    message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId(), value);
 
                 boolean on = true;
                 if (value == 0)
@@ -304,7 +305,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zwave_get_list: //Get list of menu item
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateGetListDevicesMsg(DeviceTypeProtocol.ZWAVE);
+                    message = RemoteAccessMsg.CreateGetListDevicesMsg(DeviceTypeProtocol.ZWAVE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -322,7 +323,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zigbee_get_list: //Get list of menu item
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateGetListDevicesMsg(DeviceTypeProtocol.ZIGBEE);
+                    message = RemoteAccessMsg.CreateGetListDevicesMsg(DeviceTypeProtocol.ZIGBEE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -337,7 +338,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_upnp_get_list: //Get list of menu item
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateGetListDevicesMsg(DeviceTypeProtocol.UPNP);
+                    message = RemoteAccessMsg.CreateGetListDevicesMsg(DeviceTypeProtocol.UPNP);
                 } catch (JSONException e) {
 
                 }
@@ -354,7 +355,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zwave_add_device:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateAddDeviceMsg(DeviceTypeProtocol.ZWAVE);
+                    message = RemoteAccessMsg.CreateAddDeviceMsg(DeviceTypeProtocol.ZWAVE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -370,7 +371,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zigbee_add_device:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateAddDeviceMsg(DeviceTypeProtocol.ZIGBEE);
+                    message = RemoteAccessMsg.CreateAddDeviceMsg(DeviceTypeProtocol.ZIGBEE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -385,7 +386,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_upnp_add_device:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateAddDeviceMsg(DeviceTypeProtocol.UPNP);
+                    message = RemoteAccessMsg.CreateAddDeviceMsg(DeviceTypeProtocol.UPNP);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -402,7 +403,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zwave_remove_device:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg(DeviceTypeProtocol.ZWAVE);
+                    message = RemoteAccessMsg.CreateRemoveDeviceMsg(DeviceTypeProtocol.ZWAVE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -418,7 +419,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             case R.id.option_menu_remoteAccess_zigbee_remove_device:
                 message = null;
                 try {
-                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg(DeviceTypeProtocol.ZIGBEE);
+                    message = RemoteAccessMsg.CreateRemoveDeviceMsg(DeviceTypeProtocol.ZIGBEE);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -434,7 +435,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 //            case R.id.option_menu_remoteAccess_upnp_remove_device:
 //                message = null;
 //                try {
-//                    message = MQTTMessageWrapper.CreateRemoveDeviceMsg(DeviceTypeProtocol.UPNP);
+//                    message = RemoteAccessMsg.CreateRemoveDeviceMsg(DeviceTypeProtocol.UPNP);
 //                } catch (JSONException e) {
 //                    e.printStackTrace();
 //                }
@@ -485,11 +486,11 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 try {
 
                     if (device.type.contentEquals("zwave"))
-                        message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId());
+                        message = RemoteAccessMsg.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId());
                     else if (device.type.contains("zigbee"))
-                        message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId());
+                        message = RemoteAccessMsg.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId());
                     else if (device.type.contains("upnp"))
-                        message = MQTTMessageWrapper.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId());
+                        message = RemoteAccessMsg.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId());
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -523,16 +524,16 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         Log.d(TAG,"Received data from topic: "+topic+", Mqtt message: "+mqttMessage.toString());
 
 
-        if (MQTTMessageWrapper.isMyMessage(mqttMessage.toString()))
+        if (RemoteAccessMsg.isMyMessage(mqttMessage.toString()))
             return;
 
-        String command = MQTTMessageWrapper.getCommand(mqttMessage.toString());
+        String command = RemoteAccessMsg.getCommand(mqttMessage.toString());
 
         JSONObject jason;
 
         if (command != null) {
             switch (command) {
-                case MQTTMessageWrapper.commandGetListDeviceR:
+                case RemoteAccessMsg.commandGetListDeviceR:
                     // fine-tuning the GUI
                     jason = new JSONObject(mqttMessage.toString());
 
@@ -570,9 +571,11 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                         {
 
                             new_device = new DeviceAEON_LABSMultilevelSensor5(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                        }else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_Door_Lock) == 0)
+                        {
+
+                            new_device = new DeviceIR_SEC_SAFETYDoorLock(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
                         }
-
-
                         else {
 
                             new_device = new Device(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
@@ -591,14 +594,14 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                     list.setAdapter(adapter);
 
                     break;
-                case MQTTMessageWrapper.commandAddDeviceR:
-                case MQTTMessageWrapper.commandRemoveDeviceR:
-                case MQTTMessageWrapper.commandSetBinaryR:
-                case MQTTMessageWrapper.commandGetBinaryR:
-                case MQTTMessageWrapper.commandGetSecureSpecR:
-                case MQTTMessageWrapper.commandSetSecureSpecR:
-                case MQTTMessageWrapper.commandSetSpecificationR:
-                case MQTTMessageWrapper.commandGetSpecificationR:
+                case RemoteAccessMsg.commandAddDeviceR:
+                case RemoteAccessMsg.commandRemoveDeviceR:
+                case RemoteAccessMsg.commandSetBinaryR:
+                case RemoteAccessMsg.commandGetBinaryR:
+                case RemoteAccessMsg.commandGetSecureSpecR:
+                case RemoteAccessMsg.commandSetSecureSpecR:
+                case RemoteAccessMsg.commandSetSpecificationR:
+                case RemoteAccessMsg.commandGetSpecificationR:
                     // fine-tuning the GUI
                     jason = new JSONObject(mqttMessage.toString());
                     // get NodeID
@@ -617,7 +620,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                     break;
 
 
-                case MQTTMessageWrapper.commandResetR:
+                case RemoteAccessMsg.commandResetR:
                 default:
                     Toast.makeText(getApplicationContext(), "Just Received a MQTT message: " + mqttMessage.toString(), Toast.LENGTH_LONG).show();
                     break;

@@ -7,8 +7,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import remote.service.verik.com.remoteaccess.MQTTMessageWrapper;
-import remote.service.verik.com.remoteaccess.R;
+import remote.service.verik.com.remoteaccess.RemoteAccessMsg;
 
 public class DeviceAEON_LABSMultilevelSensor6 extends Device {
 
@@ -111,7 +110,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device {
             if (method == null || commandinfo == null)
                 return; // do nothing
 
-            if (method.equals(MQTTMessageWrapper.commandGetSpecificationR))
+            if (method.equals(RemoteAccessMsg.commandGetSpecificationR))
             {
                 JSONObject jason_command_info = new JSONObject(commandinfo);
                 String klass = jason_command_info.getString("class");
@@ -182,7 +181,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device {
                     // TODO
 
                 }
-        }else if (method.equals(MQTTMessageWrapper.commandSetSpecificationR))
+        }else if (method.equals(RemoteAccessMsg.commandSetSpecificationR))
             {
                 JSONObject jason_command_info = new JSONObject(commandinfo);
                 String klass = jason_command_info.getString("class");

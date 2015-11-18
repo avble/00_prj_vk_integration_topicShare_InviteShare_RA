@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
@@ -22,6 +22,7 @@ import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSens
 import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor6;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
+import remote.service.verik.com.remoteaccess.model.DeviceIR_SEC_SAFETYDoorLock;
 
 public class DeviceDetailActivity extends AppCompatActivity {
 
@@ -70,11 +71,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device_dimmer.getId(), dimer_progress);
+                            message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device_dimmer.getId(), dimer_progress);
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device_dimmer.getId(), dimer_progress);
+                            message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device_dimmer.getId(), dimer_progress);
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device_dimmer.getId(), dimer_progress);
+                            message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device_dimmer.getId(), dimer_progress);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -105,11 +106,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                             value = 0;
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
+                            message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), value);
+                            message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), value);
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId(), value);
+                            message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId(), value);
 
                         boolean on = true;
                         if (value == 0)
@@ -173,11 +174,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     MqttMessage message = null;
                     try {
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -203,11 +204,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     MqttMessage message = null;
                     try {
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_HUMI, "", "");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_HUMI, "", "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_HUMI, "", "");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_HUMI, "", "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_HUMI, "", "");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_HUMI, "", "");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -233,11 +234,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     MqttMessage message = null;
                     try {
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_METER, "GET", DeviceAEON_LABSHeavyDutySmart.type_METER_POWER, "", "");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_METER, "GET", DeviceAEON_LABSHeavyDutySmart.type_METER_POWER, "", "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_METER, "GET", DeviceAEON_LABSHeavyDutySmart.type_METER_POWER, "", "");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_METER, "GET", DeviceAEON_LABSHeavyDutySmart.type_METER_POWER, "", "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_METER, "GET", DeviceAEON_LABSHeavyDutySmart.type_METER_POWER, "", "");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_METER, "GET", DeviceAEON_LABSHeavyDutySmart.type_METER_POWER, "", "");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -319,11 +320,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     MqttMessage message = null;
                     try {
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -347,11 +348,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     MqttMessage message = null;
                     try {
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -380,11 +381,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     MqttMessage message = null;
                     try {
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -409,11 +410,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     MqttMessage message = null;
                     try {
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_UV, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_UV, "2A", "1/10");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_UV, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_UV, "2A", "1/10");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_UV, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_UV, "2A", "1/10");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -450,13 +451,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                         try {
 
                             if (device.type.contentEquals("zwave"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK, value, "");
                             else if (device.type.contains("zigbee"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK, value, "");
                             else if (device.type.contains("upnp"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK, value, "");
 
                         } catch (JSONException e) {
@@ -503,13 +504,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                         try {
 
                             if (device.type.contentEquals("zwave"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(device_mutilevel.configuration_timer - 10), "");
                             else if (device.type.contains("zigbee"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(device_mutilevel.configuration_timer - 10), "");
                             else if (device.type.contains("upnp"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(device_mutilevel.configuration_timer - 10), "");
 
                         } catch (JSONException e) {
@@ -585,18 +586,17 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     String value = Integer.toHexString(configuration_report);
 
 
-
                     MqttMessage message = null;
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
 
                     } catch (JSONException e) {
@@ -644,13 +644,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
 
                     } catch (JSONException e) {
@@ -680,13 +680,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
 
                     } catch (JSONException e) {
@@ -716,13 +716,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
 
                     } catch (JSONException e) {
@@ -752,13 +752,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
 
                     } catch (JSONException e) {
@@ -788,13 +788,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
 
                     } catch (JSONException e) {
@@ -825,13 +825,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
 
                     } catch (JSONException e) {
@@ -882,13 +882,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                         try {
 
                             if (device.type.contentEquals("zwave"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
                             else if (device.type.contains("zigbee"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
                             else if (device.type.contains("upnp"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
 
                         } catch (JSONException e) {
@@ -923,8 +923,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
                             try {
 
                                 if (device.type.contentEquals("zwave"))
-                                    message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_ASSOCIATION,
-                                            "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID , "");
+                                    message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_ASSOCIATION,
+                                            "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -940,8 +940,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
                             try {
 
                                 if (device.type.contentEquals("zwave"))
-                                    message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_ASSOCIATION,
-                                            "REMOVE", DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID , "");
+                                    message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_ASSOCIATION,
+                                            "REMOVE", DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -993,19 +993,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
             }
 
 
-
-            // Configuration class
-//            device_mutilevel.viwer_cb_configuration_lock = (CheckBox)findViewById(R.id.sensor_multilevel5_cb_configuration_lock);
-//            if (device_mutilevel.viwer_cb_configuration_lock != null)
-//            {
-//                if (device_mutilevel.configuration_lock == 0)
-//                    device_mutilevel.viwer_cb_configuration_lock.setChecked(true);
-//                else
-//                    device_mutilevel.viwer_cb_configuration_lock.setChecked(false);
-//
-//            }
-
-
             device_mutilevel.viewer_seekBar_configuration_timer = (SeekBar) findViewById(R.id.sensor_multilevel5_seekbar_configuration_timer);
             //device_mutilevel.viewer_seekBar_configuration_timer.setMax(Integer.parseInt(device_mutilevel.cmd_klass_CONFIGURATION_TIMER_VALUE_OFF) - 10);
             device_mutilevel.viewer_seekBar_configuration_timer.setMax(100); //FIXME: it is just for testing
@@ -1030,11 +1017,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     MqttMessage message = null;
                     try {
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1058,11 +1045,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     MqttMessage message = null;
                     try {
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1088,11 +1075,11 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     MqttMessage message = null;
                     try {
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1118,7 +1105,7 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     MqttMessage message = null;
                     try {
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_BATTERY, "GET", "", "", "");
+                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_BATTERY, "GET", "", "", "");
                        
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1132,50 +1119,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
                 }
             });
-
-
-//            // configuration class
-//
-//            final CheckBox cb_enable_disable = (CheckBox)findViewById(R.id.sensor_multilevel5_cb_configuration_lock);
-//            if (cb_enable_disable != null)
-//            {
-//                cb_enable_disable.setOnClickListener(new View.OnClickListener() {
-//
-//                    @Override
-//                    public void onClick(View v) {
-//                        String value = DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_LOCK_VALUE_ENABLE;
-//                        if (cb_enable_disable.isChecked())
-//                            value = DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_LOCK_VALUE_DISABLE;
-//
-//                        DeviceAEON_LABSMultilevelSensor5 device_multilevel5 = (DeviceAEON_LABSMultilevelSensor5) device;
-//                        //device_multilevel5.configuration_timer = Integer.toString(timer_value);
-//
-//                        MqttMessage message = null;
-//                        try {
-//
-//                            if (device.type.contentEquals("zwave"))
-//                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
-//                                        "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_LOCK, value, "");
-//                            else if (device.type.contains("zigbee"))
-//                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
-//                                        "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_LOCK, value, "");
-//                            else if (device.type.contains("upnp"))
-//                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
-//                                        "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_LOCK, value, "");
-//
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                        try {
-//                            MainActivity.client.publish(MainActivity.topic, message);
-//                        } catch (MqttException e) {
-//                            Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-//                        }
-//
-//                    }
-//                });
-//            }
-//
 
 
             // Timer
@@ -1208,13 +1151,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                         try {
 
                             if (device.type.contentEquals("zwave"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(configuration_timer_progress - 10), "");
                             else if (device.type.contains("zigbee"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(configuration_timer_progress - 10), "");
                             else if (device.type.contains("upnp"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(configuration_timer_progress - 10), "");
 
                         } catch (JSONException e) {
@@ -1245,13 +1188,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
 
                     } catch (JSONException e) {
@@ -1283,13 +1226,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
 
                     } catch (JSONException e) {
@@ -1320,13 +1263,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
 
                     } catch (JSONException e) {
@@ -1360,13 +1303,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
 
                     } catch (JSONException e) {
@@ -1405,13 +1348,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                     try {
 
                         if (device.type.contentEquals("zwave"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("zigbee"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_PIR, value, "");
                         else if (device.type.contains("upnp"))
-                            message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_PIR, value, "");
 
                     } catch (JSONException e) {
@@ -1462,13 +1405,13 @@ public class DeviceDetailActivity extends AppCompatActivity {
                         try {
 
                             if (device.type.contentEquals("zwave"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
                             else if (device.type.contains("zigbee"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
                             else if (device.type.contains("upnp"))
-                                message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
+                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
 
                         } catch (JSONException e) {
@@ -1485,8 +1428,6 @@ public class DeviceDetailActivity extends AppCompatActivity {
 
 
             // association test
-
-
             final CheckBox cb_association_notification = (CheckBox)findViewById(R.id.sensor_multilevel5_cb_association_add_group);
             if (cb_association_notification != null)
             {
@@ -1503,8 +1444,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
                             try {
 
                                 if (device.type.contentEquals("zwave"))
-                                    message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_ASSOCIATION,
-                                            "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID , "");
+                                    message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_ASSOCIATION,
+                                            "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -1520,8 +1461,8 @@ public class DeviceDetailActivity extends AppCompatActivity {
                             try {
 
                                 if (device.type.contentEquals("zwave"))
-                                    message = MQTTMessageWrapper.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_ASSOCIATION,
-                                            "REMOVE", DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID , "");
+                                    message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_ASSOCIATION,
+                                            "REMOVE", DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -1539,6 +1480,247 @@ public class DeviceDetailActivity extends AppCompatActivity {
                 });
             }
 
+
+
+        } else if(device instanceof DeviceIR_SEC_SAFETYDoorLock) {
+
+
+            final DeviceIR_SEC_SAFETYDoorLock device_ir_doorlock = (DeviceIR_SEC_SAFETYDoorLock)device;
+
+            setContentView(R.layout.content_device_ir_sec_safety_doorlock);
+
+
+            View.OnClickListener checkbox_configuration = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String klass_cmd = "";
+                    String value = "00";
+                    CheckBox cb_tmp = (CheckBox)v;
+
+                    if (cb_tmp.isChecked())
+                        value = "FF";
+
+                    switch(v.getId()) {
+                        case R.id.sensor_ir_sec_safety_doorNlock_cb_auto_lock:
+                            klass_cmd = DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_AUTO_LOCK;
+                            break;
+                        case R.id.sensor_ir_sec_safety_doorNlock_cb_beeper:
+                            klass_cmd = DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_BEEPER;
+                            break;
+
+                        case R.id.sensor_ir_sec_safety_doorNlock_cb_lock_n_leave:
+                            klass_cmd = DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_LOCK_AND_LEAVE;
+                            break;
+
+                        case R.id.sensor_ir_sec_safety_doorNlock_cb_vacation:
+                            klass_cmd = DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_VACATION;
+                            break;
+
+                    }
+
+                    MqttMessage message = null;
+                    try {
+
+                        if (device.type.contentEquals("zwave"))
+                            message = RemoteAccessMsg.CreateSetSecureMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                                    DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_CONFIGURATION, "SET", klass_cmd, value, "");
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                }
+            };
+
+            CheckBox checkbox_door_and_lock = (CheckBox) findViewById(R.id.sensor_ir_sec_safety_doorNlock_cb_auto_lock);
+            checkbox_door_and_lock.setOnClickListener(checkbox_configuration);
+
+            CheckBox checkbox_beeper = (CheckBox) findViewById(R.id.sensor_ir_sec_safety_doorNlock_cb_beeper);
+            checkbox_beeper.setOnClickListener(checkbox_configuration);
+
+            CheckBox checkbox_lock_n_leave = (CheckBox) findViewById(R.id.sensor_ir_sec_safety_doorNlock_cb_lock_n_leave);
+            checkbox_lock_n_leave.setOnClickListener(checkbox_configuration);
+
+            CheckBox checkbox_vacation = (CheckBox) findViewById(R.id.sensor_ir_sec_safety_doorNlock_cb_vacation);
+            checkbox_vacation.setOnClickListener(checkbox_configuration);
+
+            device_ir_doorlock.viewer_et_pin_len = (EditText)findViewById(R.id.sensor_ir_sec_safety_doorNlock_et_pin_len);
+            if (device_ir_doorlock.viewer_et_pin_len != null){
+                device_ir_doorlock.viewer_et_pin_len.setText("4-8");
+            }
+
+            Button viewer_bt_pin_len_get = (Button)findViewById(R.id.sensor_ir_sec_safety_doorNlock_button_pin_len_get);
+            if (viewer_bt_pin_len_get != null)
+            {
+                viewer_bt_pin_len_get.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MqttMessage message = null;
+                        try {
+
+                            if (device.type.contentEquals("zwave"))
+                                message = RemoteAccessMsg.CreateGetSecureMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                                        DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_CONFIGURATION, "GET", DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_PIN_LENGTH, "1", "");
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                    }
+                });
+            }
+
+            Button bt_pin_len_set = (Button)findViewById(R.id.sensor_ir_sec_safety_doorNlock_button_pin_len_set);
+            if (bt_pin_len_set != null)
+            {
+                bt_pin_len_set.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String pin_len = device_ir_doorlock.viewer_et_pin_len.getText().toString();
+
+                        MqttMessage message = null;
+                        try {
+
+                            if (device.type.contentEquals("zwave"))
+                                message = RemoteAccessMsg.CreateSetSecureMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                                        DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_CONFIGURATION, "SET", DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_PIN_LENGTH,  pin_len, "");
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                    }
+                });
+            }
+
+
+            Button bt_battery_get = (Button)findViewById(R.id.sensor_ir_sec_safety_doorNlock_button_battery_get);
+            if (bt_battery_get != null)
+            {
+                bt_battery_get.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        MqttMessage message = null;
+                        try {
+
+                            if (device.type.contentEquals("zwave"))
+                                message = RemoteAccessMsg.CreateGetSecureMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                                        DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_BATTERY, "GET", "", "", "");
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                    }
+                });
+            }
+
+
+
+
+            View.OnClickListener door_lock_listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String klass_cmd = DeviceIR_SEC_SAFETYDoorLock.cmd_klass_DOOR_LOCK_insecure;
+                    CheckBox cb_tmp = (CheckBox)v;
+
+                    if (cb_tmp.isChecked())
+                        klass_cmd = DeviceIR_SEC_SAFETYDoorLock.cmd_klass_DOOR_LOCK_secure;
+
+                    MqttMessage message = null;
+                    try {
+
+                        if (device.type.contentEquals("zwave"))
+                            message = RemoteAccessMsg.CreateSetSecureMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                                    DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_DOOR_LOCK, "SET", klass_cmd, "", "");
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                }
+            };
+
+            CheckBox checkbox_door_lock = (CheckBox) findViewById(R.id.sensor_ir_sec_safety_doorNlock_cb_door_lock);
+            checkbox_door_lock.setOnClickListener(door_lock_listener);
+
+
+
+
+            View.OnClickListener association_listener = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    String klass_cmd = "REMOVE";
+                    CheckBox cb_tmp = (CheckBox)v;
+
+                    if (cb_tmp.isChecked())
+                        klass_cmd = "SET";
+
+                    MqttMessage message = null;
+                    try {
+
+                        if (device.type.contentEquals("zwave"))
+                            message = RemoteAccessMsg.CreateSetSecureMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                                    DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_DOOR_LOCK, klass_cmd, DeviceIR_SEC_SAFETYDoorLock.cmd_klass_ASSOCIATION_ONOFF_GROUP, "1", "1");
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                }
+            };
+
+            CheckBox checkbox_association = (CheckBox) findViewById(R.id.sensor_ir_sec_safety_doorNlock_cb_association_add_group);
+            checkbox_association.setOnClickListener(association_listener);
+
+
+            device_ir_doorlock.viewer_user_code_1_et_code = (EditText)findViewById(R.id.sensor_ir_sec_safety_doorNlock_et_user_code_1);
+            if (device_ir_doorlock.viewer_user_code_1_et_code != null){
+                device_ir_doorlock.viewer_user_code_1_et_code.setText("123456");
+            }
+
+            Button viewer_bt_user_code1_set = (Button)findViewById(R.id.sensor_ir_sec_safety_doorNlock_button_user_code_1_set);
+            if (viewer_bt_user_code1_set != null)
+            {
+                viewer_bt_user_code1_set.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MqttMessage message = null;
+                        try {
+
+                            if (device.type.contentEquals("zwave"))
+                                message = RemoteAccessMsg.CreateSetSecureMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+                                        DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_USER_CODE, "SET", "1" , device_ir_doorlock.getKlass_SENSOR_USER_CODE_STATE_ACCUPIED , device_ir_doorlock.viewer_user_code_1_et_code.getText().toString());
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                    }
+                });
+            }
 
 
         }
