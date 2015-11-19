@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import remote.service.verik.com.remoteaccess.model.Adapter;
 import remote.service.verik.com.remoteaccess.model.Device;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor5;
+import remote.service.verik.com.remoteaccess.model.DeviceAEOTEC_Door_Window_Sensor;
 import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor6;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
@@ -94,7 +95,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         }
     };
 
-    public static View.OnClickListener BinarySwitchButton = new View.OnClickListener(){
+    public static View.OnClickListener DeviceOnOffButton = new View.OnClickListener(){
         @Override
         public void onClick(View v) {
             Device device = (Device) v.getTag();
@@ -120,13 +121,8 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            try {
-                MainActivity.client.publish(topic, message);
-            } catch (MqttException e) {
-                Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-            }
 
-
+            MQTTWrapper.PublishRemoteAccessMsg(topic, message);
 
         }
 
@@ -303,50 +299,23 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 return true;
 
             case R.id.option_menu_remoteAccess_zwave_get_list: //Get list of menu item
-                message = null;
-                try {
-                    message = RemoteAccessMsg.CreateGetListDevicesMsg(DeviceTypeProtocol.ZWAVE);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    MainActivity.client.publish(topic, message);
-                } catch (MqttException e) {
-                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                }
-
-                return true;
-
-
-
-
             case R.id.option_menu_remoteAccess_zigbee_get_list: //Get list of menu item
+            case R.id.option_menu_remoteAccess_upnp_get_list: //Get list of menu item
+
+                DeviceTypeProtocol protocol = DeviceTypeProtocol.ZWAVE;
+
+                if (item.getItemId() == R.id.option_menu_remoteAccess_upnp_get_list)
+                    protocol = DeviceTypeProtocol.UPNP;
+                else if (item.getItemId() == R.id.option_menu_remoteAccess_zigbee_get_list)
+                    protocol = DeviceTypeProtocol.ZIGBEE;
+
                 message = null;
                 try {
-                    message = RemoteAccessMsg.CreateGetListDevicesMsg(DeviceTypeProtocol.ZIGBEE);
+                    message = RemoteAccessMsg.CreateGetListDevicesMsg(protocol);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                try {
-                    MainActivity.client.publish(topic, message);
-                } catch (MqttException e) {
-                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                }
-
-                return true;
-
-            case R.id.option_menu_remoteAccess_upnp_get_list: //Get list of menu item
-                message = null;
-                try {
-                    message = RemoteAccessMsg.CreateGetListDevicesMsg(DeviceTypeProtocol.UPNP);
-                } catch (JSONException e) {
-
-                }
-                try {
-                    MainActivity.client.publish(topic, message);
-                } catch (MqttException e) {
-                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                }
+                MQTTWrapper.PublishRemoteAccessMsg(topic, message);
 
                 return true;
 
@@ -432,22 +401,6 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 return true;
 
 
-//            case R.id.option_menu_remoteAccess_upnp_remove_device:
-//                message = null;
-//                try {
-//                    message = RemoteAccessMsg.CreateRemoveDeviceMsg(DeviceTypeProtocol.UPNP);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//                try {
-//                    MainActivity.client.publish(topic, message);
-//                } catch (MqttException e) {
-//                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-//                }
-//
-//                return true;
-
-
             case R.id.option_menu_help:
 
                 return true;
@@ -528,8 +481,10 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             return;
 
         String command = RemoteAccessMsg.getCommand(mqttMessage.toString());
+        String protocol = RemoteAccessMsg.getType(mqttMessage.toString());
 
         JSONObject jason;
+
 
         if (command != null) {
             switch (command) {
@@ -542,51 +497,71 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                     devices = new ArrayList<>();
                     adapter.clear();
 
-                    for (int i = 0; i < deviceList.length(); i++) {
-                        JSONObject device = deviceList.getJSONObject(i);
+                    if (protocol.equals("zwave")) {
 
-                        String friendlyName = (String) device.get("FriendlyName");
+                        for (int i = 0; i < deviceList.length(); i++) {
+                            JSONObject device = deviceList.getJSONObject(i);
 
-                        String ID = (String) device.get("ID");
-                        String serialNumber = (String)device.get("Serial");
+                            String friendlyName = (String) device.get("FriendlyName");
 
-                        String type = "zwave";
+                            String ID = (String) device.get("ID");
+                            String serialNumber = (String) device.get("Serial");
 
-                        Device new_device;
+                            String type = "zwave";
 
-                        if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Aeotec_Smartdimmer)
-                                || Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Smart_Dimmer) )
-                        {
-                            new_device = new DeviceGenericDimmer(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                            Device new_device;
 
-                        } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Heavy_Duty_Smart_Switch))
-                        {
-                            new_device = new DeviceAEON_LABSHeavyDutySmart(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                            if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Aeotec_Smartdimmer)
+                                    || Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Smart_Dimmer)) {
+                                new_device = new DeviceGenericDimmer(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
 
-                        } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Sensor_Multilevel_6))
-                        {
+                            } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Heavy_Duty_Smart_Switch)) {
+                                new_device = new DeviceAEON_LABSHeavyDutySmart(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
 
-                            new_device = new DeviceAEON_LABSMultilevelSensor6(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-                        }else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Sensor_Multilevel_Gen5))
-                        {
+                            } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Sensor_Multilevel_6)) {
 
-                            new_device = new DeviceAEON_LABSMultilevelSensor5(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-                        }else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_Door_Lock) == 0)
-                        {
+                                new_device = new DeviceAEON_LABSMultilevelSensor6(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                            } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Sensor_Multilevel_Gen5)) {
 
-                            new_device = new DeviceIR_SEC_SAFETYDoorLock(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                                new_device = new DeviceAEON_LABSMultilevelSensor5(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                            } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_Door_Lock) == 0) {
+
+                                new_device = new DeviceIR_SEC_SAFETYDoorLock(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                            } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_AEOTEC_Door_Window_Sensor) == 0) {
+
+                                new_device = new DeviceAEOTEC_Door_Window_Sensor(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                            } else {
+
+                                new_device = new Device(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+
+                            }
+                            new_device.serialNumber = serialNumber;
+
+                            String capabilityID = (String) device.get("Capability");
+                            new_device.setCapabilityID(capabilityID);
+                            devices.add(new_device);
+
                         }
-                        else {
+                    }else if (protocol.equals("upnp"))
+                    {
 
-                            new_device = new Device(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                        for (int i = 0; i < deviceList.length(); i++) {
+                            JSONObject device = deviceList.getJSONObject(i);
+
+                            String friendlyName = (String) device.get("FriendlyName");
+
+                            String ID = (String) device.get("RealName");
+                            String serialNumber = (String) device.get("UDN");
+
+                            String type = "upnp";
+                            Device new_device = new Device(ID, "[UPnP] " + friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                            new_device.serialNumber = serialNumber;
+
+                            devices.add(new_device);
 
                         }
-                        new_device.serialNumber = serialNumber;
 
-                        String capabilityID = (String) device.get("Capability");
-                        new_device.setCapabilityID(capabilityID);
-                        devices.add(new_device);
-
+                        Toast.makeText(getApplicationContext(), "Just Received a MQTT message: " + mqttMessage.toString(), Toast.LENGTH_LONG).show();
                     }
 
                     ListView list = (ListView) findViewById(R.id.list);

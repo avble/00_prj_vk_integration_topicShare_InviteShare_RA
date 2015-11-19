@@ -14,9 +14,10 @@ public class Device {
     // extract from manu_product.h (zwavehandler-cli modue)
 
 	public static String DEVICE_TYPE_Zwave_Door_Window_Sensor                   = "01020059"; /**/
-	public static String DEVICE_TYPE_Zwave_Door_Window_Sensor1                  = "0002001D";
-	public static String DEVICE_TYPE_Zwave_Door_Window_Sensor2                  = "07002000";/**/
-	public static String DEVICE_TYPE_Zwave_Door_Window_Sensor3                  = "00010002";/**/
+	public static String DEVICE_TYPE_Zwave_AEOTEC_Door_Window_Sensor                  = "00860002001D";
+	public static String DEVICE_TYPE_Zwave_FIBARO_Door_Window_Sensor                  = "010f07002000";/**/
+	public static String DEVICE_TYPE_Zwave_ECOLINK_Door_Window_Sensor                  = "011f00010002";/**/
+    public static String DEVICE_TYPE_Zwave_DWZ_Door_Window_Sensor                  = "014a00010002";/**/
 	public static String DEVICE_TYPE_Zwave_Sensor_Multilevel_6                  = "008601020064"; /**/
 	public static String DEVICE_TYPE_Zwave_Smart_Outlet                         = "49523031";/**/
 	public static String DEVICE_TYPE_Zwave_Smart_Dimmer                         = "006349443031";/**/
@@ -30,6 +31,10 @@ public class Device {
 	public static String DEVICE_TYPE_Zwave_Smart_Switch                         = "4F503031";/**/
 	public static String DEVICE_TYPE_Zwave_Door_Lock                            = "003b63495044";/**/
 	public static String DEVICE_TYPE_Zwave_Hue_Bulb                             = "00020002";/**/
+
+    // UPnP (WEMO) device
+    public static String DEVICE_TYPE_UPNP_WEMO_INSIGHT = "insight";
+
 
 
 //    {"00860103004E",      sizeof(HeavyDutySmartSwitch)/sizeof(config_associate_command),              HeavyDutySmartSwitch},
@@ -51,8 +56,8 @@ public class Device {
 //    {"00860002001D",      sizeof(aeotecdoorwindowsensor)/sizeof(config_associate_command),            aeotecdoorwindowsensor},
 //
 
-    // extract from manu_product.h (zwavehandler-cli modue)
 
+    // Product ID
     public static String MFG_ID_NOT_DEFINED_OR_UNDEFINED                = "FFFF"; //Notdefinedorun-defined
     public static String MFG_ID_2B_ELECTRONICS                          = "0028"; //2BElectronics
     public static String MFG_ID_2GIG_TECHNOLOGIES_INC                   = "009B"; //2gigTechnologiesInc.
@@ -241,8 +246,13 @@ public class Device {
 
 
 
+    // UPnP RealName
+    // ZWAVE ID
     private String id;
-    private String name;
+
+    //
+    private String friendlyName;
+
     private boolean turnOn;
     private boolean available;
     public String type;
@@ -253,9 +263,9 @@ public class Device {
 
     }
 
-    public Device(String id, String name, boolean turnOn, boolean available, String device_type) {
+    public Device(String id, String friendlyName, boolean turnOn, boolean available, String device_type) {
         this.id = id;
-        this.name = name;
+        this.friendlyName = friendlyName;
         this.turnOn = turnOn;
         this.available = available;
         type = "zwave";
@@ -284,7 +294,7 @@ public class Device {
     }
 
     public String getName() {
-        return name;
+        return friendlyName;
     }
 
     public boolean isTurnOn() {
@@ -299,8 +309,8 @@ public class Device {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String friendlyName) {
+        this.friendlyName = friendlyName;
     }
 
     public void setTurnOn(boolean turnOn) {
@@ -315,7 +325,7 @@ public class Device {
     public String toString() {
         return "Device{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
+                ", friendlyName='" + friendlyName + '\'' +
                 ", turnOn=" + turnOn +
                 ", available=" + available +
                 '}';

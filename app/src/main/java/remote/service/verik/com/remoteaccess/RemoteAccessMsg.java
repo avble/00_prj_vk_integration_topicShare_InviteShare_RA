@@ -357,6 +357,19 @@ public class RemoteAccessMsg {
     }
 
 
+    public static String getType(String command) {
+        try {
+            JSONObject jason = new JSONObject(command);
+            String type = (String) jason.get("type");
+            return type;
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     public static String getuuid(String command)
     {
         try {

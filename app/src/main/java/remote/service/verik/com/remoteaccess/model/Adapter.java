@@ -35,7 +35,7 @@ public class Adapter extends ArrayAdapter<Device> {
 
         ImageView bulb = (ImageView) convertView.findViewById(R.id.bulb);
 
-        bulb.setOnClickListener(MainActivity.BinarySwitchButton);
+        bulb.setOnClickListener(MainActivity.DeviceOnOffButton);
         bulb.setTag(device);
 
         TextView tw = (TextView)convertView.findViewById(R.id.device_name);
