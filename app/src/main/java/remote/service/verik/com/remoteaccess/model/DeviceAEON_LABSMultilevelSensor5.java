@@ -215,13 +215,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                     }
 
                 }
-
-
-
             }
-
-
-
 
         }
         catch (JSONException e) {
