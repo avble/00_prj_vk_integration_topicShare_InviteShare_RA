@@ -1,9 +1,16 @@
 package remote.service.verik.com.remoteaccess;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.ActionBar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -25,12 +32,72 @@ import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSens
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
 import remote.service.verik.com.remoteaccess.model.DeviceIR_SEC_SAFETYDoorLock;
 
-public class DeviceDetailActivity extends AppCompatActivity {
+public class DeviceDetailActivity extends FragmentActivity implements ActionBar.TabListener {
 
     public static Device device;
+
+    AppSectionsPagerAdapter mAppSectionsPagerAdapter;
+
+    ViewPager mViewPager;
+
+
+
+
+    @Override
+    public void onTabSelected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
+        mViewPager.setCurrentItem(tab.getPosition());
+
+    }
+
+    @Override
+    public void onTabUnselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
+
+    }
+
+    @Override
+    public void onTabReselected(ActionBar.Tab tab, android.app.FragmentTransaction ft) {
+
+    }
+
+
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
+     * sections of the app.
+     */
+    public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public AppSectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+
+            return device.getFragment(i);
+        }
+
+        @Override
+        public int getCount() {
+            return device.getFragmentCount();
+
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return device.getFragmentTitle(position);
+            //return "Section " + (position + 1);
+        }
+    }
+
+
+
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         if (device instanceof DeviceGenericDimmer) {
             setContentView(R.layout.content_device_generic_dimmer);
@@ -256,710 +323,640 @@ public class DeviceDetailActivity extends AppCompatActivity {
         } else if (device instanceof DeviceAEON_LABSMultilevelSensor6) {
 
 
-            final DeviceAEON_LABSMultilevelSensor6 device_mutilevel = (DeviceAEON_LABSMultilevelSensor6)device;
-
-            setContentView(R.layout.content_device_generic_sensor_multilevel6);
-
-            device_mutilevel.viewer_tw_multilevel6_humi = (TextView)findViewById(R.id.sensor_multilevel6_tw_humi);
-            if (device_mutilevel.viewer_tw_multilevel6_humi != null)
-            {
-                device_mutilevel.viewer_tw_multilevel6_humi.setText(Double.toString(device_mutilevel.multilevel_sensor_humi));
-            }
-
-            device_mutilevel.viewer_tw_multilevel6_lumi = (TextView)findViewById(R.id.sensor_multilevel6_tw_lumi);
-            if (device_mutilevel.viewer_tw_multilevel6_lumi != null)
-            {
-                device_mutilevel.viewer_tw_multilevel6_lumi.setText(Double.toString(device_mutilevel.multilevel_sensor_lumi));
-            }
-
-            device_mutilevel.viewer_tw_multilevel6_temp = (TextView)findViewById(R.id.sensor_multilevel6_tw_temp);
-            if (device_mutilevel.viewer_tw_multilevel6_temp != null)
-            {
-                device_mutilevel.viewer_tw_multilevel6_temp.setText(Double.toString(device_mutilevel.multilevel_sensor_temp));
-            }
+            setContentView(R.layout.device_detail);
 
 
-            device_mutilevel.viewer_tw_multilevel6_uv = (TextView)findViewById(R.id.sensor_multilevel6_tw_ultra_violet);
-            if (device_mutilevel.viewer_tw_multilevel6_uv != null)
-            {
-                device_mutilevel.viewer_tw_multilevel6_uv.setText(Double.toString(device_mutilevel.multilevel_sensor_uv));
-            }
+            // Create the adapter that will return a fragment for each of the three primary sections
+            // of the app.
+            mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(getSupportFragmentManager());
 
 
-            // Configuration class
-            device_mutilevel.viwer_cb_configuration_lock = (CheckBox)findViewById(R.id.sensor_multilevel6_cb_configuration_lock);
-            if (device_mutilevel.viwer_cb_configuration_lock != null)
-            {
-                if (device_mutilevel.configuration_lock == 0)
-                    device_mutilevel.viwer_cb_configuration_lock.setChecked(true);
-                else
-                    device_mutilevel.viwer_cb_configuration_lock.setChecked(false);
+            // Set up the action bar.
+            final ActionBar actionBar = getActionBar();
 
-            }
+            // Specify that the Home/Up button should not be enabled, since there is no hierarchical
+            // parent.
+            actionBar.setHomeButtonEnabled(false);
 
-            device_mutilevel.viewer_seekBar_configuration_timer = (SeekBar) findViewById(R.id.sensor_multilevel6_seekbar_configuration_timer);
-            //device_mutilevel.viewer_seekBar_configuration_timer.setMax(Integer.parseInt(device_mutilevel.cmd_klass_CONFIGURATION_TIMER_VALUE_OFF) - 10);
-            device_mutilevel.viewer_seekBar_configuration_timer.setMax(100); //FIXME: it is just for testing
-            device_mutilevel.viewer_seekBar_configuration_timer.setProgress(device_mutilevel.configuration_timer - 10);
+            // Specify that we will be displaying tabs in the action bar.
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-
-
-
-
-            TextView sensor_multilevel6_device_name = (TextView) findViewById(R.id.sensor_multilevel6_device_name);
-            sensor_multilevel6_device_name.setText(device.getName());
-
-
-
-
-            Button button_temp = (Button) findViewById(R.id.sensor_multilevel6_button_temp);
-
-            button_temp.setOnClickListener(new View.OnClickListener() {
+            // Set up the ViewPager, attaching the adapter and setting up a listener for when the
+            // user swipes between sections.
+            mViewPager = (ViewPager) findViewById(R.id.pager);
+            mViewPager.setAdapter(mAppSectionsPagerAdapter);
+            mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
                 @Override
-                public void onClick(View v) {
-
-                    MqttMessage message = null;
-                    try {
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-
-                }
-            });
-
-            Button button_humi = (Button) findViewById(R.id.sensor_multilevel6_button_humi);
-
-            button_humi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    MqttMessage message = null;
-                    try {
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-
+                public void onPageSelected(int position) {
+                    // When swiping between different app sections, select the corresponding tab.
+                    // We can also use ActionBar.Tab#select() to do this if we have a reference to the
+                    // Tab.
+                    actionBar.setSelectedNavigationItem(position);
                 }
             });
 
 
 
-
-
-
-            Button button_lumi = (Button) findViewById(R.id.sensor_multilevel6_button_lumi);
-
-            button_lumi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    MqttMessage message = null;
-                    try {
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-
-                }
-            });
-
-
-            Button button_violet = (Button) findViewById(R.id.sensor_multilevel6_button_ultra_violet);
-
-            button_violet.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    MqttMessage message = null;
-                    try {
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_UV, "2A", "1/10");
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_UV, "2A", "1/10");
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_UV, "2A", "1/10");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-
-                }
-            });
-
-
-            // configuration class
-
-
-            final CheckBox cb_enable_disable = (CheckBox)findViewById(R.id.sensor_multilevel6_cb_configuration_lock);
-            if (cb_enable_disable != null)
-            {
-                cb_enable_disable.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-                        String value = DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK_VALUE_ENABLE;
-                        if (cb_enable_disable.isChecked())
-                            value = DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK_VALUE_DISABLE;
-
-                        DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-                        //device_multilevel6.configuration_timer = Integer.toString(timer_value);
-
-                        MqttMessage message = null;
-                        try {
-
-                            if (device.type.contentEquals("zwave"))
-                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK, value, "");
-                            else if (device.type.contains("zigbee"))
-                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK, value, "");
-                            else if (device.type.contains("upnp"))
-                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK, value, "");
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            MainActivity.client.publish(MainActivity.topic, message);
-                        } catch (MqttException e) {
-                            Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                        }
-
-                    }
-                });
+            // For each of the sections in the app, add a tab to the action bar.
+            for (int i = 0; i < mAppSectionsPagerAdapter.getCount(); i++) {
+                // Create a tab with text corresponding to the page title defined by the adapter.
+                // Also specify this Activity object, which implements the TabListener interface, as the
+                // listener for when this tab is selected.
+                actionBar.addTab(
+                        actionBar.newTab()
+                                .setText(mAppSectionsPagerAdapter.getPageTitle(i))
+                                .setTabListener(this));
             }
 
 
-
-            // Timer
-
-            if (device_mutilevel.viewer_seekBar_configuration_timer != null) {
-                device_mutilevel.viewer_seekBar_configuration_timer.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-                    int configuration_timer_progress = device_mutilevel.configuration_timer - 10;
-
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-                        configuration_timer_progress = progress;
-
-
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-
-                        MqttMessage message = null;
-                        device_mutilevel.configuration_timer  = configuration_timer_progress;
-
-                        try {
-
-                            if (device.type.contentEquals("zwave"))
-                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(device_mutilevel.configuration_timer - 10), "");
-                            else if (device.type.contains("zigbee"))
-                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(device_mutilevel.configuration_timer - 10), "");
-                            else if (device.type.contains("upnp"))
-                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(device_mutilevel.configuration_timer - 10), "");
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            MainActivity.client.publish(MainActivity.topic, message);
-                        } catch (MqttException e) {
-                            Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                        }
-
-
-                    }
-                });
-            }
-
-
-            View.OnClickListener checkbox_report_configuration = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-                    CheckBox cb_tmp = (CheckBox)v;
-
-                    int configuration_report = device_multilevel6.configuration_report;
-
-                    switch(v.getId()) {
-                        case R.id.sensor_multilevel6_cb_temperature:
-                            if (cb_tmp.isChecked()) {
-                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_TEMP, 16);
-                            }else {
-                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_TEMP, 16);
-                            }
-                            break;
-
-                        case R.id.sensor_multilevel6_cb_battery:
-                            if (cb_tmp.isChecked()) {
-                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_BATTERY, 16);
-                            }else {
-                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_BATTERY, 16);
-                            }
-
-                            break;
-
-                        case R.id.sensor_multilevel6_cb_luminance:
-                            if (cb_tmp.isChecked()) {
-                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_LUMI, 16);
-                            }else {
-                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_LUMI, 16);
-                            }
-
-                            break;
-
-                        case R.id.sensor_multilevel6_cb_ultra_violet:
-                            if (cb_tmp.isChecked()) {
-                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_ULTRA, 16);
-                            }else {
-                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_ULTRA, 16);
-                            }
-                            break;
-
-                        case R.id.sensor_multilevel6_cb_humidity:
-                            if (cb_tmp.isChecked()) {
-                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_HUMI, 16);
-                            }else {
-                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_HUMI, 16);
-                            }
-                            break;
-
-                    }
-
-                    device_multilevel6.configuration_report = configuration_report;
-
-                    String value = Integer.toHexString(configuration_report);
-
-
-                    MqttMessage message = null;
-                    try {
-
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-                }
-            };
-
-
-            CheckBox checkbox_report_temp = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_temperature);
-            checkbox_report_temp.setOnClickListener(checkbox_report_configuration);
-
-            CheckBox checkbox_report_humi = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_humidity);
-            checkbox_report_humi.setOnClickListener(checkbox_report_configuration);
-
-            CheckBox checkbox_report_uv = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_ultra_violet);
-            checkbox_report_uv.setOnClickListener(checkbox_report_configuration);
-
-            CheckBox checkbox_report_battery = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_battery);
-            checkbox_report_battery.setOnClickListener(checkbox_report_configuration);
-
-            CheckBox checkbox_report_lum = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_luminance);
-            checkbox_report_lum.setOnClickListener(checkbox_report_configuration);
-
-
-
-            // Configuration class, Motion command class
-            final RadioButton radio_button_motion_level1 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level1);
-            radio_button_motion_level1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-
-                    String value = "00";
-                    if (radio_button_motion_level1.isChecked())
-                        value = "1";
-
-                    MqttMessage message = null;
-                    try {
-
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-                }
-            });
-
-
-            final RadioButton radio_button_motion_level2 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level2);
-            radio_button_motion_level2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-
-                    String value = "00";
-                    if (radio_button_motion_level2.isChecked())
-                        value = "2";
-
-                    MqttMessage message = null;
-                    try {
-
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-                }
-            });
-
-
-            final RadioButton radio_button_motion_level3 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level3);
-            radio_button_motion_level3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-
-                    String value = "00";
-                    if (radio_button_motion_level3.isChecked())
-                        value = "3";
-
-                    MqttMessage message = null;
-                    try {
-
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-                }
-            });
-
-
-            final RadioButton radio_button_motion_level4 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level4);
-            radio_button_motion_level4.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-
-                    String value = "00";
-                    if (radio_button_motion_level4.isChecked())
-                        value = "4";
-
-                    MqttMessage message = null;
-                    try {
-
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-                }
-            });
-
-
-            final RadioButton radio_button_motion_level5 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level5);
-            radio_button_motion_level5.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-
-                    String value = "00";
-                    if (radio_button_motion_level5.isChecked())
-                        value = "5";
-
-                    MqttMessage message = null;
-                    try {
-
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-                }
-            });
-
-            RadioButton radio_button_motion_disable = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_disable);
-            radio_button_motion_disable.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-
-                    RadioButton radio_button_temp = (RadioButton)v;
-
-                    String value = "00";
-                    if (radio_button_temp.isChecked())
-                        value = "00";
-
-                    MqttMessage message = null;
-                    try {
-
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
-
-                }
-            });
-
-
-            // Timer
-            SeekBar seek_bar_auto_timer = (SeekBar) findViewById(R.id.sensor_multilevel6_seekbar_auto_timer);
-            seek_bar_auto_timer.setMax(2678400 - 10);
-            if (seek_bar_auto_timer != null) {
-                seek_bar_auto_timer.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-
-                    int progress_auto_timer = 0;
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-
-
-                        progress_auto_timer = progress;
-
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-
-                        DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-                        progress_auto_timer = 15;
-
-                        device_multilevel6.configuration_auto_timer = progress_auto_timer;
-                        //Log.d("DEBUG", )
-
-                        MqttMessage message = null;
-                        try {
-
-                            if (device.type.contentEquals("zwave"))
-                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
-                            else if (device.type.contains("zigbee"))
-                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
-                            else if (device.type.contains("upnp"))
-                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        try {
-                            MainActivity.client.publish(MainActivity.topic, message);
-                        } catch (MqttException e) {
-                            Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                        }
-                    }
-                });
-            }
-
-
-            // association test
-
-
-            final CheckBox cb_association_notification = (CheckBox)findViewById(R.id.sensor_multilevel6_cb_association_add_group);
-            if (cb_association_notification != null)
-            {
-                cb_association_notification.setOnClickListener(new View.OnClickListener() {
-
-                    @Override
-                    public void onClick(View v) {
-
-                        DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
-
-                        if (cb_association_notification.isChecked()){
-
-                            MqttMessage message = null;
-                            try {
-
-                                if (device.type.contentEquals("zwave"))
-                                    message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_ASSOCIATION,
-                                            "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                MainActivity.client.publish(MainActivity.topic, message);
-                            } catch (MqttException e) {
-                                Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                            }
-                        }else
-                        {
-                            MqttMessage message = null;
-                            try {
-
-                                if (device.type.contentEquals("zwave"))
-                                    message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_ASSOCIATION,
-                                            "REMOVE", DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            try {
-                                MainActivity.client.publish(MainActivity.topic, message);
-                            } catch (MqttException e) {
-                                Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                            }
-
-
-                        }
-
-                    }
-                });
-            }
-
+//
+//
+//            final DeviceAEON_LABSMultilevelSensor6 device_mutilevel = (DeviceAEON_LABSMultilevelSensor6)device;
+//
+//            setContentView(R.layout.content_device_generic_sensor_multilevel6);
+//
+//            device_mutilevel.viewer_tw_multilevel6_humi = (TextView)findViewById(R.id.sensor_multilevel6_tw_humi);
+//            if (device_mutilevel.viewer_tw_multilevel6_humi != null)
+//            {
+//                device_mutilevel.viewer_tw_multilevel6_humi.setText(Double.toString(device_mutilevel.multilevel_sensor_humi));
+//            }
+//
+//            device_mutilevel.viewer_tw_multilevel6_lumi = (TextView)findViewById(R.id.sensor_multilevel6_tw_lumi);
+//            if (device_mutilevel.viewer_tw_multilevel6_lumi != null)
+//            {
+//                device_mutilevel.viewer_tw_multilevel6_lumi.setText(Double.toString(device_mutilevel.multilevel_sensor_lumi));
+//            }
+//
+//            device_mutilevel.viewer_tw_multilevel6_temp = (TextView)findViewById(R.id.sensor_multilevel6_tw_temp);
+//            if (device_mutilevel.viewer_tw_multilevel6_temp != null)
+//            {
+//                device_mutilevel.viewer_tw_multilevel6_temp.setText(Double.toString(device_mutilevel.multilevel_sensor_temp));
+//            }
+//
+//
+//            device_mutilevel.viewer_tw_multilevel6_uv = (TextView)findViewById(R.id.sensor_multilevel6_tw_ultra_violet);
+//            if (device_mutilevel.viewer_tw_multilevel6_uv != null)
+//            {
+//                device_mutilevel.viewer_tw_multilevel6_uv.setText(Double.toString(device_mutilevel.multilevel_sensor_uv));
+//            }
+//
+//
+//            // Configuration class
+//            device_mutilevel.viwer_cb_configuration_lock = (CheckBox)findViewById(R.id.sensor_multilevel6_cb_configuration_lock);
+//            if (device_mutilevel.viwer_cb_configuration_lock != null)
+//            {
+//                if (device_mutilevel.configuration_lock == 0)
+//                    device_mutilevel.viwer_cb_configuration_lock.setChecked(true);
+//                else
+//                    device_mutilevel.viwer_cb_configuration_lock.setChecked(false);
+//
+//            }
+//
+//            device_mutilevel.viewer_seekBar_configuration_timer = (SeekBar) findViewById(R.id.sensor_multilevel6_seekbar_configuration_timer);
+//            //device_mutilevel.viewer_seekBar_configuration_timer.setMax(Integer.parseInt(device_mutilevel.cmd_klass_CONFIGURATION_TIMER_VALUE_OFF) - 10);
+//            device_mutilevel.viewer_seekBar_configuration_timer.setMax(100); //FIXME: it is just for testing
+//            device_mutilevel.viewer_seekBar_configuration_timer.setProgress(device_mutilevel.configuration_timer - 10);
+//
+//
+//
+//
+//
+//            TextView sensor_multilevel6_device_name = (TextView) findViewById(R.id.sensor_multilevel6_device_name);
+//            sensor_multilevel6_device_name.setText(device.getName());
+//
+//
+//
+
+//
+//            // configuration class
+//
+//
+//            final CheckBox cb_enable_disable = (CheckBox)findViewById(R.id.sensor_multilevel6_cb_configuration_lock);
+//            if (cb_enable_disable != null)
+//            {
+//                cb_enable_disable.setOnClickListener(new View.OnClickListener() {
+//
+//                    @Override
+//                    public void onClick(View v) {
+//                        String value = DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK_VALUE_ENABLE;
+//                        if (cb_enable_disable.isChecked())
+//                            value = DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK_VALUE_DISABLE;
+//
+//                        DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+//                        //device_multilevel6.configuration_timer = Integer.toString(timer_value);
+//
+//                        MqttMessage message = null;
+//                        try {
+//
+//                            if (device.type.contentEquals("zwave"))
+//                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+//                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK, value, "");
+//                            else if (device.type.contains("zigbee"))
+//                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+//                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK, value, "");
+//                            else if (device.type.contains("upnp"))
+//                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+//                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK, value, "");
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                        try {
+//                            MainActivity.client.publish(MainActivity.topic, message);
+//                        } catch (MqttException e) {
+//                            Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                        }
+//
+//                    }
+//                });
+//            }
+//
+//
+//
+//            // Timer
+//
+//            if (device_mutilevel.viewer_seekBar_configuration_timer != null) {
+//                device_mutilevel.viewer_seekBar_configuration_timer.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+//
+//                    int configuration_timer_progress = device_mutilevel.configuration_timer - 10;
+//
+//                    @Override
+//                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//
+//                        configuration_timer_progress = progress;
+//
+//
+//                    }
+//
+//                    @Override
+//                    public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//                        MqttMessage message = null;
+//                        device_mutilevel.configuration_timer  = configuration_timer_progress;
+//
+//                        try {
+//
+//                            if (device.type.contentEquals("zwave"))
+//                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+//                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(device_mutilevel.configuration_timer - 10), "");
+//                            else if (device.type.contains("zigbee"))
+//                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+//                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(device_mutilevel.configuration_timer - 10), "");
+//                            else if (device.type.contains("upnp"))
+//                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+//                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(device_mutilevel.configuration_timer - 10), "");
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                        try {
+//                            MainActivity.client.publish(MainActivity.topic, message);
+//                        } catch (MqttException e) {
+//                            Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                        }
+//
+//
+//                    }
+//                });
+//            }
+//
+//
+//            View.OnClickListener checkbox_report_configuration = new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+//                    CheckBox cb_tmp = (CheckBox)v;
+//
+//                    int configuration_report = device_multilevel6.configuration_report;
+//
+//                    switch(v.getId()) {
+//                        case R.id.sensor_multilevel6_cb_temperature:
+//                            if (cb_tmp.isChecked()) {
+//                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_TEMP, 16);
+//                            }else {
+//                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_TEMP, 16);
+//                            }
+//                            break;
+//
+//                        case R.id.sensor_multilevel6_cb_battery:
+//                            if (cb_tmp.isChecked()) {
+//                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_BATTERY, 16);
+//                            }else {
+//                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_BATTERY, 16);
+//                            }
+//
+//                            break;
+//
+//                        case R.id.sensor_multilevel6_cb_luminance:
+//                            if (cb_tmp.isChecked()) {
+//                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_LUMI, 16);
+//                            }else {
+//                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_LUMI, 16);
+//                            }
+//
+//                            break;
+//
+//                        case R.id.sensor_multilevel6_cb_ultra_violet:
+//                            if (cb_tmp.isChecked()) {
+//                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_ULTRA, 16);
+//                            }else {
+//                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_ULTRA, 16);
+//                            }
+//                            break;
+//
+//                        case R.id.sensor_multilevel6_cb_humidity:
+//                            if (cb_tmp.isChecked()) {
+//                                configuration_report = configuration_report | Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_HUMI, 16);
+//                            }else {
+//                                configuration_report = configuration_report & ~Integer.parseInt(device_multilevel6.cmd_klass_CONFIGURATION_REPORT_VALUE_HUMI, 16);
+//                            }
+//                            break;
+//
+//                    }
+//
+//                    device_multilevel6.configuration_report = configuration_report;
+//
+//                    String value = Integer.toHexString(configuration_report);
+//
+//
+//                    MqttMessage message = null;
+//                    try {
+//
+//                        if (device.type.contentEquals("zwave"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
+//                        else if (device.type.contains("zigbee"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
+//                        else if (device.type.contains("upnp"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    try {
+//                        MainActivity.client.publish(MainActivity.topic, message);
+//                    } catch (MqttException e) {
+//                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                    }
+//
+//                }
+//            };
+//
+//
+//            CheckBox checkbox_report_temp = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_temperature);
+//            checkbox_report_temp.setOnClickListener(checkbox_report_configuration);
+//
+//            CheckBox checkbox_report_humi = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_humidity);
+//            checkbox_report_humi.setOnClickListener(checkbox_report_configuration);
+//
+//            CheckBox checkbox_report_uv = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_ultra_violet);
+//            checkbox_report_uv.setOnClickListener(checkbox_report_configuration);
+//
+//            CheckBox checkbox_report_battery = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_battery);
+//            checkbox_report_battery.setOnClickListener(checkbox_report_configuration);
+//
+//            CheckBox checkbox_report_lum = (CheckBox) findViewById(R.id.sensor_multilevel6_cb_luminance);
+//            checkbox_report_lum.setOnClickListener(checkbox_report_configuration);
+//
+//
+//
+//            // Configuration class, Motion command class
+//            final RadioButton radio_button_motion_level1 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level1);
+//            radio_button_motion_level1.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+//
+//                    String value = "00";
+//                    if (radio_button_motion_level1.isChecked())
+//                        value = "1";
+//
+//                    MqttMessage message = null;
+//                    try {
+//
+//                        if (device.type.contentEquals("zwave"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//                        else if (device.type.contains("zigbee"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//                        else if (device.type.contains("upnp"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    try {
+//                        MainActivity.client.publish(MainActivity.topic, message);
+//                    } catch (MqttException e) {
+//                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                    }
+//
+//                }
+//            });
+//
+//
+//            final RadioButton radio_button_motion_level2 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level2);
+//            radio_button_motion_level2.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+//
+//                    String value = "00";
+//                    if (radio_button_motion_level2.isChecked())
+//                        value = "2";
+//
+//                    MqttMessage message = null;
+//                    try {
+//
+//                        if (device.type.contentEquals("zwave"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//                        else if (device.type.contains("zigbee"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//                        else if (device.type.contains("upnp"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    try {
+//                        MainActivity.client.publish(MainActivity.topic, message);
+//                    } catch (MqttException e) {
+//                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                    }
+//
+//                }
+//            });
+//
+//
+//            final RadioButton radio_button_motion_level3 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level3);
+//            radio_button_motion_level3.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+//
+//                    String value = "00";
+//                    if (radio_button_motion_level3.isChecked())
+//                        value = "3";
+//
+//                    MqttMessage message = null;
+//                    try {
+//
+//                        if (device.type.contentEquals("zwave"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//                        else if (device.type.contains("zigbee"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//                        else if (device.type.contains("upnp"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    try {
+//                        MainActivity.client.publish(MainActivity.topic, message);
+//                    } catch (MqttException e) {
+//                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                    }
+//
+//                }
+//            });
+//
+//
+//            final RadioButton radio_button_motion_level4 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level4);
+//            radio_button_motion_level4.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+//
+//                    String value = "00";
+//                    if (radio_button_motion_level4.isChecked())
+//                        value = "4";
+//
+//                    MqttMessage message = null;
+//                    try {
+//
+//                        if (device.type.contentEquals("zwave"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//                        else if (device.type.contains("zigbee"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//                        else if (device.type.contains("upnp"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    try {
+//                        MainActivity.client.publish(MainActivity.topic, message);
+//                    } catch (MqttException e) {
+//                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                    }
+//
+//                }
+//            });
+//
+//
+//            final RadioButton radio_button_motion_level5 = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_level5);
+//            radio_button_motion_level5.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+//
+//                    String value = "00";
+//                    if (radio_button_motion_level5.isChecked())
+//                        value = "5";
+//
+//                    MqttMessage message = null;
+//                    try {
+//
+//                        if (device.type.contentEquals("zwave"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//                        else if (device.type.contains("zigbee"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//                        else if (device.type.contains("upnp"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    try {
+//                        MainActivity.client.publish(MainActivity.topic, message);
+//                    } catch (MqttException e) {
+//                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                    }
+//
+//                }
+//            });
+//
+//            RadioButton radio_button_motion_disable = (RadioButton) findViewById(R.id.sensor_multilevel6_radio_motion_disable);
+//            radio_button_motion_disable.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+//
+//                    RadioButton radio_button_temp = (RadioButton)v;
+//
+//                    String value = "00";
+//                    if (radio_button_temp.isChecked())
+//                        value = "00";
+//
+//                    MqttMessage message = null;
+//                    try {
+//
+//                        if (device.type.contentEquals("zwave"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//                        else if (device.type.contains("zigbee"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//                        else if (device.type.contains("upnp"))
+//                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(),
+//                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    try {
+//                        MainActivity.client.publish(MainActivity.topic, message);
+//                    } catch (MqttException e) {
+//                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                    }
+//
+//                }
+//            });
+//
+//
+//            // Timer
+//            SeekBar seek_bar_auto_timer = (SeekBar) findViewById(R.id.sensor_multilevel6_seekbar_auto_timer);
+//            seek_bar_auto_timer.setMax(2678400 - 10);
+//            if (seek_bar_auto_timer != null) {
+//                seek_bar_auto_timer.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+//
+//
+//                    int progress_auto_timer = 0;
+//                    @Override
+//                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//
+//
+//
+//                        progress_auto_timer = progress;
+//
+//                    }
+//
+//                    @Override
+//                    public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//                        DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+//                        progress_auto_timer = 15;
+//
+//                        device_multilevel6.configuration_auto_timer = progress_auto_timer;
+//                        //Log.d("DEBUG", )
+//
+//                        MqttMessage message = null;
+//                        try {
+//
+//                            if (device.type.contentEquals("zwave"))
+//                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+//                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
+//                            else if (device.type.contains("zigbee"))
+//                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+//                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
+//                            else if (device.type.contains("upnp"))
+//                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.UPNP, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
+//                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                        try {
+//                            MainActivity.client.publish(MainActivity.topic, message);
+//                        } catch (MqttException e) {
+//                            Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                        }
+//                    }
+//                });
+//            }
+//
+//
+//            // association test
+//
+//
+//            final CheckBox cb_association_notification = (CheckBox)findViewById(R.id.sensor_multilevel6_cb_association_add_group);
+//            if (cb_association_notification != null)
+//            {
+//                cb_association_notification.setOnClickListener(new View.OnClickListener() {
+//
+//                    @Override
+//                    public void onClick(View v) {
+//
+//                        DeviceAEON_LABSMultilevelSensor6 device_multilevel6 = (DeviceAEON_LABSMultilevelSensor6) device;
+//
+//                        if (cb_association_notification.isChecked()){
+//
+//                            MqttMessage message = null;
+//                            try {
+//
+//                                if (device.type.contentEquals("zwave"))
+//                                    message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_ASSOCIATION,
+//                                            "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
+//
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                            try {
+//                                MainActivity.client.publish(MainActivity.topic, message);
+//                            } catch (MqttException e) {
+//                                Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                            }
+//                        }else
+//                        {
+//                            MqttMessage message = null;
+//                            try {
+//
+//                                if (device.type.contentEquals("zwave"))
+//                                    message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_ASSOCIATION,
+//                                            "REMOVE", DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
+//
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            }
+//                            try {
+//                                MainActivity.client.publish(MainActivity.topic, message);
+//                            } catch (MqttException e) {
+//                                Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
+//                            }
+//
+//
+//                        }
+//
+//                    }
+//                });
+//            }
+//
 
 
         } else if (device instanceof DeviceAEON_LABSMultilevelSensor5) {

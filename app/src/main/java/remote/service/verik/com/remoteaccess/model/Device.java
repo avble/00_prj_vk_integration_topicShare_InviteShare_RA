@@ -1,6 +1,9 @@
 package remote.service.verik.com.remoteaccess.model;
 
+import android.support.v4.app.Fragment;
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
 
 import remote.service.verik.com.remoteaccess.DeviceDetailActivity;
@@ -359,4 +362,79 @@ public class Device {
     }
 
 
+
+    // methods regarding to display
+    public int getFragmentCount()
+    {
+        return 0;
+
+    }
+
+    public Fragment getFragment(int index)
+    {
+        return null;
+    }
+
+
+    ///
+    public CharSequence getFragmentTitle(int position)
+    {
+
+        return "";
+
+    }
+
+
+
+    /**
+     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
+     * sections of the app.
+     */
+    public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
+
+        public AppSectionsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            return null;
+//
+//            return Device. this.getFragment(i);
+//
+//            switch (i) {
+//                case 0:
+//                    // The first section of the app is the most interesting -- it offers
+//                    // a launchpad into the other demonstrations in this example application.
+//                    //return new LaunchpadSectionFragment();
+//
+//                default:
+//                    // The other sections of the app are dummy placeholders.
+//                    Fragment fragment = new DummySectionFragment();
+//                    Bundle args = new Bundle();
+//                    args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
+//                    fragment.setArguments(args);
+//                    return fragment;
+//            }
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Section " + (position + 1);
+        }
+    }
+
+
+
+
 }
+
+
+
+
+

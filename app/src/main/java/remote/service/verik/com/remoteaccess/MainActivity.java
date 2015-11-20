@@ -48,6 +48,8 @@ import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSens
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
 import remote.service.verik.com.remoteaccess.model.DeviceIR_SEC_SAFETYDoorLock;
 
+import remote.service.verik.com.remoteaccess.DeviceDetailActivity;
+
 
 public class MainActivity extends ActionBarActivity implements View.OnCreateContextMenuListener, MqttCallback, IMqttActionListener, httpWrapperInterface {
 
@@ -70,7 +72,6 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
     public static String share_topic = "topic";
     public static String share_pin = "pincode";
     public static String share_key = "key";
-
 
 
     // MQTT related data member
@@ -475,6 +476,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
 
         Log.d(TAG,"Received data from topic: "+topic+", Mqtt message: "+mqttMessage.toString());
+
 
 
         if (RemoteAccessMsg.isMyMessage(mqttMessage.toString()))
