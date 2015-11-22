@@ -31,6 +31,7 @@ import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONArray;
@@ -79,10 +80,13 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
     // Should remove either of them
 
     public static MqttAndroidClient client;
-    private String mqttSRV = "52.88.81.183:1883";
+    //private String mqttSRV = "52.88.81.183:1883";
+
+    private String mqttSRV = "tcp://192.168.0.108:1883";
+
     public static String topic = "/VEriK/topic01234567890";
     public static final String TAG = "MQTT";
-    public static final String URI = "tcp://52.88.81.183:1883";
+    //public static final String URI = "tcp://52.88.81.183:1883";
     public static final String CLIENT_ID = "Android-01";
 
 
@@ -225,12 +229,20 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         Log.d(TAG,"Start to connect to MQTT server.");
         //connect to server
         try {
-            client  = new MqttAndroidClient(this,URI,CLIENT_ID);
+
+            client  = new MqttAndroidClient(this,mqttSRV, CLIENT_ID );
+
+            MqttConnectOptions conOpt = new MqttConnectOptions();
+
+            conOpt.setCleanSession(false);
+            conOpt.setConnectionTimeout(1000);
+            conOpt.setKeepAliveInterval(10);
+
             client.setCallback(this);
             //connect to server
-            client.connect(null,this);
+            client.connect(conOpt,this);
         } catch (MqttException e) {
-            Log.d(TAG, "Error when connect to server " + URI + ", error code:  " + e.getReasonCode());
+            Log.d(TAG, "Error when connect to server " + mqttSRV + ", error code:  " + e.getReasonCode());
         }
 
         // Alljoyn initialzation
@@ -290,6 +302,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 return true;
 
             case R.id.option_menu_setting:
+
                 Intent intent1 = new Intent(this, SettingActivity.class);
                 intent1.putExtra(share_invite_srv, inviteSRV);
                 intent1.putExtra(share_mqtt_srv, mqttSRV);
@@ -608,16 +621,6 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
         }
 
-
-//        if(adapter != null){
-//            Device device = adapter.getItem(0);
-//            if(mqttMessage.toString().equals("on")){
-//                device.setTurnOn(true);
-//            }else if(mqttMessage.toString().equals("off")){
-//                device.setTurnOn(false);
-//            }
-//            adapter.notifyDataSetChanged();
-//        }
     }
 
     @Override
@@ -628,7 +631,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
     @Override
     public void onSuccess(IMqttToken iMqttToken) {
         Log.d(TAG,"Connect success");
-        Toast.makeText(this,"Connect to server "+URI+" successful",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Connect to server "+mqttSRV+" successful",Toast.LENGTH_LONG).show();
 
         if (topic.length() > 0) {
 
@@ -650,6 +653,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
     @Override
     public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
         Log.d(TAG, "Connect fail ");
+        Toast.makeText(this,"Connect to server "+mqttSRV+" Fail",Toast.LENGTH_LONG).show();
     }
 
     @Override

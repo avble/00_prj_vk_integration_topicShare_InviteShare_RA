@@ -6,11 +6,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import remote.service.verik.com.remoteaccess.DeviceDetailActivity;
 
-/**
- * Created by congngale on 7/16/15.
- */
 public class Device {
 
 
@@ -262,6 +262,11 @@ public class Device {
     private String capabilityID;
     public String serialNumber;
 
+
+    // For rendering the UI
+
+    public List<DeviceFragment> listFragment;
+
     public Device(){
 
     }
@@ -278,6 +283,8 @@ public class Device {
             type = "zigbee";
         else if (device_type.contentEquals("upnp"))
             type = "upnp";
+
+        listFragment = new ArrayList<DeviceFragment>();
 
 
     }
@@ -363,70 +370,33 @@ public class Device {
 
 
 
+
     // methods regarding to display
     public int getFragmentCount()
     {
-        return 0;
+
+        return listFragment.size();
 
     }
 
     public Fragment getFragment(int index)
     {
-        return null;
+        if (index < listFragment.size())
+            return listFragment.get(index);
+        else
+            return null;
+
     }
 
 
     ///
     public CharSequence getFragmentTitle(int position)
     {
+        if (position < listFragment.size())
+            return listFragment.get(position).getFragmentTitle();
 
-        return "";
+        return null;
 
-    }
-
-
-
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the primary
-     * sections of the app.
-     */
-    public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public AppSectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            return null;
-//
-//            return Device. this.getFragment(i);
-//
-//            switch (i) {
-//                case 0:
-//                    // The first section of the app is the most interesting -- it offers
-//                    // a launchpad into the other demonstrations in this example application.
-//                    //return new LaunchpadSectionFragment();
-//
-//                default:
-//                    // The other sections of the app are dummy placeholders.
-//                    Fragment fragment = new DummySectionFragment();
-//                    Bundle args = new Bundle();
-//                    args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
-//                    fragment.setArguments(args);
-//                    return fragment;
-//            }
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "Section " + (position + 1);
-        }
     }
 
 

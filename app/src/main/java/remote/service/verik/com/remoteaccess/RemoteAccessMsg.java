@@ -118,7 +118,9 @@ public class RemoteAccessMsg {
 
     public static MqttMessage CreateGetListDevicesMsg(DeviceTypeProtocol device_type) throws JSONException {
         MqttMessage message = new MqttMessage();
-        message.setId(1);
+
+        //message.setId(1);
+
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
@@ -137,7 +139,7 @@ public class RemoteAccessMsg {
 
     public static MqttMessage CreateAddDeviceMsg(DeviceTypeProtocol device_type) throws JSONException {
         MqttMessage message = new MqttMessage();
-        message.setId(1);
+        //message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
@@ -157,7 +159,7 @@ public class RemoteAccessMsg {
 
     public static MqttMessage CreateRemoveDeviceMsg(DeviceTypeProtocol device_type) throws JSONException {
         MqttMessage message = new MqttMessage();
-        message.setId(1);
+        //message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
@@ -176,7 +178,7 @@ public class RemoteAccessMsg {
 
     public static MqttMessage CreateZwaveSetBinaryMsg(DeviceTypeProtocol device_type, String id, int value) throws JSONException {
         MqttMessage message = new MqttMessage();
-        message.setId(1);
+        //message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
@@ -197,7 +199,7 @@ public class RemoteAccessMsg {
 
     public static MqttMessage CreateZwaveGetBinaryMsg(DeviceTypeProtocol device_type, String id) throws JSONException {
         MqttMessage message = new MqttMessage();
-        message.setId(1);
+        //message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
@@ -214,65 +216,78 @@ public class RemoteAccessMsg {
         return message;
     }
 
-    public static MqttMessage CreateGetSpecificationMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String type, String scale, String force) throws JSONException {
+    public static MqttMessage CreateGetSpecificationMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String type, String scale, String force)  {
         MqttMessage message = new MqttMessage();
-        message.setId(1);
+        //message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
-        jason_get_list.put("method", RemoteAccessMsg.commandGetSpecification);
-        jason_get_list.put("uuid", uuid);
-        jason_get_list.put("type", "zwave");
-        if (device_type == DeviceTypeProtocol.ZIGBEE)
-            jason_get_list.put("type", "zigbee");
-        else if (device_type == DeviceTypeProtocol.UPNP)
-            jason_get_list.put("type", "upnp");
 
-        jason_get_list.put("id", id);
-        jason_get_list.put("class", klass);
-        jason_get_list.put("cmd", cmd);
-        jason_get_list.put("data0", type);
-        jason_get_list.put("data1", scale);
-        jason_get_list.put("data2", force);
+        try {
+
+            jason_get_list.put("method", RemoteAccessMsg.commandGetSpecification);
+            jason_get_list.put("uuid", uuid);
+            jason_get_list.put("type", "zwave");
+            if (device_type == DeviceTypeProtocol.ZIGBEE)
+                jason_get_list.put("type", "zigbee");
+            else if (device_type == DeviceTypeProtocol.UPNP)
+                jason_get_list.put("type", "upnp");
+
+            jason_get_list.put("id", id);
+            jason_get_list.put("class", klass);
+            jason_get_list.put("cmd", cmd);
+            jason_get_list.put("data0", type);
+            jason_get_list.put("data1", scale);
+            jason_get_list.put("data2", force);
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        message.setPayload(jason_get_list.toString().getBytes());
+        return message;
+    }
+
+
+    public static MqttMessage CreateSetSpecificationMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2)  {
+        MqttMessage message = new MqttMessage();
+        //message.setId(1);
+        message.setQos(0);
+        message.setRetained(false);
+        JSONObject jason_get_list = new JSONObject();
+        try {
+            jason_get_list.put("method", RemoteAccessMsg.commandSetSpecification);
+
+            jason_get_list.put("uuid", uuid);
+            jason_get_list.put("type", "zwave");
+            if (device_type == DeviceTypeProtocol.ZIGBEE)
+                jason_get_list.put("type", "zigbee");
+            else if (device_type == DeviceTypeProtocol.UPNP)
+                jason_get_list.put("type", "upnp");
+
+            jason_get_list.put("id", id);
+            jason_get_list.put("class", klass);
+            jason_get_list.put("cmd", cmd);
+            jason_get_list.put("data0", data0);
+            jason_get_list.put("data1", data1);
+            jason_get_list.put("data2", data2);
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
 
         message.setPayload(jason_get_list.toString().getBytes());
         return message;
     }
 
 
-    public static MqttMessage CreateSetSpecificationMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2) throws JSONException {
+    public static MqttMessage CreateSetSecureMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2)  {
         MqttMessage message = new MqttMessage();
-        message.setId(1);
+        //message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
-        jason_get_list.put("method", RemoteAccessMsg.commandSetSpecification);
-
-        jason_get_list.put("uuid", uuid);
-        jason_get_list.put("type", "zwave");
-        if (device_type == DeviceTypeProtocol.ZIGBEE)
-            jason_get_list.put("type", "zigbee");
-        else if (device_type == DeviceTypeProtocol.UPNP)
-            jason_get_list.put("type", "upnp");
-
-        jason_get_list.put("id", id);
-        jason_get_list.put("class", klass);
-        jason_get_list.put("cmd", cmd);
-        jason_get_list.put("data0", data0);
-        jason_get_list.put("data1", data1);
-        jason_get_list.put("data2", data2);
-
-        message.setPayload(jason_get_list.toString().getBytes());
-        return message;
-    }
-
-
-    public static MqttMessage CreateSetSecureMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2) throws JSONException  {
-        MqttMessage message = new MqttMessage();
-        message.setId(1);
-        message.setQos(0);
-        message.setRetained(false);
-        JSONObject jason_get_list = new JSONObject();
+        try
+        {
         jason_get_list.put("method", RemoteAccessMsg.commandSetSecureSpec);
         jason_get_list.put("uuid", uuid);
         jason_get_list.put("type", "zwave");
@@ -287,6 +302,10 @@ public class RemoteAccessMsg {
         jason_get_list.put("data0", data0);
         jason_get_list.put("data1", data1);
         jason_get_list.put("data2", data2);
+    } catch (JSONException e)
+    {
+        e.printStackTrace();
+    }
 
         message.setPayload(jason_get_list.toString().getBytes());
         return message;
@@ -295,7 +314,7 @@ public class RemoteAccessMsg {
 
     public static MqttMessage CreateGetSecureMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2)  throws JSONException {
         MqttMessage message = new MqttMessage();
-        message.setId(1);
+        //message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
@@ -320,7 +339,7 @@ public class RemoteAccessMsg {
 
     public static MqttMessage CreateResetMsg(DeviceTypeProtocol device_type) throws JSONException {
         MqttMessage message = new MqttMessage();
-        message.setId(1);
+        //message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();

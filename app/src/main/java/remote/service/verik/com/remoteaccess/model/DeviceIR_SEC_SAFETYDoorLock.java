@@ -1,11 +1,25 @@
 package remote.service.verik.com.remoteaccess.model;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import remote.service.verik.com.remoteaccess.DeviceTypeProtocol;
+import remote.service.verik.com.remoteaccess.MQTTWrapper;
+import remote.service.verik.com.remoteaccess.MainActivity;
+import remote.service.verik.com.remoteaccess.R;
+import remote.service.verik.com.remoteaccess.RemoteAccessMsg;
 
 public class DeviceIR_SEC_SAFETYDoorLock extends Device {
 
@@ -91,6 +105,249 @@ public class DeviceIR_SEC_SAFETYDoorLock extends Device {
     public DeviceIR_SEC_SAFETYDoorLock(String id, String name, boolean turnOn, boolean available, String device_type)
     {
         super(id, name, turnOn, available, device_type);
+        // Fragment initialization
+        listFragment.add(createFragmentConfiguration());
+        listFragment.add(createFragmentMultilevel());
+
+    }
+
+
+    private DeviceFragment createFragmentMultilevel() {
+
+
+        DeviceFragment fragment = new DeviceFragment() {
+            @Nullable
+            @Override
+            public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
+                View rootView = inflater.inflate(R.layout.content_device_ir_sec_safety_doorlock_door_lock, container, false);
+
+
+
+
+                View.OnClickListener door_lock_listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String klass_cmd = DeviceIR_SEC_SAFETYDoorLock.cmd_klass_DOOR_LOCK_insecure;
+                        CheckBox cb_tmp = (CheckBox) v;
+
+                        if (cb_tmp.isChecked())
+                            klass_cmd = DeviceIR_SEC_SAFETYDoorLock.cmd_klass_DOOR_LOCK_secure;
+
+                        MqttMessage message = null;
+                        if (DeviceIR_SEC_SAFETYDoorLock.this.type.contentEquals("zwave"))
+                            message = RemoteAccessMsg.CreateSetSecureMsg(DeviceTypeProtocol.ZWAVE, DeviceIR_SEC_SAFETYDoorLock.this.getId(),
+                                    DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_DOOR_LOCK, "SET", klass_cmd, "", "");
+
+
+                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                    }
+                };
+
+                CheckBox checkbox_door_lock = (CheckBox) rootView.findViewById(R.id.sensor_ir_sec_safety_doorNlock_cb_door_lock);
+                checkbox_door_lock.setOnClickListener(door_lock_listener);
+
+
+                View.OnClickListener association_listener = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String klass_cmd = "REMOVE";
+                        CheckBox cb_tmp = (CheckBox) v;
+
+                        if (cb_tmp.isChecked())
+                            klass_cmd = "SET";
+
+                        MqttMessage message = null;
+                        if (DeviceIR_SEC_SAFETYDoorLock.this.type.contentEquals("zwave"))
+                            message = RemoteAccessMsg.CreateSetSecureMsg(DeviceTypeProtocol.ZWAVE, DeviceIR_SEC_SAFETYDoorLock.this.getId(),
+                                    DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_DOOR_LOCK, klass_cmd, DeviceIR_SEC_SAFETYDoorLock.cmd_klass_ASSOCIATION_ONOFF_GROUP, "1", "1");
+
+
+                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                    }
+                };
+
+                CheckBox checkbox_association = (CheckBox) rootView.findViewById(R.id.sensor_ir_sec_safety_doorNlock_cb_association_add_group);
+                checkbox_association.setOnClickListener(association_listener);
+
+
+                DeviceIR_SEC_SAFETYDoorLock.this.viewer_user_code_1_et_code = (EditText) rootView.findViewById(R.id.sensor_ir_sec_safety_doorNlock_et_user_code_1);
+                if (DeviceIR_SEC_SAFETYDoorLock.this.viewer_user_code_1_et_code != null) {
+                    DeviceIR_SEC_SAFETYDoorLock.this.viewer_user_code_1_et_code.setText("123456");
+                }
+
+                Button viewer_bt_user_code1_set = (Button) rootView.findViewById(R.id.sensor_ir_sec_safety_doorNlock_button_user_code_1_set);
+                if (viewer_bt_user_code1_set != null) {
+                    viewer_bt_user_code1_set.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            MqttMessage message = null;
+                            if (DeviceIR_SEC_SAFETYDoorLock.this.type.contentEquals("zwave"))
+                                message = RemoteAccessMsg.CreateSetSecureMsg(DeviceTypeProtocol.ZWAVE, DeviceIR_SEC_SAFETYDoorLock.this.getId(),
+                                        DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_USER_CODE, "SET", "1", DeviceIR_SEC_SAFETYDoorLock.this.getKlass_SENSOR_USER_CODE_STATE_ACCUPIED, DeviceIR_SEC_SAFETYDoorLock.this.viewer_user_code_1_et_code.getText().toString());
+
+
+                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                        }
+                    });
+                }
+                return rootView;
+            }
+        };
+        return fragment;
+    }
+
+    private DeviceFragment createFragmentConfiguration() {
+
+
+
+        DeviceFragment fragment = new DeviceFragment() {
+
+            @Nullable
+            @Override
+            public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
+                View rootView = inflater.inflate(R.layout.content_device_ir_sec_safety_doorlock_configuration, container, false);
+
+
+                View.OnClickListener checkbox_configuration = new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        String klass_cmd = "";
+                        String value = "00";
+                        CheckBox cb_tmp = (CheckBox) v;
+
+                        if (cb_tmp.isChecked())
+                            value = "FF";
+
+                        switch (v.getId()) {
+                            case R.id.sensor_ir_sec_safety_doorNlock_configuration_cb_auto_lock:
+                                klass_cmd = DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_AUTO_LOCK;
+                                break;
+                            case R.id.sensor_ir_sec_safety_doorNlock_configuration_cb_beeper:
+                                klass_cmd = DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_BEEPER;
+                                break;
+
+                            case R.id.sensor_ir_sec_safety_doorNlock_configuration_cb_lock_n_leave:
+                                klass_cmd = DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_LOCK_AND_LEAVE;
+                                break;
+
+                            case R.id.sensor_ir_sec_safety_doorNlock_configuration_cb_vacation:
+                                klass_cmd = DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_VACATION;
+                                break;
+
+                        }
+
+                        MqttMessage message = null;
+
+                        if (DeviceIR_SEC_SAFETYDoorLock.this.type.contentEquals("zwave"))
+                            message = RemoteAccessMsg.CreateSetSecureMsg(DeviceTypeProtocol.ZWAVE, DeviceIR_SEC_SAFETYDoorLock.this.getId(),
+                                    DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_CONFIGURATION, "SET", klass_cmd, value, "");
+
+
+                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                    }
+                };
+
+                CheckBox checkbox_door_and_lock = (CheckBox) rootView.findViewById(R.id.sensor_ir_sec_safety_doorNlock_configuration_cb_auto_lock);
+                checkbox_door_and_lock.setOnClickListener(checkbox_configuration);
+
+                CheckBox checkbox_beeper = (CheckBox) rootView.findViewById(R.id.sensor_ir_sec_safety_doorNlock_configuration_cb_beeper);
+                checkbox_beeper.setOnClickListener(checkbox_configuration);
+
+                CheckBox checkbox_lock_n_leave = (CheckBox) rootView.findViewById(R.id.sensor_ir_sec_safety_doorNlock_configuration_cb_lock_n_leave);
+                checkbox_lock_n_leave.setOnClickListener(checkbox_configuration);
+
+                CheckBox checkbox_vacation = (CheckBox) rootView.findViewById(R.id.sensor_ir_sec_safety_doorNlock_configuration_cb_vacation);
+                checkbox_vacation.setOnClickListener(checkbox_configuration);
+
+                DeviceIR_SEC_SAFETYDoorLock.this.viewer_et_pin_len = (EditText) rootView.findViewById(R.id.sensor_ir_sec_safety_doorNlock_configuration_et_pin_len);
+                if (DeviceIR_SEC_SAFETYDoorLock.this.viewer_et_pin_len != null) {
+                    DeviceIR_SEC_SAFETYDoorLock.this.viewer_et_pin_len.setText("4-8");
+                }
+
+                Button viewer_bt_pin_len_get = (Button) rootView.findViewById(R.id.sensor_ir_sec_safety_doorNlock_configuration_button_pin_len_get);
+                if (viewer_bt_pin_len_get != null) {
+                    viewer_bt_pin_len_get.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            MqttMessage message = null;
+                            try {
+
+                                if (DeviceIR_SEC_SAFETYDoorLock.this.type.contentEquals("zwave"))
+                                    message = RemoteAccessMsg.CreateGetSecureMsg(DeviceTypeProtocol.ZWAVE, DeviceIR_SEC_SAFETYDoorLock.this.getId(),
+                                            DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_CONFIGURATION, "GET", DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_PIN_LENGTH, "1", "");
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                        }
+                    });
+                }
+
+                Button bt_pin_len_set = (Button) rootView.findViewById(R.id.sensor_ir_sec_safety_doorNlock_configuration_button_pin_len_set);
+                if (bt_pin_len_set != null) {
+                    bt_pin_len_set.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            String pin_len = DeviceIR_SEC_SAFETYDoorLock.this.viewer_et_pin_len.getText().toString();
+
+                            MqttMessage message = null;
+                            if (DeviceIR_SEC_SAFETYDoorLock.this.type.contentEquals("zwave"))
+                                message = RemoteAccessMsg.CreateSetSecureMsg(DeviceTypeProtocol.ZWAVE, DeviceIR_SEC_SAFETYDoorLock.this.getId(),
+                                        DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_CONFIGURATION, "SET", DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_PIN_LENGTH, pin_len, "");
+
+
+                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                        }
+                    });
+                }
+
+
+                Button bt_battery_get = (Button) rootView.findViewById(R.id.sensor_ir_sec_safety_doorNlock_configuration_button_battery_get);
+                if (bt_battery_get != null) {
+                    bt_battery_get.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            MqttMessage message = null;
+                            try {
+
+                                if (DeviceIR_SEC_SAFETYDoorLock.this.type.contentEquals("zwave"))
+                                    message = RemoteAccessMsg.CreateGetSecureMsg(DeviceTypeProtocol.ZWAVE, DeviceIR_SEC_SAFETYDoorLock.this.getId(),
+                                            DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_BATTERY, "GET", "", "", "");
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                        }
+                    });
+                }
+
+
+
+                return rootView;
+            }
+        };
+        fragment.setTitle("Configuration & Battery");
+        return fragment;
     }
 
 
