@@ -125,7 +125,7 @@
                     android:id="@+id/sensor_multilevel5_configuration_tw_auto_timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Timer configuration"
+                    android:text="[Auto] Timer configuration"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <SeekBar
@@ -160,7 +160,7 @@
                     android:id="@+id/sensor_multilevel5_configuration_tw_config_"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Auto Timer configuration"
+                    android:text="Timer configuration"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <SeekBar

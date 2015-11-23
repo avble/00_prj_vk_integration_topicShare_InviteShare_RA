@@ -42,6 +42,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
     public int configuration_timer = 10; // minimun value
 
 
+
     public int configuration_report = Integer.parseInt(cmd_klass_CONFIGURATION_REPORT_VALUE_DISABLE, 16);
     public int configuration_PIR_sense = Integer.parseInt(cmd_klass_CONFIGURATION_PIR_VALUE_SENSE_LEVEL1, 16);
     public int configuration_auto_timer = Integer.parseInt(cmd_klass_CONFIGURATION_AUTO_TIMER_MIN, 16);
@@ -99,7 +100,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
     public TextView viewer_tw_multilevel6_lumi;
     public TextView viewer_tw_multilevel6_uv;
 
-    public CheckBox viwer_cb_configuration_lock;
+    public CheckBox viewer_cb_configuration_lock;
     public SeekBar viewer_seekBar_configuration_timer;
 
 
@@ -213,9 +214,9 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                             String data1 = jason_command_info.getString("data1");
                             configuration_lock = Integer.parseInt(data1);
                             if (configuration_lock == 0)
-                                viwer_cb_configuration_lock.setChecked(true);
+                                viewer_cb_configuration_lock.setChecked(true);
                             else
-                                viwer_cb_configuration_lock.setChecked(false);
+                                viewer_cb_configuration_lock.setChecked(false);
                         }
                     }
 
@@ -247,6 +248,13 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
             public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
                 View rootView = inflater.inflate(R.layout.content_device_generic_sensor_multilevel6_multilevel, container, false);
+
+                DeviceAEON_LABSMultilevelSensor6.this.viewer_tw_multilevel6_humi = (TextView) rootView.findViewById(R.id.sensor_multilevel6_multilevel_tw_humi);
+                DeviceAEON_LABSMultilevelSensor6.this.viewer_tw_multilevel6_temp = (TextView) rootView.findViewById(R.id.sensor_multilevel6_multilevel_tw_temp);
+                DeviceAEON_LABSMultilevelSensor6.this.viewer_tw_multilevel6_lumi = (TextView) rootView.findViewById(R.id.sensor_multilevel6_multilevel_tw_lumi);
+                DeviceAEON_LABSMultilevelSensor6.this.viewer_tw_multilevel6_uv = (TextView) rootView.findViewById(R.id.sensor_multilevel6_multilevel_tw_ultra_violet);
+
+
 
                 Button button_temp = (Button) rootView.findViewById(R.id.sensor_multilevel6_multilevel_button_temp);
 
@@ -341,6 +349,11 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
 
                 View rootView = inflater.inflate(R.layout.content_device_generic_sensor_multilevel6_configuration, container, false);
 
+                DeviceAEON_LABSMultilevelSensor6.this.viewer_cb_configuration_lock = (CheckBox)rootView.findViewById(R.id.sensor_multilevel6_cb_configuration_lock);
+                DeviceAEON_LABSMultilevelSensor6.this.viewer_seekBar_configuration_timer = (SeekBar)rootView.findViewById(R.id.sensor_multilevel6_seekbar_configuration_timer);
+
+
+
                 final CheckBox cb_enable_disable = (CheckBox) rootView.findViewById(R.id.sensor_multilevel6_cb_configuration_lock);
 
                 if (cb_enable_disable != null) {
@@ -369,16 +382,19 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
 
 
                 // Timer
+                DeviceAEON_LABSMultilevelSensor6.this.viewer_seekBar_configuration_timer = (SeekBar) rootView.findViewById(R.id.sensor_multilevel6_seekbar_configuration_timer);
+
+                // Scale for debugging
+                DeviceAEON_LABSMultilevelSensor6.this.viewer_seekBar_configuration_timer.setMax((3600-10)/10);
 
                 if (DeviceAEON_LABSMultilevelSensor6.this.viewer_seekBar_configuration_timer != null) {
                     DeviceAEON_LABSMultilevelSensor6.this.viewer_seekBar_configuration_timer.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
-                        int configuration_timer_progress = DeviceAEON_LABSMultilevelSensor6.this.configuration_timer - 10;
 
                         @Override
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-                            configuration_timer_progress = progress;
+                            DeviceAEON_LABSMultilevelSensor6.this.configuration_timer  = progress;
 
 
                         }
@@ -392,7 +408,6 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                         public void onStopTrackingTouch(SeekBar seekBar) {
 
                             MqttMessage message = null;
-                            DeviceAEON_LABSMultilevelSensor6.this.configuration_timer = configuration_timer_progress;
 
                             if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
                                 message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
@@ -634,18 +649,19 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
 
                 // Timer
                 SeekBar seek_bar_auto_timer = (SeekBar) rootView.findViewById(R.id.sensor_multilevel6_seekbar_auto_timer);
-                seek_bar_auto_timer.setMax(2678400 - 10);
+                // Scale for debugging
+                seek_bar_auto_timer.setMax((2678400 - 10)/10000);
                 if (seek_bar_auto_timer != null) {
                     seek_bar_auto_timer.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
 
-                        int progress_auto_timer = 0;
+  //                      int progress_auto_timer = 0;
 
                         @Override
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
+                            DeviceAEON_LABSMultilevelSensor6.this.configuration_auto_timer = progress;
 
-                            progress_auto_timer = progress;
 
                         }
 
@@ -657,16 +673,12 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                         @Override
                         public void onStopTrackingTouch(SeekBar seekBar) {
 
-                            progress_auto_timer = 15;
-
-                            DeviceAEON_LABSMultilevelSensor6.this.configuration_auto_timer = progress_auto_timer;
-                            //Log.d("DEBUG", )
 
                             MqttMessage message = null;
 
                             if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
                                 message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
+                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString( DeviceAEON_LABSMultilevelSensor6.this.configuration_auto_timer + 10), "");
 
 
                             MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);

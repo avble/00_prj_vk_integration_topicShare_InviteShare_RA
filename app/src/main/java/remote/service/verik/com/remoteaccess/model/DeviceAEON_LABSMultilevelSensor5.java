@@ -53,8 +53,8 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
     final public static String cmd_klass_CONFIGURATION_LOCK_VALUE_ENABLE = "1";
 
     final public static String cmd_klass_CONFIGURATION_TIMER = "TIME";
-    final public static String cmd_klass_CONFIGURATION_TIMER_VALUE_MIN = "10";
-    final public static String cmd_klass_CONFIGURATION_TIMER_VALUE_OFF = "3600";
+    final public static String cmd_klass_CONFIGURATION_TIMER_VALUE_MIN = "1";
+    final public static String cmd_klass_CONFIGURATION_TIMER_VALUE_MAX = "15300";
 
     final public static String cmd_klass_CONFIGURATION_REPORT = "REPORT_SENSOR";
     final public static String cmd_klass_CONFIGURATION_REPORT_VALUE_TEMP = "20";
@@ -71,8 +71,8 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
 
 
     final public static String cmd_klass_CONFIGURATION_AUTO_TIMER = "TIME_AUTO_REPORT";
-    final public static String cmd_klass_CONFIGURATION_AUTO_TIMER_MIN = "0A";
-    final public static String cmd_klass_CONFIGURATION_AUTO_TIMER_MAX = "28DE80";
+    final public static String cmd_klass_CONFIGURATION_AUTO_TIMER_MIN = "10";
+    final public static String cmd_klass_CONFIGURATION_AUTO_TIMER_MAX = "2678400";
 
 
     // configuration class
@@ -116,7 +116,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                 View rootView = inflater.inflate(R.layout.content_device_generic_sensor_multilevel5_association, container, false);
 
                 // association test
-                final CheckBox cb_association_notification = (CheckBox) rootView.findViewById(R.id.sensor_multilevel5_cb_association_add_group);
+                final CheckBox cb_association_notification = (CheckBox) rootView.findViewById(R.id.sensor_multilevel5_association_cb_association_add_group);
                 if (cb_association_notification != null) {
                     cb_association_notification.setOnClickListener(new View.OnClickListener() {
 
@@ -148,6 +148,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
 
             }
         };
+        fragment.setTitle("Association");
         return fragment;
     }
 
@@ -248,6 +249,8 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
             }
 
         };
+        fragment.setTitle("Multilevel");
+
         return fragment;
     }
 
@@ -262,16 +265,19 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
 
                 // Timer
 
+                DeviceAEON_LABSMultilevelSensor5.this.viewer_seekBar_configuration_timer = (SeekBar)rootView.findViewById(R.id.sensor_multilevel5_configuration_seekbar_configuration_timer);
+
                 if (DeviceAEON_LABSMultilevelSensor5.this.viewer_seekBar_configuration_timer != null) {
+
+                    // FIXME: scale for development
+                    DeviceAEON_LABSMultilevelSensor5.this.viewer_seekBar_configuration_timer.setMax((Integer.parseInt(DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_TIMER_VALUE_MAX) - Integer.parseInt(DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_TIMER_VALUE_MIN))/10) ;
+
                     DeviceAEON_LABSMultilevelSensor5.this.viewer_seekBar_configuration_timer.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
-                        int configuration_timer_progress = 0;
 
                         @Override
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-                            configuration_timer_progress = progress;
-
+                            DeviceAEON_LABSMultilevelSensor5.this.configuration_timer = progress;
 
                         }
 
@@ -285,12 +291,9 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
 
                             MqttMessage message = null;
 
-                            //DeviceAEON_LABSMultilevelSensor5.this.configuration_timer  = configuration_timer_progress;
-
-
                             if (DeviceAEON_LABSMultilevelSensor5.this.type.contentEquals("zwave"))
                                 message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(configuration_timer_progress - 10), "");
+                                        "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(DeviceAEON_LABSMultilevelSensor5.this.configuration_timer - 10), "");
 
                             MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
 
@@ -424,18 +427,21 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
 
                 // Timer
                 SeekBar seek_bar_auto_timer = (SeekBar) rootView.findViewById(R.id.sensor_multilevel5_configuration_seekbar_auto_timer);
-                seek_bar_auto_timer.setMax(2678400 - 10);
+
                 if (seek_bar_auto_timer != null) {
+
+                    // FIXME: scale for development
+                    DeviceAEON_LABSMultilevelSensor5.this.viewer_seekBar_configuration_timer.setMax((Integer.parseInt(DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_AUTO_TIMER_MAX) - Integer.parseInt(DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_AUTO_TIMER_MIN))/10000) ;
+
+
                     seek_bar_auto_timer.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
 
-                        int progress_auto_timer = 0;
 
                         @Override
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
-
-                            progress_auto_timer = progress;
+                            DeviceAEON_LABSMultilevelSensor5.this.configuration_auto_timer = progress + Integer.parseInt(DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_AUTO_TIMER_MIN);
 
                         }
 
@@ -446,16 +452,13 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
 
                         @Override
                         public void onStopTrackingTouch(SeekBar seekBar) {
-                            progress_auto_timer = 15;
-
-                            DeviceAEON_LABSMultilevelSensor5.this.configuration_auto_timer = progress_auto_timer;
                             //Log.d("DEBUG", )
 
                             MqttMessage message = null;
 
                             if (DeviceAEON_LABSMultilevelSensor5.this.type.contentEquals("zwave"))
                                 message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(progress_auto_timer), "");
+                                        "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(DeviceAEON_LABSMultilevelSensor5.this.configuration_auto_timer), "");
                             MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
                         }
                     });
@@ -465,6 +468,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
 
             }
         };
+        fragment.setTitle("Configuration");
         return fragment;
     }
 

@@ -76,13 +76,10 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
 
     // MQTT related data member
-    // FIXME: there are 2 variables mqttSRV + URI.
-    // Should remove either of them
-
     public static MqttAndroidClient client;
-    //private String mqttSRV = "52.88.81.183:1883";
+    private String mqttSRV = "tcp://52.88.81.183:1883";
 
-    private String mqttSRV = "tcp://192.168.0.108:1883";
+    //private String mqttSRV = "tcp://192.168.0.108:1883";
 
     public static String topic = "/VEriK/topic01234567890";
     public static final String TAG = "MQTT";

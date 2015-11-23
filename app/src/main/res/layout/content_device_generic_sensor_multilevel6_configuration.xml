@@ -223,7 +223,7 @@
                     android:id="@+id/sensor_multilevel6_tw_auto_timer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Timer configuration"
+                    android:text="[AUTO] Timer configuration"
                     android:textAppearance="?android:attr/textAppearanceLarge"/>
 
                 <SeekBar

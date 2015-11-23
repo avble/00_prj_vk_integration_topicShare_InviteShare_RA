@@ -115,7 +115,7 @@
                     android:layout_width= "300px"
                     android:layout_height="wrap_content"
                     android:hint="Len of pin (6-10) "/>
-
+<i> </i>
 
                 <Button
                     android:id="@+id/sensor_ir_sec_safety_doorNlock_button_user_code_1_set"
