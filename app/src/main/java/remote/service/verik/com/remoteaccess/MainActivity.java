@@ -50,9 +50,10 @@ import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart
 import remote.service.verik.com.remoteaccess.model.DeviceIR_SEC_SAFETYDoorLock;
 
 import remote.service.verik.com.remoteaccess.DeviceDetailActivity;
+import remote.service.verik.com.remoteaccess.mqtt.VConnection;
 
 
-public class MainActivity extends ActionBarActivity implements View.OnCreateContextMenuListener, MqttCallback, IMqttActionListener, httpWrapperInterface {
+public class MainActivity extends ActionBarActivity implements View.OnCreateContextMenuListener, httpWrapperInterface {
 
 
     /* Load the native alljoyn_java library. */
@@ -62,7 +63,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
     private final int INTENT_SETTING_RESULT_CODE = 1;
 
-    public ArrayList<Device> devices;
+    public static ArrayList<Device> devices;
 
     public static Handler handler;
 
@@ -76,15 +77,13 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
 
     // MQTT related data member
-    public static MqttAndroidClient client;
     private String mqttSRV = "tcp://52.88.81.183:1883";
-
-    //private String mqttSRV = "tcp://192.168.0.108:1883";
-
     public static String topic = "/VEriK/topic01234567890";
     public static final String TAG = "MQTT";
-    //public static final String URI = "tcp://52.88.81.183:1883";
     public static final String CLIENT_ID = "Android-01";
+
+    // test-code
+    public static VConnection mqtt_client;
 
 
     public static View.OnClickListener deviceOnClick = new View.OnClickListener() {
@@ -178,24 +177,9 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
     public void setTopic(String new_topic) {
         if (!new_topic.equals(topic)) {
             topic = new_topic;
+            mqtt_client = new VConnection(this, mqttSRV, CLIENT_ID + "testMe");
+            mqtt_client.Connect();
 
-            if (topic.length() > 0) {
-
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            if (client.isConnected()) {
-                                client.subscribe(topic, 0);
-                            }
-                        } catch (MqttException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
-
-            }
         }
     }
 
@@ -222,25 +206,8 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         // Context menu
         registerForContextMenu(list);
 
-        // MQTT initialization
-        Log.d(TAG,"Start to connect to MQTT server.");
-        //connect to server
-        try {
 
-            client  = new MqttAndroidClient(this,mqttSRV, CLIENT_ID );
 
-            MqttConnectOptions conOpt = new MqttConnectOptions();
-
-            conOpt.setCleanSession(false);
-            conOpt.setConnectionTimeout(1000);
-            conOpt.setKeepAliveInterval(10);
-
-            client.setCallback(this);
-            //connect to server
-            client.connect(conOpt,this);
-        } catch (MqttException e) {
-            Log.d(TAG, "Error when connect to server " + mqttSRV + ", error code:  " + e.getReasonCode());
-        }
 
         // Alljoyn initialzation
         alljoyn_wrapper = new AlljoynWrapper();
@@ -248,6 +215,10 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         //InviteShare Initialzation
         HttpWrapper.disableSSLCertificateChecking();
 
+        // MQTT related initilization
+        Log.d(TAG,"Start to connect to MQTT server.");
+        mqtt_client = new VConnection(this, mqttSRV, CLIENT_ID);
+        mqtt_client.Connect();
 
     }
 
@@ -339,11 +310,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                try {
-                    MainActivity.client.publish(topic, message);
-                } catch (MqttException e) {
-                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                }
+                mqtt_client.PublishRemoteAccessMsg(topic, message);
 
                 return true;
 
@@ -355,11 +322,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                try {
-                    MainActivity.client.publish(topic, message);
-                } catch (MqttException e) {
-                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                }
+                mqtt_client.PublishRemoteAccessMsg(topic, message);
 
                 return true;
 
@@ -370,11 +333,8 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                try {
-                    MainActivity.client.publish(topic, message);
-                } catch (MqttException e) {
-                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                }
+
+                mqtt_client.PublishRemoteAccessMsg(topic, message);
 
                 return true;
 
@@ -387,11 +347,8 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                try {
-                    MainActivity.client.publish(topic, message);
-                } catch (MqttException e) {
-                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                }
+
+                mqtt_client.PublishRemoteAccessMsg(topic, message);
 
                 return true;
 
@@ -403,11 +360,8 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                try {
-                    MainActivity.client.publish(topic, message);
-                } catch (MqttException e) {
-                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                }
+
+                mqtt_client.PublishRemoteAccessMsg(topic, message);
 
                 return true;
 
@@ -459,11 +413,8 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                try {
-                    MainActivity.client.publish(topic, message);
-                } catch (MqttException e) {
-                    Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                }
+
+                mqtt_client.PublishRemoteAccessMsg(topic, message);
 
                 return true;
             case R.id.context_menu_get_specification:
@@ -476,18 +427,11 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
     }
 
-    @Override
-    public void connectionLost(Throwable throwable) {
-        Log.d(TAG, "Connection to server has been lost, message: " + throwable.getMessage());
-    }
 
-    @Override
     public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
 
 
         Log.d(TAG,"Received data from topic: "+topic+", Mqtt message: "+mqttMessage.toString());
-
-
 
         if (RemoteAccessMsg.isMyMessage(mqttMessage.toString()))
             return;
@@ -496,7 +440,6 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         String protocol = RemoteAccessMsg.getType(mqttMessage.toString());
 
         JSONObject jason;
-
 
         if (command != null) {
             switch (command) {
@@ -618,39 +561,6 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
         }
 
-    }
-
-    @Override
-    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-        Log.d(TAG,"Delivered message successful");
-    }
-
-    @Override
-    public void onSuccess(IMqttToken iMqttToken) {
-        Log.d(TAG,"Connect success");
-        Toast.makeText(this,"Connect to server "+mqttSRV+" successful",Toast.LENGTH_LONG).show();
-
-        if (topic.length() > 0) {
-
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        if (client.isConnected()) {
-                            client.subscribe(topic, 0);
-                        }
-                    } catch (MqttException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-    }
-
-    @Override
-    public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
-        Log.d(TAG, "Connect fail ");
-        Toast.makeText(this,"Connect to server "+mqttSRV+" Fail",Toast.LENGTH_LONG).show();
     }
 
     @Override

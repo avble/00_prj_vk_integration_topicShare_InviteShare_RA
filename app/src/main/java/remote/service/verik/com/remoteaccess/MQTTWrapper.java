@@ -9,16 +9,13 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 /**
  * Created by huyle on 11/18/15.
  */
+
+//FIXME: delete this object
 public class MQTTWrapper {
 
     public static void PublishRemoteAccessMsg(String topic, MqttMessage message)
     {
-
-        try {
-            MainActivity.client.publish(topic, message);
-        } catch (MqttException e) {
-            Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-        }
+        MainActivity.mqtt_client.PublishRemoteAccessMsg(topic, message);
 
     }
 
