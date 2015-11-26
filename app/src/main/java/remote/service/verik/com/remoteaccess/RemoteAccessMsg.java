@@ -176,41 +176,56 @@ public class RemoteAccessMsg {
         return message;
     }
 
-    public static MqttMessage CreateZwaveSetBinaryMsg(DeviceTypeProtocol device_type, String id, int value) throws JSONException {
+    public static MqttMessage CreateZwaveSetBinaryMsg(DeviceTypeProtocol device_type, String id, int value) {
         MqttMessage message = new MqttMessage();
         //message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
-        jason_get_list.put("method", RemoteAccessMsg.commandSetBinary);
-        jason_get_list.put("type", "zwave");
-        if (device_type == DeviceTypeProtocol.ZIGBEE)
-            jason_get_list.put("type", "zigbee");
-        else if (device_type == DeviceTypeProtocol.UPNP)
-            jason_get_list.put("type", "upnp");
-        jason_get_list.put("uuid", uuid);
-        jason_get_list.put("id", id);
-        jason_get_list.put("value", Integer.toString(value));
 
+        try {
+
+            jason_get_list.put("method", RemoteAccessMsg.commandSetBinary);
+            jason_get_list.put("type", "zwave");
+            if (device_type == DeviceTypeProtocol.ZIGBEE)
+                jason_get_list.put("type", "zigbee");
+            else if (device_type == DeviceTypeProtocol.UPNP)
+                jason_get_list.put("type", "upnp");
+            jason_get_list.put("uuid", uuid);
+            jason_get_list.put("id", id);
+            jason_get_list.put("value", Integer.toString(value));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
         message.setPayload(jason_get_list.toString().getBytes());
+
+
         return message;
     }
 
 
-    public static MqttMessage CreateZwaveGetBinaryMsg(DeviceTypeProtocol device_type, String id) throws JSONException {
+    public static MqttMessage CreateZwaveGetBinaryMsg(DeviceTypeProtocol device_type, String id) {
         MqttMessage message = new MqttMessage();
-        //message.setId(1);
-        message.setQos(0);
-        message.setRetained(false);
-        JSONObject jason_get_list = new JSONObject();
-        jason_get_list.put("method", RemoteAccessMsg.commandGetBinary);
-        jason_get_list.put("type", "zwave");
-        if (device_type == DeviceTypeProtocol.ZIGBEE)
-            jason_get_list.put("type", "zigbee");
-        else if (device_type == DeviceTypeProtocol.UPNP)
-            jason_get_list.put("type", "upnp");
-        jason_get_list.put("uuid", uuid);
-        jason_get_list.put("id", id);
+
+            //message.setId(1);
+            message.setQos(0);
+            message.setRetained(false);
+            JSONObject jason_get_list = new JSONObject();
+        try {
+            jason_get_list.put("method", RemoteAccessMsg.commandGetBinary);
+            jason_get_list.put("type", "zwave");
+            if (device_type == DeviceTypeProtocol.ZIGBEE)
+                jason_get_list.put("type", "zigbee");
+            else if (device_type == DeviceTypeProtocol.UPNP)
+                jason_get_list.put("type", "upnp");
+            jason_get_list.put("uuid", uuid);
+            jason_get_list.put("id", id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
 
         message.setPayload(jason_get_list.toString().getBytes());
         return message;
@@ -242,6 +257,7 @@ public class RemoteAccessMsg {
         } catch (JSONException e)
         {
             e.printStackTrace();
+            return null;
         }
         message.setPayload(jason_get_list.toString().getBytes());
         return message;
@@ -273,6 +289,7 @@ public class RemoteAccessMsg {
         } catch (JSONException e)
         {
             e.printStackTrace();
+            return null;
         }
 
         message.setPayload(jason_get_list.toString().getBytes());

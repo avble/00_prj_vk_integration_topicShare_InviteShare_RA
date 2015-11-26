@@ -49,7 +49,7 @@ import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSens
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
 import remote.service.verik.com.remoteaccess.model.DeviceIR_SEC_SAFETYDoorLock;
 
-import remote.service.verik.com.remoteaccess.DeviceDetailActivity;
+import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSSiren5;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnCreateContextMenuListener, MqttCallback, IMqttActionListener, httpWrapperInterface {
@@ -97,32 +97,28 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         }
     };
 
-    public static View.OnClickListener DeviceOnOffButton = new View.OnClickListener(){
+    public static View.OnClickListener DeviceOnOffButton = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Device device = (Device) v.getTag();
             MqttMessage message = null;
-            try {
-                int value = 1;
-                if (device.isTurnOn())
-                    value = 0;
+            int value = 1;
+            if (device.isTurnOn())
+                value = 0;
 
-                if (device.type.contentEquals("zwave"))
-                    message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
-                else if (device.type.contains("zigbee"))
-                    message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), value);
-                else if (device.type.contains("upnp"))
-                    message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId(), value);
+            if (device.type.contentEquals("zwave"))
+                message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
+            else if (device.type.contains("zigbee"))
+                message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), value);
+            else if (device.type.contains("upnp"))
+                message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId(), value);
 
-                boolean on = true;
-                if (value == 0)
-                    on = false;
+            boolean on = true;
+            if (value == 0)
+                on = false;
 
-                device.setTurnOn(on);
+            device.setTurnOn(on);
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
 
             MQTTWrapper.PublishRemoteAccessMsg(topic, message);
 
@@ -148,9 +144,9 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                     String ret = (String) msg.obj;
                     if (ret.length() > 0) {
                         Toast.makeText(getApplicationContext(), "Just received a topic with key " + alljoyn_wrapper.keyValue + ": " + (String) msg.obj, Toast.LENGTH_LONG).show();
-                        setTopic((String)msg.obj);
-                    }else
-                        Toast.makeText(getApplicationContext(), "Can not find the topic for key " + alljoyn_wrapper.keyValue , Toast.LENGTH_LONG).show();
+                        setTopic((String) msg.obj);
+                    } else
+                        Toast.makeText(getApplicationContext(), "Can not find the topic for key " + alljoyn_wrapper.keyValue, Toast.LENGTH_LONG).show();
 
                     break;
 
@@ -199,8 +195,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         }
     }
 
-    public static String getTopic()
-    {
+    public static String getTopic() {
         return topic;
     }
 
@@ -223,11 +218,11 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         registerForContextMenu(list);
 
         // MQTT initialization
-        Log.d(TAG,"Start to connect to MQTT server.");
+        Log.d(TAG, "Start to connect to MQTT server.");
         //connect to server
         try {
 
-            client  = new MqttAndroidClient(this,mqttSRV, CLIENT_ID );
+            client = new MqttAndroidClient(this, mqttSRV, CLIENT_ID);
 
             MqttConnectOptions conOpt = new MqttConnectOptions();
 
@@ -237,7 +232,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
             client.setCallback(this);
             //connect to server
-            client.connect(conOpt,this);
+            client.connect(conOpt, this);
         } catch (MqttException e) {
             Log.d(TAG, "Error when connect to server " + mqttSRV + ", error code:  " + e.getReasonCode());
         }
@@ -285,7 +280,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 url += inviteSRV + "/generateInvite";
                 http_request.execute(url);
             }
-                return true;
+            return true;
 
             case R.id.option_menu_inviteShare_getTopic: {
                 HttpWrapper http_request = new HttpWrapper();
@@ -296,7 +291,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 url += inviteSRV + "/getTopic/" + pincode;
                 http_request.execute(url);
             }
-                return true;
+            return true;
 
             case R.id.option_menu_setting:
 
@@ -329,7 +324,6 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 MQTTWrapper.PublishRemoteAccessMsg(topic, message);
 
                 return true;
-
 
 
             case R.id.option_menu_remoteAccess_zwave_add_device:
@@ -379,7 +373,6 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 return true;
 
 
-
             case R.id.option_menu_remoteAccess_zwave_remove_device:
                 message = null;
                 try {
@@ -427,11 +420,11 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         super.onCreateContextMenu(menu, v, menuInfo);
         getMenuInflater().inflate(R.menu.device_context_menu, menu);
 
-        ListView list = (ListView)v;
+        ListView list = (ListView) v;
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
-        Device device = (Device)list.getItemAtPosition(info.position);
+        Device device = (Device) list.getItemAtPosition(info.position);
         menu.setHeaderTitle(device.getId());
 
     }
@@ -441,24 +434,19 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         MqttMessage message;
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-        Device device = (Device)adapter.getItem(info.position);
+        Device device = (Device) adapter.getItem(info.position);
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.context_menu_get_binary:
                 message = null;
-                try {
 
-                    if (device.type.contentEquals("zwave"))
-                        message = RemoteAccessMsg.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId());
-                    else if (device.type.contains("zigbee"))
-                        message = RemoteAccessMsg.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId());
-                    else if (device.type.contains("upnp"))
-                        message = RemoteAccessMsg.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId());
+                if (device.type.contentEquals("zwave"))
+                    message = RemoteAccessMsg.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId());
+                else if (device.type.contains("zigbee"))
+                    message = RemoteAccessMsg.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId());
+                else if (device.type.contains("upnp"))
+                    message = RemoteAccessMsg.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId());
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 try {
                     MainActivity.client.publish(topic, message);
                 } catch (MqttException e) {
@@ -485,8 +473,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
     public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
 
 
-        Log.d(TAG,"Received data from topic: "+topic+", Mqtt message: "+mqttMessage.toString());
-
+        Log.d(TAG, "Received data from topic: " + topic + ", Mqtt message: " + mqttMessage.toString());
 
 
         if (RemoteAccessMsg.isMyMessage(mqttMessage.toString()))
@@ -542,7 +529,10 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                             } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_AEOTEC_Door_Window_Sensor) == 0) {
 
                                 new_device = new DeviceAEOTEC_Door_Window_Sensor(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-                            } else {
+                            } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_Siren_Alarm_Sensor) == 0) {
+
+                                new_device = new DeviceAEON_LABSSiren5(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                            }else {
 
                                 new_device = new Device(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
 
@@ -554,8 +544,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                             devices.add(new_device);
 
                         }
-                    }else if (protocol.equals("upnp"))
-                    {
+                    } else if (protocol.equals("upnp")) {
 
                         for (int i = 0; i < deviceList.length(); i++) {
                             JSONObject device = deviceList.getJSONObject(i);
@@ -596,8 +585,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
                     for (int i = 0; i < devices.size(); i++) {
                         Device device_tmp = devices.get(i);
-                        if (device_tmp.getId().equals(node_id))
-                        {
+                        if (device_tmp.getId().equals(node_id)) {
                             device_tmp.Update(mqttMessage.toString());
                             break;
 
@@ -612,8 +600,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                     Toast.makeText(getApplicationContext(), "Just Received a MQTT message: " + mqttMessage.toString(), Toast.LENGTH_LONG).show();
                     break;
             }
-        }else
-        {
+        } else {
             Toast.makeText(getApplicationContext(), "Just Received a MQTT message: " + mqttMessage.toString(), Toast.LENGTH_LONG).show();
 
         }
@@ -622,13 +609,13 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
     @Override
     public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
-        Log.d(TAG,"Delivered message successful");
+        Log.d(TAG, "Delivered message successful");
     }
 
     @Override
     public void onSuccess(IMqttToken iMqttToken) {
-        Log.d(TAG,"Connect success");
-        Toast.makeText(this,"Connect to server "+mqttSRV+" successful",Toast.LENGTH_LONG).show();
+        Log.d(TAG, "Connect success");
+        Toast.makeText(this, "Connect to server " + mqttSRV + " successful", Toast.LENGTH_LONG).show();
 
         if (topic.length() > 0) {
 
@@ -650,7 +637,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
     @Override
     public void onFailure(IMqttToken iMqttToken, Throwable throwable) {
         Log.d(TAG, "Connect fail ");
-        Toast.makeText(this,"Connect to server "+mqttSRV+" Fail",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Connect to server " + mqttSRV + " Fail", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -658,16 +645,15 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
         if (SettingActivity.cur_command == SettingActivity.COMMAND_INVITESHARE_UNKNOWN) {
             // TODO: Just send a Toast
-            Toast.makeText(getApplicationContext(), "[InviteShare] Unknown response from server " , Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "[InviteShare] Unknown response from server ", Toast.LENGTH_LONG).show();
 
-        }else if (SettingActivity.cur_command == SettingActivity.COMMAND_INVITESHARE_GEN_PINCODE) {
+        } else if (SettingActivity.cur_command == SettingActivity.COMMAND_INVITESHARE_GEN_PINCODE) {
             pincode = s;
-            Toast.makeText(getApplicationContext(), "[InviteShare] just received the pincode ( " + pincode + " ) for topic " + topic , Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "[InviteShare] just received the pincode ( " + pincode + " ) for topic " + topic, Toast.LENGTH_LONG).show();
 
-        }
-        else if (SettingActivity.cur_command == SettingActivity.COMMAND_INVITESHARE_GET_TOPIC) {
+        } else if (SettingActivity.cur_command == SettingActivity.COMMAND_INVITESHARE_GET_TOPIC) {
             setTopic(s);
-            Toast.makeText(getApplicationContext(), "[InviteShare] just received the topic ( " + topic + " ) for pincode " + pincode , Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "[InviteShare] just received the topic ( " + topic + " ) for pincode " + pincode, Toast.LENGTH_LONG).show();
 //
 //            handler.post(new Runnable() {
 //                @Override
@@ -688,8 +674,8 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case (INTENT_SETTING_RESULT_CODE) : {
+        switch (requestCode) {
+            case (INTENT_SETTING_RESULT_CODE): {
                 if (resultCode == SettingActivity.INTENT_RESULT_OK && data != null) {
 
                     //inviteSRV =  data.getStringExtra(MainActivity.share_invite_srv);
@@ -707,7 +693,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
         }
     }
 
-    class AlljoynWrapper{
+    class AlljoynWrapper {
 
 
         private static final int MESSAGE_ALLJOYN_GETTOPIC_REPLY = 2;
@@ -717,7 +703,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
         private static final String TAG = "GetTopic";
 
-//        public static final String key = "key";
+        //        public static final String key = "key";
         final public String keyValue;
 
 
@@ -726,7 +712,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
         private ProgressDialog mDialog;
 
-        AlljoynWrapper(){
+        AlljoynWrapper() {
             HandlerThread busThread = new HandlerThread("BusHandler");
             busThread.start();
             mBusHandler = new BusHandler(busThread.getLooper());
@@ -748,13 +734,13 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
              */
             private static final String SERVICE_NAME = "org.alljoyn.Bus.VEriK.GetTopic";
             private static final String OBJ_PATH = "/GetTopic";
-            private static final short CONTACT_PORT=25;
+            private static final short CONTACT_PORT = 25;
 
             private BusAttachment mBus;
             private ProxyBusObject mProxyObj;
             private BasicInterface mBasicInterface;
 
-            private int 	mSessionId;
+            private int mSessionId;
             private boolean mIsInASession;
             private boolean mIsConnected;
             private boolean mIsStoppingDiscovery;
@@ -775,7 +761,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
 
             @Override
             public void handleMessage(Message msg) {
-                switch(msg.what) {
+                switch (msg.what) {
             /* Connect to a remote instance of an object implementing the BasicInterface. */
                     case CONNECT: {
                         org.alljoyn.bus.alljoyn.DaemonInit.PrepareDaemon(getApplicationContext());
@@ -798,7 +784,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                             @Override
                             public void foundAdvertisedName(String name, short transport, String namePrefix) {
                                 logInfo(String.format("MyBusListener.foundAdvertisedName(%s, 0x%04x, %s)", name, transport, namePrefix));
-                    	/*
+                        /*
                     	 * This client will only join the first service that it sees advertising
                     	 * the indicated well-known name.  If the program is already a member of
                     	 * a session (i.e. connected to a service) we will not attempt to join
@@ -806,7 +792,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                     	 * It is possible to join multiple session however joining multiple
                     	 * sessions is not shown in this sample.
                     	 */
-                                if(!mIsConnected) {
+                                if (!mIsConnected) {
                                     Message msg = obtainMessage(JOIN_SESSION);
                                     msg.arg1 = transport;
                                     msg.obj = name;
@@ -856,14 +842,14 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                  */
                         short contactPort = CONTACT_PORT;
                         SessionOpts sessionOpts = new SessionOpts();
-                        sessionOpts.transports = (short)msg.arg1;
+                        sessionOpts.transports = (short) msg.arg1;
                         Mutable.IntegerValue sessionId = new Mutable.IntegerValue();
 
                         Status status = mBus.joinSession((String) msg.obj, contactPort, sessionId, sessionOpts, new SessionListener() {
                             @Override
                             public void sessionLost(int sessionId, int reason) {
                                 mIsConnected = false;
-                                logInfo(String.format("MyBusListener.sessionLost(sessionId = %d, reason = %d)", sessionId,reason));
+                                logInfo(String.format("MyBusListener.sessionLost(sessionId = %d, reason = %d)", sessionId, reason));
                                 mHandler.sendEmptyMessage(MESSAGE_ALLJOYN_START_PROGRESS_DIALOG);
                             }
                         });
@@ -877,13 +863,13 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                      * This ProxyBusObject is located at the well-known SERVICE_NAME, under path
                      * "/sample", uses sessionID of CONTACT_PORT, and implements the BasicInterface.
                      */
-                            mProxyObj =  mBus.getProxyBusObject(SERVICE_NAME,
+                            mProxyObj = mBus.getProxyBusObject(SERVICE_NAME,
                                     OBJ_PATH,
                                     sessionId.value,
-                                    new Class<?>[] { BasicInterface.class });
+                                    new Class<?>[]{BasicInterface.class});
 
                 	/* We make calls to the methods of the AllJoyn object through one of its interfaces. */
-                            mBasicInterface =  mProxyObj.getInterface(BasicInterface.class);
+                            mBasicInterface = mProxyObj.getInterface(BasicInterface.class);
 
                             mSessionId = sessionId.value;
                             mIsConnected = true;
@@ -915,7 +901,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                             if (mBasicInterface != null) {
                                 //sendUiMessage(MESSAGE_PING, msg.obj + " and " + msg.obj);
                                 //String reply = mBasicInterface.cat((String) msg.obj, (String) msg.obj);
-                                String reply = mBasicInterface.get_topic((String)msg.obj);
+                                String reply = mBasicInterface.get_topic((String) msg.obj);
                                 sendUiMessage(MESSAGE_ALLJOYN_GETTOPIC_REPLY, reply);
                             }
                         } catch (BusException ex) {

@@ -29,7 +29,7 @@ public class Device {
 	public static String DEVICE_TYPE_Zwave_Outlet_Lamp_Module                   = "44503030";/**/
 	public static String DEVICE_TYPE_Zwave_Motion_Sensor_Ecolink                = "00010001";/**/
 	public static String DEVICE_TYPE_Zwave_Sensor_Multilevel_Gen5               = "00860102004A";/**/
-	public static String DEVICE_TYPE_Zwave_Siren_Alarm_Sensor                   = "01040050";/**/
+	public static String DEVICE_TYPE_Zwave_Siren_Alarm_Sensor                   = "008601040050";/**/
 	public static String DEVICE_TYPE_Zwave_Aeotec_Smartdimmer                   = "008600030019";/**/
 	public static String DEVICE_TYPE_Zwave_Smart_Switch                         = "4F503031";/**/
 	public static String DEVICE_TYPE_Zwave_Door_Lock                            = "003b63495044";/**/
@@ -251,7 +251,7 @@ public class Device {
 
     // UPnP RealName
     // ZWAVE ID
-    private String id;
+    public String id;
 
     //
     private String friendlyName;

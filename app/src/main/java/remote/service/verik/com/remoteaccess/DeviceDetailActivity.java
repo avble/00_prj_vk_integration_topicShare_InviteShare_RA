@@ -8,21 +8,16 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONException;
 
 import remote.service.verik.com.remoteaccess.model.Device;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor5;
@@ -31,6 +26,7 @@ import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor6;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
 import remote.service.verik.com.remoteaccess.model.DeviceIR_SEC_SAFETYDoorLock;
+import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSSiren5;
 
 public class DeviceDetailActivity extends FragmentActivity implements ActionBar.TabListener {
 
@@ -131,18 +127,13 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
 
 
                     MqttMessage message = null;
-                    try {
+                    if (device.type.contentEquals("zwave"))
+                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device_dimmer.getId(), dimer_progress);
+                    else if (device.type.contains("zigbee"))
+                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device_dimmer.getId(), dimer_progress);
+                    else if (device.type.contains("upnp"))
+                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device_dimmer.getId(), dimer_progress);
 
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device_dimmer.getId(), dimer_progress);
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device_dimmer.getId(), dimer_progress);
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device_dimmer.getId(), dimer_progress);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
                     try {
                         MainActivity.client.publish(MainActivity.topic, message);
                     } catch (MqttException e) {
@@ -163,27 +154,23 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
 
                     Device device = (Device) v.getTag();
                     MqttMessage message = null;
-                    try {
-                        int value = 1;
-                        if (device.isTurnOn())
-                            value = 0;
+                    int value = 1;
+                    if (device.isTurnOn())
+                        value = 0;
 
-                        if (device.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
-                        else if (device.type.contains("zigbee"))
-                            message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), value);
-                        else if (device.type.contains("upnp"))
-                            message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId(), value);
+                    if (device.type.contentEquals("zwave"))
+                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
+                    else if (device.type.contains("zigbee"))
+                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), value);
+                    else if (device.type.contains("upnp"))
+                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId(), value);
 
-                        boolean on = true;
-                        if (value == 0)
-                            on = false;
+                    boolean on = true;
+                    if (value == 0)
+                        on = false;
 
-                        device.setTurnOn(on);
+                    device.setTurnOn(on);
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
                     try {
                         MainActivity.client.publish(MainActivity.topic, message);
                     } catch (MqttException e) {
@@ -287,7 +274,7 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
             });
 
         } else if (device instanceof DeviceAEON_LABSMultilevelSensor6 || device instanceof DeviceAEON_LABSMultilevelSensor5
-                || device instanceof DeviceIR_SEC_SAFETYDoorLock) {
+                || device instanceof DeviceIR_SEC_SAFETYDoorLock || device instanceof DeviceAEON_LABSSiren5) {
 
 
             setContentView(R.layout.device_detail);
