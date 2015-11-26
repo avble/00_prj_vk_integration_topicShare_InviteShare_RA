@@ -134,11 +134,9 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
                     else if (device.type.contains("upnp"))
                         message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device_dimmer.getId(), dimer_progress);
 
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
+
+                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
+
 
 
                 }
@@ -171,11 +169,9 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
 
                     device.setTurnOn(on);
 
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
+
+                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
+
 
 
                 }
@@ -219,11 +215,7 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
                     if (device.type.contentEquals("zwave"))
                         message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
 
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
+                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                 }
@@ -240,12 +232,7 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
                     if (device.type.contentEquals("zwave"))
                         message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_HUMI, "", "");
 
-
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
+                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                 }
@@ -264,11 +251,8 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
                         message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_METER, "GET", DeviceAEON_LABSHeavyDutySmart.type_METER_POWER, "", "");
 
 
-                    try {
-                        MainActivity.client.publish(MainActivity.topic, message);
-                    } catch (MqttException e) {
-                        Log.d(MainActivity.TAG, "Publish error with message: " + e.getMessage());
-                    }
+                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
+
 
                 }
             });
