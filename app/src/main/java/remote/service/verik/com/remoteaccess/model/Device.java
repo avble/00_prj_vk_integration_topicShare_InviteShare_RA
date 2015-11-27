@@ -400,7 +400,7 @@ public class Device {
                 return ((DeviceFragment)fragment).getFragmentTitle();
             else if (fragment instanceof  HistoryFragment)
             {
-                return "History";
+                return "Dashboard";
             }
         }
 

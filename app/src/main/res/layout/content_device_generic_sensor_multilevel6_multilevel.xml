@@ -17,18 +17,9 @@
         android:layout_height="match_parent">
 
         <TableRow
-            android:id="@+id/tableRow1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="1px" >
-
-            <TextView
-                android:id="@+id/sensor_multilevel6_multilevel_tw_temp"
-                android:layout_width="500px"
-                android:layout_height="wrap_content"
-                android:text="Temp"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
             <Button
                 android:id="@+id/sensor_multilevel6_multilevel_button_temp"
                 android:layout_width="wrap_content"
@@ -41,17 +32,9 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/tableRow2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="1px" >
-
-            <TextView
-                android:id="@+id/sensor_multilevel6_multilevel_tw_humi"
-                android:layout_width="500px"
-                android:layout_height="wrap_content"
-                android:text="Humi"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <Button
                 android:id="@+id/sensor_multilevel6_multilevel_button_humi"
@@ -65,17 +48,9 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/tableRow3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="1px" >
-
-            <TextView
-                android:id="@+id/sensor_multilevel6_multilevel_tw_lumi"
-                android:layout_width="500px"
-                android:layout_height="wrap_content"
-                android:text="LUMI"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <Button
                 android:id="@+id/sensor_multilevel6_multilevel_button_lumi"
@@ -89,17 +64,9 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/tableRow4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="1px" >
-
-            <TextView
-                android:id="@+id/sensor_multilevel6_multilevel_tw_ultra_violet"
-                android:layout_width="500px"
-                android:layout_height="wrap_content"
-                android:text="Violet"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <Button
                 android:id="@+id/sensor_multilevel6_multilevel_button_ultra_violet"

@@ -23,19 +23,19 @@ import remote.service.verik.com.remoteaccess.DeviceTypeProtocol;
 import remote.service.verik.com.remoteaccess.MainActivity;
 import remote.service.verik.com.remoteaccess.R;
 import remote.service.verik.com.remoteaccess.RemoteAccessMsg;
+import remote.service.verik.com.remoteaccess.Vtransport.genericDevice.genericMultilevelSensor;
+import remote.service.verik.com.remoteaccess.Vtransport.zwaveConfigurationMsg;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdConfigurationResp;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdMultilevelResp;
 
 
-public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.OnClickListener {
+public class DeviceAEON_LABSMultilevelSensor6 extends genericMultilevelSensor implements  View.OnClickListener, IcmdMultilevelResp, IcmdConfigurationResp {
 
 
     //CmdZWaveConfiguration cmdConfiguration[] =
 
     ArrayList <CmdZWaveConfiguration> listZwaveCmd = new ArrayList<CmdZWaveConfiguration>();
 
-    public double multilevel_sensor_temp = 0;
-    public double multilevel_sensor_humi = 0;
-    public double multilevel_sensor_lumi = 0;
-    public double multilevel_sensor_uv = 0;
 
     public int configuration_lock = 0;
     public int configuration_timer = 10; // minimun value
@@ -93,12 +93,6 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
     final public static String cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID = "1";
 
 
-    // For Viewer
-    public TextView viewer_tw_multilevel6_humi;
-    public TextView viewer_tw_multilevel6_temp;
-    public TextView viewer_tw_multilevel6_lumi;
-    public TextView viewer_tw_multilevel6_uv;
-
     public CheckBox viewer_cb_configuration_lock;
     public SeekBar viewer_seekBar_configuration_timer;
 
@@ -121,111 +115,111 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
     @Override
     public void Update(String property) {
         super.Update(property);
-
-        JSONObject jason;
-
-        try {
-            jason = new JSONObject(property);
-
-            String method = jason.getString("method");
-
-            String device_id = jason.getString("deviceid");
-
-            String commandinfo = jason.getString("commandinfo");
-            if (method == null || commandinfo == null)
-                return; // do nothing
-
-            if (method.equals(RemoteAccessMsg.commandGetSpecificationR)) {
-                JSONObject jason_command_info = new JSONObject(commandinfo);
-                String klass = jason_command_info.getString("class");
-                String command = jason_command_info.getString("command");
-                String data0 = jason_command_info.getString("data0");
-
-                if (klass == null || command == null || data0 == null)
-                    return;
-
-                if (klass.equals(klass_SENSOR_MULTILEVEL)) {
-                    if (command.equals("GET")) {
-                        if (data0.equals(type_SENSOR_MULTILEVEL_TEMP)) {
-                            String fahrenheit = jason.getString("fahrenheit");
-                            multilevel_sensor_temp = Double.parseDouble(fahrenheit);
-
-                            if (viewer_tw_multilevel6_temp != null) {
-                                viewer_tw_multilevel6_temp.setText(Double.toString(multilevel_sensor_temp));
-                            }
-
-                        } else if (data0.equals(type_SENSOR_MULTILEVEL_LUMI)) {
-
-                            String luminance = jason.getString("luminance");
-                            multilevel_sensor_lumi = Double.parseDouble(luminance);
-
-                            if (viewer_tw_multilevel6_lumi != null) {
-                                viewer_tw_multilevel6_lumi.setText(Double.toString(multilevel_sensor_lumi));
-                            }
-
-                        } else if (data0.equals(type_SENSOR_MULTILEVEL_HUMI)) {
-                            String absolute_humidity = jason.getString("absolute_humidity");
-                            multilevel_sensor_humi = Double.parseDouble(absolute_humidity);
-
-                            if (viewer_tw_multilevel6_humi != null) {
-                                viewer_tw_multilevel6_humi.setText(Double.toString(multilevel_sensor_humi));
-                            }
-
-
-                        } else if (data0.equals(type_SENSOR_MULTILEVEL_UV)) {
-
-                            String ultraviolet = jason.getString("ultraviolet");
-                            multilevel_sensor_uv = Double.parseDouble(ultraviolet);
-
-                            if (viewer_tw_multilevel6_uv != null) {
-                                viewer_tw_multilevel6_uv.setText(Double.toString(multilevel_sensor_uv));
-                            }
-
-                        }
-                    }
-
-                } else if (klass.equals(klass_SENSOR_ASSOCIATION)) {
-
-                    // TODO
-
-                } else if (klass.equals(klass_SENSOR_CONFIGURATION)) {
-                    // TODO
-
-                }
-            } else if (method.equals(RemoteAccessMsg.commandSetSpecificationR)) {
-                JSONObject jason_command_info = new JSONObject(commandinfo);
-                String klass = jason_command_info.getString("class");
-                String command = jason_command_info.getString("command");
-                String data0 = jason_command_info.getString("data0");
-
-                if (klass == null || command == null || data0 == null)
-                    return;
-                if (klass.equals(klass_SENSOR_MULTILEVEL)) {
-
-
-                } else if (klass.equals(klass_SENSOR_ASSOCIATION)) {
-
-                    // TODO
-
-                } else if (klass.equals(klass_SENSOR_CONFIGURATION)) {
-                    if (command.equals("GET")) {
-                        if (data0.equals(cmd_klass_CONFIGURATION_LOCK)) {
-                            String data1 = jason_command_info.getString("data1");
-                            configuration_lock = Integer.parseInt(data1);
-                            if (configuration_lock == 0)
-                                viewer_cb_configuration_lock.setChecked(true);
-                            else
-                                viewer_cb_configuration_lock.setChecked(false);
-                        }
-                    }
-
-                }
-
-            }
-
-
-        } catch (JSONException e) {
-        }
+//
+//        JSONObject jason;
+//
+//        try {
+//            jason = new JSONObject(property);
+//
+//            String method = jason.getString("method");
+//
+//            String device_id = jason.getString("deviceid");
+//
+//            String commandinfo = jason.getString("commandinfo");
+//            if (method == null || commandinfo == null)
+//                return; // do nothing
+//
+//            if (method.equals(RemoteAccessMsg.commandGetSpecificationR)) {
+//                JSONObject jason_command_info = new JSONObject(commandinfo);
+//                String klass = jason_command_info.getString("class");
+//                String command = jason_command_info.getString("command");
+//                String data0 = jason_command_info.getString("data0");
+//
+//                if (klass == null || command == null || data0 == null)
+//                    return;
+//
+//                if (klass.equals(klass_SENSOR_MULTILEVEL)) {
+//                    if (command.equals("GET")) {
+//                        if (data0.equals(type_SENSOR_MULTILEVEL_TEMP)) {
+//                            String fahrenheit = jason.getString("fahrenheit");
+//                            multilevel_sensor_temp = Double.parseDouble(fahrenheit);
+//
+//                            if (viewer_tw_multilevel6_temp != null) {
+//                                viewer_tw_multilevel6_temp.setText(Double.toString(multilevel_sensor_temp));
+//                            }
+//
+//                        } else if (data0.equals(type_SENSOR_MULTILEVEL_LUMI)) {
+//
+//                            String luminance = jason.getString("luminance");
+//                            multilevel_sensor_lumi = Double.parseDouble(luminance);
+//
+//                            if (viewer_tw_multilevel6_lumi != null) {
+//                                viewer_tw_multilevel6_lumi.setText(Double.toString(multilevel_sensor_lumi));
+//                            }
+//
+//                        } else if (data0.equals(type_SENSOR_MULTILEVEL_HUMI)) {
+//                            String absolute_humidity = jason.getString("absolute_humidity");
+//                            multilevel_sensor_humi = Double.parseDouble(absolute_humidity);
+//
+//                            if (viewer_tw_multilevel6_humi != null) {
+//                                viewer_tw_multilevel6_humi.setText(Double.toString(multilevel_sensor_humi));
+//                            }
+//
+//
+//                        } else if (data0.equals(type_SENSOR_MULTILEVEL_UV)) {
+//
+//                            String ultraviolet = jason.getString("ultraviolet");
+//                            multilevel_sensor_uv = Double.parseDouble(ultraviolet);
+//
+//                            if (viewer_tw_multilevel6_uv != null) {
+//                                viewer_tw_multilevel6_uv.setText(Double.toString(multilevel_sensor_uv));
+//                            }
+//
+//                        }
+//                    }
+//
+//                } else if (klass.equals(klass_SENSOR_ASSOCIATION)) {
+//
+//                    // TODO
+//
+//                } else if (klass.equals(klass_SENSOR_CONFIGURATION)) {
+//                    // TODO
+//
+//                }
+//            } else if (method.equals(RemoteAccessMsg.commandSetSpecificationR)) {
+//                JSONObject jason_command_info = new JSONObject(commandinfo);
+//                String klass = jason_command_info.getString("class");
+//                String command = jason_command_info.getString("command");
+//                String data0 = jason_command_info.getString("data0");
+//
+//                if (klass == null || command == null || data0 == null)
+//                    return;
+//                if (klass.equals(klass_SENSOR_MULTILEVEL)) {
+//
+//
+//                } else if (klass.equals(klass_SENSOR_ASSOCIATION)) {
+//
+//                    // TODO
+//
+//                } else if (klass.equals(klass_SENSOR_CONFIGURATION)) {
+//                    if (command.equals("GET")) {
+//                        if (data0.equals(cmd_klass_CONFIGURATION_LOCK)) {
+//                            String data1 = jason_command_info.getString("data1");
+//                            configuration_lock = Integer.parseInt(data1);
+//                            if (configuration_lock == 0)
+//                                viewer_cb_configuration_lock.setChecked(true);
+//                            else
+//                                viewer_cb_configuration_lock.setChecked(false);
+//                        }
+//                    }
+//
+//                }
+//
+//            }
+//
+//
+//        } catch (JSONException e) {
+//        }
     }
 
 
@@ -248,27 +242,13 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
 
                 View rootView = inflater.inflate(R.layout.content_device_generic_sensor_multilevel6_multilevel, container, false);
 
-                DeviceAEON_LABSMultilevelSensor6.this.viewer_tw_multilevel6_humi = (TextView) rootView.findViewById(R.id.sensor_multilevel6_multilevel_tw_humi);
-                DeviceAEON_LABSMultilevelSensor6.this.viewer_tw_multilevel6_temp = (TextView) rootView.findViewById(R.id.sensor_multilevel6_multilevel_tw_temp);
-                DeviceAEON_LABSMultilevelSensor6.this.viewer_tw_multilevel6_lumi = (TextView) rootView.findViewById(R.id.sensor_multilevel6_multilevel_tw_lumi);
-                DeviceAEON_LABSMultilevelSensor6.this.viewer_tw_multilevel6_uv = (TextView) rootView.findViewById(R.id.sensor_multilevel6_multilevel_tw_ultra_violet);
-
-
 
                 Button button_temp = (Button) rootView.findViewById(R.id.sensor_multilevel6_multilevel_button_temp);
 
                 button_temp.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        MqttMessage message = null;
-
-                        message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
-
-                        if (message != null)
-                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
-
+                        multilevelGet(type_SENSOR_MULTILEVEL_TEMP);
                     }
                 });
 
@@ -277,14 +257,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                 button_humi.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        MqttMessage message = null;
-                        if (type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
-
-                        if (message != null)
-                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
+                        multilevelGet(type_SENSOR_MULTILEVEL_HUMI);
 
                     }
                 });
@@ -295,14 +268,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                 button_lumi.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        MqttMessage message = null;
-                        if (type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
-
-                        if (message != null)
-                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
+                        multilevelGet(type_SENSOR_MULTILEVEL_LUMI);
 
                     }
                 });
@@ -314,14 +280,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                     @Override
                     public void onClick(View v) {
 
-                        MqttMessage message = null;
-                        if (type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_UV, "2A", "1/10");
-
-
-                        if (message != null)
-                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
+                        multilevelGet(type_SENSOR_MULTILEVEL_UV);
 
                     }
                 });
@@ -364,16 +323,8 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                             if (cb_enable_disable.isChecked())
                                 value = DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK_VALUE_DISABLE;
 
-
-                            MqttMessage message = null;
-
-                            if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
-                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK, value, "");
-
-
-                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
+                            zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                            config.Set(id, cmd_klass_CONFIGURATION_LOCK, value, "");
 
                         }
                     });
@@ -406,15 +357,8 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                         @Override
                         public void onStopTrackingTouch(SeekBar seekBar) {
 
-                            MqttMessage message = null;
-
-                            if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
-                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(DeviceAEON_LABSMultilevelSensor6.this.configuration_timer - 10), "");
-
-
-                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
+                            zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                            config.Set(id, cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(DeviceAEON_LABSMultilevelSensor6.this.configuration_timer - 10), "");
 
                         }
                     });
@@ -478,17 +422,8 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
 
                         String value = Integer.toHexString(configuration_report);
 
-
-                        MqttMessage message = null;
-
-                        if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
-
-
-                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
-
+                        zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                        config.Set(id, cmd_klass_CONFIGURATION_REPORT, value, "");
                     }
                 };
 
@@ -519,15 +454,8 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                         if (radio_button_motion_level1.isChecked())
                             value = "1";
 
-                        MqttMessage message = null;
-
-                        if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-
-
-                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
+                        zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                        config.Set(id, cmd_klass_CONFIGURATION_PIR, value, "");
 
                     }
                 });
@@ -543,15 +471,8 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                         if (radio_button_motion_level2.isChecked())
                             value = "2";
 
-                        MqttMessage message = null;
-
-                        if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-
-
-                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
+                        zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                        config.Set(id, cmd_klass_CONFIGURATION_PIR, value, "");
 
                     }
                 });
@@ -567,13 +488,8 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                         if (radio_button_motion_level3.isChecked())
                             value = "3";
 
-                        MqttMessage message = null;
-                        if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-
-
-                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                        config.Set(id, cmd_klass_CONFIGURATION_PIR, value, "");
 
 
                     }
@@ -587,16 +503,8 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                         String value = "00";
                         if (radio_button_motion_level4.isChecked())
                             value = "4";
-
-                        MqttMessage message = null;
-
-                        if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-
-
-                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
+                        zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                        config.Set(id, cmd_klass_CONFIGURATION_PIR, value, "");
 
                     }
                 });
@@ -610,15 +518,8 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                         if (radio_button_motion_level5.isChecked())
                             value = "5";
 
-                        MqttMessage message = null;
-
-                        if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
-
-
-                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
+                        zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                        config.Set(id, cmd_klass_CONFIGURATION_PIR, value, "");
 
                     }
                 });
@@ -634,12 +535,9 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                         if (radio_button_temp.isChecked())
                             value = "00";
 
-                        MqttMessage message = null;
-                        if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
-                            message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(),
-                                    DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
+                        zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                        config.Set(id, cmd_klass_CONFIGURATION_PIR, value, "");
 
-                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -672,15 +570,82 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                         @Override
                         public void onStopTrackingTouch(SeekBar seekBar) {
 
+                            zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                            config.Set(id, cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString( DeviceAEON_LABSMultilevelSensor6.this.configuration_auto_timer + 10), "");
 
-                            MqttMessage message = null;
-
-                            if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
-                                message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION,
-                                        "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString( DeviceAEON_LABSMultilevelSensor6.this.configuration_auto_timer + 10), "");
+                        }
+                    });
+                }
 
 
-                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
+
+                // GET
+                Button button_get_lock_config = (Button) rootView.findViewById(R.id.sensor_multilevel_button_lock_config_get);
+                if (button_get_lock_config != null) {
+                    button_get_lock_config.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+
+                            zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                            config.Get(id, cmd_klass_CONFIGURATION_LOCK, "");
+
+                        }
+                    });
+                }
+
+                Button button_get_timer_config = (Button) rootView.findViewById(R.id.sensor_multilevel_button_timer_config_get);
+                if (button_get_timer_config != null) {
+                    button_get_timer_config.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+
+                            zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                            config.Get(id, cmd_klass_CONFIGURATION_TIMER, "");
+
+                        }
+                    });
+                }
+
+
+                Button button_get_report_config = (Button) rootView.findViewById(R.id.sensor_multilevel_button_report_config_get);
+                if (button_get_report_config != null) {
+                    button_get_report_config.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+
+                            zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                            config.Get(id, cmd_klass_CONFIGURATION_REPORT, "");
+
+                        }
+                    });
+                }
+
+                Button button_get_motion_config = (Button) rootView.findViewById(R.id.sensor_multilevel_button_motion_config_get);
+                if (button_get_motion_config != null) {
+                    button_get_motion_config.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+
+                            zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                            config.Get(id, cmd_klass_CONFIGURATION_PIR, "");
+
+                        }
+                    });
+                }
+
+                Button button_get_auto_timer = (Button) rootView.findViewById(R.id.sensor_multilevel_button_auto_timer_get);
+                if (button_get_auto_timer != null) {
+                    button_get_auto_timer.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+
+                            zwaveConfigurationMsg config = new zwaveConfigurationMsg();
+                            config.Get(id, cmd_klass_CONFIGURATION_PIR, "");
 
                         }
                     });
@@ -756,4 +721,15 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
 
     }
 
+    @Override
+    public int multilevelGetResp(String more) {
+        AddLogToHistory("[MULTILEVEL][GET] " + more);
+        return 0;
+    }
+
+    @Override
+    public void onConfigurationGetResp(String cmd, String data0, String data1, String data2, String status, String more) {
+        AddLogToHistory("[CONFIGURATION][GET] " + more);
+
+    }
 }
