@@ -5,6 +5,6 @@ package remote.service.verik.com.remoteaccess.zwave.cmdClass;
  */
 public interface IcmdConfigurationResp {
 
-    void onConfigurationGetResp(String cmd, String data0, String data1, String data2, String status);
+    void onConfigurationGetResp(String cmd, String data0, String data1, String data2, String status, String more);
 
 }

@@ -5,7 +5,7 @@ package remote.service.verik.com.remoteaccess.zwave.cmdClass;
  */
 public interface IcmdAssociation {
 
-    int setNode(String id, String groupID, String nodeID);
-    int getNode(String id, String groupID);
+    int associationSetNode(String id, String groupID, String nodeID);
+    int associationGetNode(String id, String groupID);
     int associationNodeRemove(String id, String groupID, String nodeID);
 }

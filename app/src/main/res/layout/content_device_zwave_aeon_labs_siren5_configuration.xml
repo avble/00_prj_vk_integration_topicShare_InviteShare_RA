@@ -13,151 +13,245 @@
     tools:showIn="@layout/activity_device_type_sensor_siren_configuration">
 
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="1dp">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
-        <TableRow
-            android:id="@+id/tableRow1"
-            android:layout_width="wrap_content"
+        <TableLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="1px">
+            android:paddingTop="1dp">
 
-            <Button
-                android:id="@+id/sensor_siren_configuration_button_volume_get"
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="500px"
+                    android:layout_height="wrap_content"
+                    android:text="Siren/Volume"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="1px"
-                android:text="Get Siren/Volume type"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:layout_margin="1px">
+
+                <Button
+                    android:id="@+id/sensor_siren_configuration_button_volume_get"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="1px"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:text="Get Siren/Volume type"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
-        </TableRow>
+            </TableRow>
 
 
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="500px"
-                android:layout_height="wrap_content"
-                android:text="Siren Type"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        </TableRow>
-
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1px">
-
-            <RadioGroup
-                android:id="@+id/radioGroupSiren"
-                android:layout_width="fill_parent"
+            <TableRow
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-
-                <RadioButton
-                    android:id="@+id/radioButtonSirenType1"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="500px"
                     android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="type 1"
-                    android:textSize="25dp" />
-                <RadioButton
-                    android:id="@+id/radioButtonSirenType2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="type 2"
-                    android:textSize="25dp" />
+                    android:text="Siren Type"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                <RadioButton
-                    android:id="@+id/radioButtonSirenType3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="type 3"
-                    android:textSize="25dp" />
-
-                <RadioButton
-                    android:id="@+id/radioButtonSirenType4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="type 4"
-                    android:textSize="25dp" />
-                <RadioButton
-                    android:id="@+id/radioButtonSirenType5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="type 5"
-                    android:textSize="25dp" />
+            </TableRow>
 
 
-            </RadioGroup>
-
-        </TableRow>
-
-
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="500px"
+            <TableRow
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Volume"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:layout_margin="1px">
 
-        </TableRow>
+                <RadioGroup
+                    android:id="@+id/radioGroupSiren"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
 
 
-        <TableRow
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1px">
+                    <RadioButton
+                        android:id="@+id/radioButtonSirenType1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="type 1"
+                        android:textSize="25dp" />
 
-            <RadioGroup
-                android:id="@+id/radioGroupVolume"
-                android:layout_width="fill_parent"
+                    <RadioButton
+                        android:id="@+id/radioButtonSirenType2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="type 2"
+                        android:textSize="25dp" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonSirenType3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="type 3"
+                        android:textSize="25dp" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonSirenType4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="type 4"
+                        android:textSize="25dp" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonSirenType5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="type 5"
+                        android:textSize="25dp" />
+
+
+                </RadioGroup>
+
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
+                <TextView
+                    android:layout_width="500px"
+                    android:layout_height="wrap_content"
+                    android:text="Volume"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                <RadioButton
-                    android:id="@+id/radioButtonVolumeType1"
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1px">
+
+                <RadioGroup
+                    android:id="@+id/radioGroupVolume"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <RadioButton
+                        android:id="@+id/radioButtonVolumeType1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="type 1"
+                        android:textSize="25dp" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonVolumeType2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="type 2"
+                        android:textSize="25dp" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonVolumeType3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="type 3"
+                        android:textSize="25dp" />
+
+
+                </RadioGroup>
+
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="500px"
+                    android:layout_height="wrap_content"
+                    android:text="Notification"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1px">
+
+                <Button
+                    android:id="@+id/sensor_siren_configuration_button_notification_get"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="type 1"
-                    android:textSize="25dp" />
-                <RadioButton
-                    android:id="@+id/radioButtonVolumeType2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="type 2"
-                    android:textSize="25dp" />
-
-                <RadioButton
-                    android:id="@+id/radioButtonVolumeType3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="false"
-                    android:text="type 3"
-                    android:textSize="25dp" />
+                    android:padding="5px"
+                    android:layout_gravity="center_horizontal|center_vertical"
+                    android:text="Get Notification"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
-            </RadioGroup>
-
-        </TableRow>
+            </TableRow>
 
 
-    </TableLayout>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1px">
+
+                <RadioGroup
+                    android:id="@+id/radioGroupNotificationType"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <RadioButton
+                        android:id="@+id/radioButtonNotificationType1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="Nothing"
+                        android:textSize="25dp" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonNotificationType2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="Hail command"
+                        android:textSize="25dp" />
+
+                    <RadioButton
+                        android:id="@+id/radioButtonNotificationType3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="false"
+                        android:text="Basic command"
+                        android:textSize="25dp" />
+
+
+                </RadioGroup>
+
+            </TableRow>
+
+
+        </TableLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

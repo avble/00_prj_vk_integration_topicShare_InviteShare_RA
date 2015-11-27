@@ -21,17 +21,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 import remote.service.verik.com.remoteaccess.MainActivity;
-import remote.service.verik.com.remoteaccess.R;
 import remote.service.verik.com.remoteaccess.RemoteAccessMsg;
-import remote.service.verik.com.remoteaccess.model.Adapter;
 import remote.service.verik.com.remoteaccess.model.Device;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor5;
@@ -40,9 +34,11 @@ import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSSiren5;
 import remote.service.verik.com.remoteaccess.model.DeviceAEOTEC_Door_Window_Sensor;
 import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
 import remote.service.verik.com.remoteaccess.model.DeviceIR_SEC_SAFETYDoorLock;
-import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdAssociationReport;
-import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBinarySwitchReport;
-import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdConfigurationReport;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdAssociationResp;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBatteryResp;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBinarySwitchResp;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdConfigurationResp;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdMultilevelResp;
 
 /**
  * Handles call backs from the MQTT Client
@@ -208,8 +204,8 @@ public class MqttCallbackHandler implements MqttCallback {
                     break;
                 case RemoteAccessMsg.commandAddDeviceR:
                 case RemoteAccessMsg.commandRemoveDeviceR:
-                    break;
                 case RemoteAccessMsg.commandSetBinaryR:
+                    Toast.makeText(context.getApplicationContext(), "Just Received a MQTT message: " + message.toString(), Toast.LENGTH_LONG).show();
                     break;
                 case RemoteAccessMsg.commandGetBinaryR:
                     // fine-tuning the GUI
@@ -222,8 +218,8 @@ public class MqttCallbackHandler implements MqttCallback {
                     for (int i = 0; i < MainActivity.devices.size(); i++) {
                         Device device_tmp = MainActivity.devices.get(i);
                         if (device_tmp.getId().equals(node_id)) {
-                            if (device_tmp instanceof IcmdBinarySwitchReport) {
-                                ((IcmdBinarySwitchReport) device_tmp).onBinarySwitchReport(status, value);
+                            if (device_tmp instanceof IcmdBinarySwitchResp) {
+                                ((IcmdBinarySwitchResp) device_tmp).onBinarySwitchGetResp(status, value);
                                 break;
                             }
 
@@ -235,6 +231,8 @@ public class MqttCallbackHandler implements MqttCallback {
                 case RemoteAccessMsg.commandGetSecureSpecR:
                 case RemoteAccessMsg.commandSetSecureSpecR:
                 case RemoteAccessMsg.commandSetSpecificationR:
+                    Toast.makeText(context.getApplicationContext(), "Just Received a MQTT message: " + message.toString(), Toast.LENGTH_LONG).show();
+                    break;
                 case RemoteAccessMsg.commandGetSpecificationR:
                     // fine-tuning the GUI
                     jason = new JSONObject(message.toString());
@@ -270,14 +268,14 @@ public class MqttCallbackHandler implements MqttCallback {
 
                         if (klass.compareToIgnoreCase("CONFIGURATION") == 0)
                         {
-                            if (found_device instanceof IcmdConfigurationReport)
+                            if (found_device instanceof IcmdConfigurationResp)
                             {
-                                ((IcmdConfigurationReport) found_device).onConfigurationReport(cmd, data0, data1, data2, status);
+                                ((IcmdConfigurationResp) found_device).onConfigurationGetResp(cmd, data0, data1, data2, status, message.toString());
                             }
 
                         }else if (klass.compareToIgnoreCase("ASSOCIATION") == 0)
                         {
-                            if (found_device instanceof IcmdAssociationReport)
+                            if (found_device instanceof IcmdAssociationResp)
                             {
                                 if (cmd.compareToIgnoreCase("GET") == 0) {
                                     String groupID = jason.getString("groupid");
@@ -285,12 +283,29 @@ public class MqttCallbackHandler implements MqttCallback {
                                     JSONArray values = jason.getJSONArray("nodefollow");
                                     String nodeFlow = values.toString();
 
-                                    ((IcmdAssociationReport) found_device).onAssociationReport(groupID, maxNode, nodeFlow);
+                                    ((IcmdAssociationResp) found_device).onAssociationGetResp(groupID, maxNode, nodeFlow);
+                                }
+                            }
+
+                        }else if (klass.compareToIgnoreCase("SENSOR_MULTILEVEL") == 0)
+                        {
+                            if (found_device instanceof IcmdMultilevelResp)
+                            {
+                                if (cmd.compareToIgnoreCase("GET") == 0) {
+                                    ((IcmdMultilevelResp) found_device).multilevelGetResp(message.toString());
+                                }
+                            }
+
+                        }else if (klass.compareToIgnoreCase("BATTERY") == 0)
+                        {
+                            if (found_device instanceof IcmdBatteryResp)
+                            {
+                                if (cmd.compareToIgnoreCase("GET") == 0) {
+                                    ((IcmdBatteryResp) found_device).batteryGetResp(message.toString());
                                 }
                             }
 
                         }
-
 
 
                     }

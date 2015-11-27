@@ -13,7 +13,7 @@ import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBinarySwitch;
 public class zwaveBinarySwitchMsg implements IcmdBinarySwitch {
 
     @Override
-    public int setOn(String id)
+    public int binarySwitchSetOn(String id)
     {
         MqttMessage message = null;
         message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, id, 1);
@@ -23,7 +23,7 @@ public class zwaveBinarySwitchMsg implements IcmdBinarySwitch {
 
     }
     @Override
-    public int setOff(String id)
+    public int binarySwitchSetOff(String id)
     {
         MqttMessage message = null;
         message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, id, 0);
@@ -35,7 +35,7 @@ public class zwaveBinarySwitchMsg implements IcmdBinarySwitch {
 
 
     @Override
-    public int GET(String id) {
+    public int binarySwitchGet(String id) {
         MqttMessage message = null;
         message = RemoteAccessMsg.CreateZwaveGetBinaryMsg(DeviceTypeProtocol.ZWAVE, id);
         MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);

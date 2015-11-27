@@ -12,184 +12,234 @@
     tools:context="remote.service.verik.com.remoteaccess.DeviceAEON_LABSMultilevelSensor5"
     tools:showIn="@layout/activity_device_type_sensor_multilevel5">
 
-    <TableLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:paddingTop="40dp">
+        android:layout_height="wrap_content">
 
-
-        <TableRow
-            android:id="@+id/tableRow5"
-            android:layout_width="wrap_content"
+        <TableLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="15px">
-
-            <TextView
-                android:id="@+id/sensor_multilevel5_configuration_tw_setting"
-                android:layout_width="500px"
-                android:layout_height="wrap_content"
-                android:text="CONFIGURATION"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        </TableRow>
+            android:layout_weight="1"
+            android:paddingTop="1dp">
 
 
-        <TableRow
-            android:id="@+id/tableRow8"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10px">
-
-            <CheckBox
-                android:id="@+id/sensor_multilevel5_configuration_cb_motion_enable"
+            <TableRow
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Enable motion " />
-
-
-        </TableRow>
-
-
-        <TableRow
-            android:id="@+id/tableRow7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1px">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
+                android:layout_margin="1px">
 
                 <TextView
-                    android:id="@+id/sensor_multilevel5_configuration_tw_config_report"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Report configuration"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <RadioButton
-                        android:id="@+id/sensor_multilevel5_configuration_radio_temperature"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Temperature" />
-
-                    <RadioButton
-                        android:id="@+id/sensor_multilevel5_configuration_radio_humidity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Humidity" />
-
-                    <RadioButton
-                        android:id="@+id/sensor_multilevel5_configuration_radio_luminance"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Luminance" />
-
-                    <RadioButton
-                        android:id="@+id/sensor_multilevel5_configuration_radio_battery"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Battery" />
-
-                </RadioGroup>
-
-            </LinearLayout>
-
-        </TableRow>
-
-
-        <TableRow
-            android:id="@+id/tableRow9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1px">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-                <TextView
-                    android:id="@+id/sensor_multilevel5_configuration_tw_auto_timer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="[Auto] Timer configuration"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                <SeekBar
-                    android:id="@+id/sensor_multilevel5_configuration_seekbar_auto_timer"
+                    android:id="@+id/sensor_multilevel5_configuration_tw_setting"
                     android:layout_width="500px"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="1dp"
-                    android:max="10" />
-
-            </LinearLayout>
-
-        </TableRow>
-
-        <TableRow
-            android:id="@+id/tableRow6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1px">
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp">
-
-                <TextView
-                    android:id="@+id/sensor_multilevel5_configuration_tw_config_"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Timer configuration"
+                    android:text="enable/disable motion.........."
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                <SeekBar
-                    android:id="@+id/sensor_multilevel5_configuration_seekbar_configuration_timer"
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10px">
+
+                <LinearLayout android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/sensor_multilevel5_configuration_button_motion_enable_get"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="GET" />
+
+                    <CheckBox
+                        android:id="@+id/sensor_multilevel5_configuration_cb_motion_enable"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Enable motion " />
+
+                </LinearLayout>
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1px">
+
+                <TextView
                     android:layout_width="500px"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginTop="1dp"
-                    android:max="10" />
+                    android:text="Report configuration.........."
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                <!--<TextView-->
-                <!--android:id="@+id/sensor_multilevel5_configuration_tw_timer"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_alignParentLeft="true"-->
-                <!--android:layout_alignParentTop="true"-->
-                <!--android:layout_marginTop="1dp"-->
-                <!--android:layout_marginBottom="10dp"-->
-                <!--android:layout_width="500px"-->
-                <!--android:max="10"/>-->
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1px">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <Button
+                        android:id="@+id/sensor_multilevel5_configuration_button_report_config_get"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="GET" />
 
 
-            </LinearLayout>
+                    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-        </TableRow>
+                        <RadioButton
+                            android:id="@+id/sensor_multilevel5_configuration_radio_temperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Temperature" />
+
+                        <RadioButton
+                            android:id="@+id/sensor_multilevel5_configuration_radio_humidity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Humidity" />
+
+                        <RadioButton
+                            android:id="@+id/sensor_multilevel5_configuration_radio_luminance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Luminance" />
+
+                        <RadioButton
+                            android:id="@+id/sensor_multilevel5_configuration_radio_battery"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Battery" />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+            </TableRow>
 
 
-    </TableLayout>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1px">
+
+                <TextView
+                    android:layout_width="500px"
+                    android:layout_height="wrap_content"
+                    android:text="AUTO Timer configuration .."
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1px">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <Button
+                        android:id="@+id/sensor_multilevel5_configuration_button_auto_timer_get"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="GET" />
+
+                    <SeekBar
+                        android:id="@+id/sensor_multilevel5_configuration_seekbar_auto_timer"
+                        android:layout_width="500px"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="1dp"
+                        android:max="10" />
+
+                </LinearLayout>
+
+            </TableRow>
+
+
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1px">
+
+                <TextView
+                    android:layout_width="500px"
+                    android:layout_height="wrap_content"
+                    android:text="Timer configuration ...."
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            </TableRow>
+
+
+            <TableRow
+                android:id="@+id/tableRow6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1px">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp">
+
+                    <Button
+                        android:id="@+id/sensor_multilevel5_configuration_button_timer_get"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="GET" />
+
+                    <SeekBar
+                        android:id="@+id/sensor_multilevel5_configuration_seekbar_configuration_timer"
+                        android:layout_width="500px"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="1dp"
+                        android:max="10" />
+
+                    <!--<TextView-->
+                    <!--android:id="@+id/sensor_multilevel5_configuration_tw_timer"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentLeft="true"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:layout_marginTop="1dp"-->
+                    <!--android:layout_marginBottom="10dp"-->
+                    <!--android:layout_width="500px"-->
+                    <!--android:max="10"/>-->
+
+
+                </LinearLayout>
+
+            </TableRow>
+
+
+        </TableLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

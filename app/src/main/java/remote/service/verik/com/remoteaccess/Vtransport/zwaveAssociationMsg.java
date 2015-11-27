@@ -12,7 +12,7 @@ import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdAssociation;
  */
 public class zwaveAssociationMsg implements IcmdAssociation {
     @Override
-    public int setNode(String id, String groupID, String nodeID) {
+    public int associationSetNode(String id, String groupID, String nodeID) {
         MqttMessage message = null;
         message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, id, "ASSOCIATION", "SET", groupID, nodeID, "");
         MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
@@ -21,7 +21,7 @@ public class zwaveAssociationMsg implements IcmdAssociation {
     }
 
     @Override
-    public int getNode(String id, String groupID) {
+    public int associationGetNode(String id, String groupID) {
 
         MqttMessage message = null;
         message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, id, "ASSOCIATION", "GET", groupID, "", "");

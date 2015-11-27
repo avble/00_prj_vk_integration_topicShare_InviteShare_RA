@@ -2,9 +2,9 @@ package remote.service.verik.com.remoteaccess.Vtransport.genericDevice;
 
 import remote.service.verik.com.remoteaccess.Vtransport.zwaveBinarySwitchMsg;
 import remote.service.verik.com.remoteaccess.model.Device;
-import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBinarySwitchReport;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBinarySwitchResp;
 
-public class SwitchBinary extends Device implements IcmdBinarySwitchReport {
+public class SwitchBinary extends Device implements IcmdBinarySwitchResp {
 
     public SwitchBinary(String id, String friendlyName, boolean turnOn, boolean available, String device_type)
     {
@@ -15,7 +15,7 @@ public class SwitchBinary extends Device implements IcmdBinarySwitchReport {
     public void binarySwitchSetOn()
     {
         zwaveBinarySwitchMsg binaryMSG  = new zwaveBinarySwitchMsg();
-        binaryMSG.setOn(id);
+        binaryMSG.binarySwitchSetOn(id);
 
     }
 
@@ -23,7 +23,7 @@ public class SwitchBinary extends Device implements IcmdBinarySwitchReport {
     public void binarySwitchSetOff()
     {
         zwaveBinarySwitchMsg binaryMSG  = new zwaveBinarySwitchMsg();
-        binaryMSG.setOff(id);
+        binaryMSG.binarySwitchSetOff(id);
 
     }
 
@@ -31,12 +31,12 @@ public class SwitchBinary extends Device implements IcmdBinarySwitchReport {
     public void binarySwitchGet()
     {
         zwaveBinarySwitchMsg binaryMSG  = new zwaveBinarySwitchMsg();
-        binaryMSG.GET(id);
+        binaryMSG.binarySwitchGet(id);
     }
 
 
     @Override
-    public void onBinarySwitchReport(String status, String value) {
+    public void onBinarySwitchGetResp(String status, String value) {
 
     }
 }
