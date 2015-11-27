@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:paddingTop="40dp">
+        android:paddingTop="1dp">
 
 
 
@@ -23,7 +23,7 @@
             android:id="@+id/tableRow511"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="15px" >
+            android:layout_margin="1px" >
 
             <TextView
                 android:id="@+id/sensor_multilevel5_association_tw_association"
@@ -35,7 +35,22 @@
         </TableRow>
 
         <TableRow
-            android:id="@+id/tableRow52"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1px">
+
+            <Button
+                android:id="@+id/button_association_group_get"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="1px"
+                android:text="GET"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+
+        </TableRow>
+
+        <TableRow
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="1px" >
@@ -46,13 +61,68 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Enable Notification" />
+                android:text="Enable Notification to Controller" />
 
 
         </TableRow>
 
 
 
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1px"
+            android:paddingTop="50dp">
+
+            <TextView
+                android:layout_width="500px"
+                android:layout_height="wrap_content"
+                android:text="Add a NodeID to GroupID"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1px" >
+
+            <LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NodeID"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <EditText
+                android:id="@+id/et_node_id"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+        </TableRow>
+
+
+        <TableRow>
+            <LinearLayout>
+            <Button
+                android:id="@+id/button_association_group_node_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Add" />
+
+                <Button
+                    android:id="@+id/button_association_group_node_remove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="Remove" />
+            </LinearLayout>
+
+        </TableRow>
 
     </TableLayout>
 

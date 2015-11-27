@@ -119,7 +119,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             device.setTurnOn(on);
 
 
-            MQTTWrapper.PublishRemoteAccessMsg(topic, message);
+            MainActivity.mqtt_client.PublishRemoteAccessMsg(topic, message);
 
         }
 
@@ -292,7 +292,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                MQTTWrapper.PublishRemoteAccessMsg(topic, message);
+                MainActivity.mqtt_client.PublishRemoteAccessMsg(topic, message);
 
                 return true;
 

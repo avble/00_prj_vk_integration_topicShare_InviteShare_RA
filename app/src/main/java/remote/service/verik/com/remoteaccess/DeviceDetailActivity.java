@@ -345,7 +345,7 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
                                 DeviceAEOTEC_Door_Window_Sensor.klass_SENSOR_CONFIGURATION, "SET", DeviceAEOTEC_Door_Window_Sensor.cmd_klass_CONFIGURATION_DETERMINES, value, "");
 
 
-                    MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                 }
             };
@@ -391,7 +391,7 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
                                 DeviceAEOTEC_Door_Window_Sensor.klass_SENSOR_CONFIGURATION, "SET", klass_cmd, value, "");
 
 
-                    MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                 }
             };
@@ -419,8 +419,7 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
                         message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
                                 DeviceAEOTEC_Door_Window_Sensor.klass_SENSOR_ASSOCIATION, klass_cmd, DeviceAEOTEC_Door_Window_Sensor.cmd_klass_ASSOCIATION_ONOFF_GROUP, "1", "");
 
-
-                    MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                 }
             };

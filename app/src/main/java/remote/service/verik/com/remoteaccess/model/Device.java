@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -265,7 +267,7 @@ public class Device {
 
     // For rendering the UI
 
-    public List<DeviceFragment> listFragment;
+    public List<Fragment> listFragment;
 
     public Device(){
 
@@ -284,8 +286,8 @@ public class Device {
         else if (device_type.contentEquals("upnp"))
             type = "upnp";
 
-        listFragment = new ArrayList<DeviceFragment>();
-
+        listFragment = new ArrayList<Fragment>();
+        listFragment.add(new HistoryFragment());
 
     }
 
@@ -392,10 +394,37 @@ public class Device {
     ///
     public CharSequence getFragmentTitle(int position)
     {
-        if (position < listFragment.size())
-            return listFragment.get(position).getFragmentTitle();
+        if (position < listFragment.size()) {
+            Fragment fragment = listFragment.get(position);
+            if ( fragment instanceof  DeviceFragment)
+                return ((DeviceFragment)fragment).getFragmentTitle();
+            else if (fragment instanceof  HistoryFragment)
+            {
+                return "History";
+            }
+        }
 
         return null;
+
+    }
+
+
+    public void AddLogToHistory(String logMsg)
+    {
+
+        Fragment fragment = listFragment.get(0);
+        if (fragment != null)
+        {
+            HistoryFragment hisFrag = (HistoryFragment)fragment;
+
+            Spanned[] array = new Spanned[1];
+
+            array[0] = Html.fromHtml(logMsg);
+
+            hisFrag.arrayAdapter.addAll(array);
+
+            hisFrag.arrayAdapter.notifyDataSetChanged();
+        }
 
     }
 

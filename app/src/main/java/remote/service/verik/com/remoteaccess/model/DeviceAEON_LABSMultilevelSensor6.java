@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 import remote.service.verik.com.remoteaccess.CmdZWaveConfiguration;
 import remote.service.verik.com.remoteaccess.DeviceTypeProtocol;
-import remote.service.verik.com.remoteaccess.MQTTWrapper;
 import remote.service.verik.com.remoteaccess.MainActivity;
 import remote.service.verik.com.remoteaccess.R;
 import remote.service.verik.com.remoteaccess.RemoteAccessMsg;
@@ -267,7 +266,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                         message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
 
                         if (message != null)
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -284,7 +283,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                             message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
 
                         if (message != null)
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -302,7 +301,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                             message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor6.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
 
                         if (message != null)
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -321,7 +320,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
 
 
                         if (message != null)
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -373,7 +372,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                                         "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_LOCK, value, "");
 
 
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                         }
@@ -414,7 +413,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                                         "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(DeviceAEON_LABSMultilevelSensor6.this.configuration_timer - 10), "");
 
 
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                         }
@@ -487,7 +486,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_REPORT, value, "");
 
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -527,7 +526,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
 
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -551,7 +550,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
 
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -574,7 +573,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
 
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -596,7 +595,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
 
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -618,7 +617,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
 
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -640,7 +639,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                             message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(),
                                     DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_PIR, value, "");
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -681,7 +680,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                                         "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString( DeviceAEON_LABSMultilevelSensor6.this.configuration_auto_timer + 10), "");
 
 
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                         }
                     });
@@ -727,7 +726,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                                             "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
 
 
-                                MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                                MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                             } else {
                                 MqttMessage message = null;
@@ -737,7 +736,7 @@ public class DeviceAEON_LABSMultilevelSensor6 extends Device implements  View.On
                                             "REMOVE", DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
 
 
-                                MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                                MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                             }

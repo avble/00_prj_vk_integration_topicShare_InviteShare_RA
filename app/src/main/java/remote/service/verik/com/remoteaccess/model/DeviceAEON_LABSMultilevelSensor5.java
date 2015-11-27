@@ -2,28 +2,28 @@ package remote.service.verik.com.remoteaccess.model;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import remote.service.verik.com.remoteaccess.DeviceTypeProtocol;
-import remote.service.verik.com.remoteaccess.MQTTWrapper;
 import remote.service.verik.com.remoteaccess.MainActivity;
 import remote.service.verik.com.remoteaccess.R;
 import remote.service.verik.com.remoteaccess.RemoteAccessMsg;
+import remote.service.verik.com.remoteaccess.Vtransport.genericDevice.NotificationSensor;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdAssociationReport;
 
-public class DeviceAEON_LABSMultilevelSensor5 extends Device {
+public class DeviceAEON_LABSMultilevelSensor5 extends NotificationSensor implements IcmdAssociationReport {
 
 
     public double multilevel_sensor_temp = 0;
@@ -112,38 +112,73 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
             @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
                 View rootView = inflater.inflate(R.layout.content_device_generic_sensor_multilevel5_association, container, false);
 
+
                 // association test
-                final CheckBox cb_association_notification = (CheckBox) rootView.findViewById(R.id.sensor_multilevel5_association_cb_association_add_group);
+                Button button_ass_get  = (Button) rootView.findViewById(R.id.button_association_group_get);
+                if (button_ass_get != null) {
+                    button_ass_get.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+
+                            getNode(id, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP);
+                        }
+                    });
+                }
+
+                final EditText ed_nodeID   = (EditText) rootView.findViewById(R.id.et_node_id);
+
+
+
+
+                Button button_ass_add  = (Button) rootView.findViewById(R.id.button_association_group_node_add);
+                if (button_ass_add != null) {
+                    button_ass_add.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String nodeID = ed_nodeID.getText().toString();
+
+                            setNode(id, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, nodeID);
+                        }
+                    });
+                }
+
+                Button button_ass_remove  = (Button) rootView.findViewById(R.id.button_association_group_node_remove);
+                if (button_ass_remove != null) {
+                    button_ass_remove.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String nodeID = ed_nodeID.getText().toString();
+
+                            associationNodeRemove(id, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, nodeID);
+                        }
+                    });
+                }
+
+
+
+
+                // association test
+                CheckBox cb_association_notification = (CheckBox) rootView.findViewById(R.id.sensor_multilevel5_association_cb_association_add_group);
                 if (cb_association_notification != null) {
                     cb_association_notification.setOnClickListener(new View.OnClickListener() {
 
                         @Override
                         public void onClick(View v) {
 
-                            if (cb_association_notification.isChecked()) {
-
-                                MqttMessage message = null;
-                                if (DeviceAEON_LABSMultilevelSensor5.this.type.contentEquals("zwave"))
-                                    message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_ASSOCIATION,
-                                            "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
-
-                                MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
-
-                            } else {
-                                MqttMessage message = null;
-                                if (DeviceAEON_LABSMultilevelSensor5.this.type.contentEquals("zwave"))
-                                    message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_ASSOCIATION,
-                                            "REMOVE", DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
-
-                                MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
-                            }
+                            if (((CheckBox)v).isChecked())
+                                setNode(id, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID);
+                             else
+                                associationNodeRemove(id, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID);
 
                         }
                     });
                 }
+
+
+
                 return rootView;
 
             }
@@ -192,7 +227,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                         if (DeviceAEON_LABSMultilevelSensor5.this.type.contentEquals("zwave"))
                             message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -208,7 +243,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                         if (DeviceAEON_LABSMultilevelSensor5.this.type.contentEquals("zwave"))
                             message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_HUMI, "2A", "1/10");
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                     }
                 });
@@ -224,7 +259,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                         if (DeviceAEON_LABSMultilevelSensor5.this.type.contentEquals("zwave"))
                             message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSMultilevelSensor5.type_SENSOR_MULTILEVEL_LUMI, "2A", "1/10");
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                     }
                 });
@@ -240,7 +275,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                         if (DeviceAEON_LABSMultilevelSensor5.this.type.contentEquals("zwave"))
                             message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_BATTERY, "GET", "", "", "");
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -295,7 +330,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                                 message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_TIMER, Integer.toHexString(DeviceAEON_LABSMultilevelSensor5.this.configuration_timer - 10), "");
 
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                         }
@@ -318,7 +353,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                             message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -343,7 +378,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                             message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
                     }
 
                 });
@@ -366,7 +401,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                             message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
                     }
 
 
@@ -390,7 +425,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                             message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_REPORT, value, "");
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -418,7 +453,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                         if (DeviceAEON_LABSMultilevelSensor5.this.type.contentEquals("zwave"))
                             message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(),
                                     DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_PIR, value, "");
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
 
                     }
@@ -459,7 +494,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
                             if (DeviceAEON_LABSMultilevelSensor5.this.type.contentEquals("zwave"))
                                 message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor5.this.getId(), DeviceAEON_LABSMultilevelSensor5.klass_SENSOR_CONFIGURATION,
                                         "SET", DeviceAEON_LABSMultilevelSensor5.cmd_klass_CONFIGURATION_AUTO_TIMER, Integer.toHexString(DeviceAEON_LABSMultilevelSensor5.this.configuration_auto_timer), "");
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
                         }
                     });
                 }
@@ -582,5 +617,10 @@ public class DeviceAEON_LABSMultilevelSensor5 extends Device {
 
         } catch (JSONException e) {
         }
+    }
+
+    @Override
+    public void onAssociationReport(String groupIdentifier, String maxNode, String nodeFlow) {
+        AddLogToHistory("[ASSOCIATION] groupIdentifier: " + groupIdentifier + " maxNode: " + maxNode + " nodeFlow: " + nodeFlow);
     }
 }

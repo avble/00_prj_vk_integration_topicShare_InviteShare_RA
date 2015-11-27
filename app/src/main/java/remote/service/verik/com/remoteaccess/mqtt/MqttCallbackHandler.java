@@ -40,6 +40,9 @@ import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSSiren5;
 import remote.service.verik.com.remoteaccess.model.DeviceAEOTEC_Door_Window_Sensor;
 import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
 import remote.service.verik.com.remoteaccess.model.DeviceIR_SEC_SAFETYDoorLock;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdAssociationReport;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBinarySwitchReport;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdConfigurationReport;
 
 /**
  * Handles call backs from the MQTT Client
@@ -115,11 +118,14 @@ public class MqttCallbackHandler implements MqttCallback {
 
         JSONObject jason;
 
+
+
         if (command != null) {
             switch (command) {
                 case RemoteAccessMsg.commandGetListDeviceR:
                     // fine-tuning the GUI
                     jason = new JSONObject(message.toString());
+
 
                     JSONArray deviceList = jason.getJSONArray("devicesList");
 
@@ -202,8 +208,30 @@ public class MqttCallbackHandler implements MqttCallback {
                     break;
                 case RemoteAccessMsg.commandAddDeviceR:
                 case RemoteAccessMsg.commandRemoveDeviceR:
+                    break;
                 case RemoteAccessMsg.commandSetBinaryR:
+                    break;
                 case RemoteAccessMsg.commandGetBinaryR:
+                    // fine-tuning the GUI
+                    jason = new JSONObject(message.toString());
+                    // get NodeID
+                    String node_id = jason.getString("deviceid");
+                    String status = jason.getString("status");
+                    String value = jason.getString("reason");
+
+                    for (int i = 0; i < MainActivity.devices.size(); i++) {
+                        Device device_tmp = MainActivity.devices.get(i);
+                        if (device_tmp.getId().equals(node_id)) {
+                            if (device_tmp instanceof IcmdBinarySwitchReport) {
+                                ((IcmdBinarySwitchReport) device_tmp).onBinarySwitchReport(status, value);
+                                break;
+                            }
+
+                        }
+                    }
+                    break;
+
+
                 case RemoteAccessMsg.commandGetSecureSpecR:
                 case RemoteAccessMsg.commandSetSecureSpecR:
                 case RemoteAccessMsg.commandSetSpecificationR:
@@ -211,16 +239,60 @@ public class MqttCallbackHandler implements MqttCallback {
                     // fine-tuning the GUI
                     jason = new JSONObject(message.toString());
                     // get NodeID
-                    String node_id = jason.getString("deviceid");
+                    node_id = jason.getString("deviceid");
+
+                    Device found_device = null;
 
                     for (int i = 0; i < MainActivity.devices.size(); i++) {
                         Device device_tmp = MainActivity.devices.get(i);
                         if (device_tmp.getId().equals(node_id))
                         {
-                            device_tmp.Update(message.toString());
+                            found_device = device_tmp;
                             break;
 
                         }
+                    }
+
+                    if (found_device != null)
+                    {
+                        String commandinfo = jason.getString("commandinfo");
+                        status = jason.getString("status");
+                        //value = jason.getString("value");
+
+                        JSONObject command_jobj = new JSONObject(commandinfo);
+
+                        String klass = command_jobj.getString("class");
+                        String cmd = command_jobj.getString("command");
+                        String data0 = command_jobj.getString("data0");
+                        String data1 = command_jobj.getString("data1");
+                        String data2 = command_jobj.getString("data2");
+
+
+                        if (klass.compareToIgnoreCase("CONFIGURATION") == 0)
+                        {
+                            if (found_device instanceof IcmdConfigurationReport)
+                            {
+                                ((IcmdConfigurationReport) found_device).onConfigurationReport(cmd, data0, data1, data2, status);
+                            }
+
+                        }else if (klass.compareToIgnoreCase("ASSOCIATION") == 0)
+                        {
+                            if (found_device instanceof IcmdAssociationReport)
+                            {
+                                if (cmd.compareToIgnoreCase("GET") == 0) {
+                                    String groupID = jason.getString("groupid");
+                                    String maxNode = jason.getString("maxnode");
+                                    JSONArray values = jason.getJSONArray("nodefollow");
+                                    String nodeFlow = values.toString();
+
+                                    ((IcmdAssociationReport) found_device).onAssociationReport(groupID, maxNode, nodeFlow);
+                                }
+                            }
+
+                        }
+
+
+
                     }
 
                     break;

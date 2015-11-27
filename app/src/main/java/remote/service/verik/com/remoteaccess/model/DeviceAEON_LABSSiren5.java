@@ -2,19 +2,20 @@ package remote.service.verik.com.remoteaccess.model;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import remote.service.verik.com.remoteaccess.R;
-import remote.service.verik.com.remoteaccess.Vtransport.zwaveConfiguration;
-import remote.service.verik.com.remoteaccess.zwave.genericDevice.SwitchBinary;
+import remote.service.verik.com.remoteaccess.Vtransport.zwaveConfigurationMsg;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdAssociationReport;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdConfigurationReport;
+import remote.service.verik.com.remoteaccess.Vtransport.genericDevice.SwitchBinary;
 
-public class DeviceAEON_LABSSiren5 extends SwitchBinary {
+public class DeviceAEON_LABSSiren5 extends SwitchBinary implements IcmdConfigurationReport, IcmdAssociationReport {
 
 
     // configuration class
@@ -26,9 +27,60 @@ public class DeviceAEON_LABSSiren5 extends SwitchBinary {
     public DeviceAEON_LABSSiren5(String id, String name, boolean turnOn, boolean available, String device_type) {
         super(id, name, turnOn, available, device_type);
 
+        listFragment.add(createFragmentBinarySwitch());
         listFragment.add(createFragmentConfiguration());
 
     }
+
+
+    private DeviceFragment createFragmentBinarySwitch() {
+
+        DeviceFragment fragment = new DeviceFragment() {
+            @Nullable
+            @Override
+            public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+                View rootView = inflater.inflate(R.layout.content_device_zwave_switch_binary, container, false);
+
+                Button button_set = (Button) rootView.findViewById(R.id.switch_binary_button_binary_switch);
+                button_set.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Button button = (Button)v;
+                        if (button.getText().toString().compareToIgnoreCase("on") == 0)
+                        {
+                            button.setText("off");
+                            DeviceAEON_LABSSiren5.this.binarySwitchSetOn();
+                        }else
+                        {
+                            button.setText("on");
+                            DeviceAEON_LABSSiren5.this.binarySwitchSetOff();
+
+                        }
+
+                    }
+                });
+
+
+                Button button_get = (Button) rootView.findViewById(R.id.switch_binary_button_binary_switch_get);
+                button_get.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                            DeviceAEON_LABSSiren5.this.binarySwitchGet();
+
+                    }
+                });
+
+
+                return rootView;
+
+            }
+        };
+
+        fragment.setTitle("BinarySwitch");
+        return fragment;
+    }
+
 
     private DeviceFragment createFragmentConfiguration() {
 
@@ -43,7 +95,7 @@ public class DeviceAEON_LABSSiren5 extends SwitchBinary {
                 button_volume.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        zwaveConfiguration config = new zwaveConfiguration();
+                        zwaveConfigurationMsg config = new zwaveConfigurationMsg();
                         config.Get(id, cmd_klass_CONFIGURATION_VOLUME, "");
 
 
@@ -81,7 +133,7 @@ public class DeviceAEON_LABSSiren5 extends SwitchBinary {
 
                             }
                             String value_s = String.format("%d00", value);
-                            zwaveConfiguration config = new zwaveConfiguration();
+                            zwaveConfigurationMsg config = new zwaveConfigurationMsg();
                             config.Set(id, cmd_klass_CONFIGURATION_VOLUME, value_s, "");
 
                             // checkedId is the RadioButton selected
@@ -114,7 +166,7 @@ public class DeviceAEON_LABSSiren5 extends SwitchBinary {
 
                             }
                             String value_s = String.format("00%d", value);
-                            zwaveConfiguration config = new zwaveConfiguration();
+                            zwaveConfigurationMsg config = new zwaveConfigurationMsg();
                             config.Set(id, cmd_klass_CONFIGURATION_VOLUME, Integer.toString(value), "");
 
                             // checkedId is the RadioButton selected
@@ -139,5 +191,22 @@ public class DeviceAEON_LABSSiren5 extends SwitchBinary {
     public void Update(String property) {
         super.Update(property);
 
+    }
+
+    @Override
+    public void onBinarySwitchReport(String status, String value) {
+        Log.d("Report Debug", "Just received a Binary Report. Status " + status + " Value is  " + value);
+
+    }
+
+    @Override
+    public void onConfigurationReport(String cmd, String data0, String data1, String data2, String status) {
+        Log.d("Report Debug", "Just received a Configuration Report. cmd " + cmd + " data0  " + data0 + " data1 " + data1 +  " data2 " + data2 + " status " + status);
+
+    }
+
+    @Override
+    public void onAssociationReport(String groupIdentifier, String maxNode, String nodeFlow) {
+        Log.d("Report Debug", "Just received a Configuration Report. groupID " + groupIdentifier +  maxNode + nodeFlow);
     }
 }

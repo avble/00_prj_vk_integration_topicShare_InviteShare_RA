@@ -8,15 +8,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import remote.service.verik.com.remoteaccess.DeviceTypeProtocol;
-import remote.service.verik.com.remoteaccess.MQTTWrapper;
 import remote.service.verik.com.remoteaccess.MainActivity;
 import remote.service.verik.com.remoteaccess.R;
 import remote.service.verik.com.remoteaccess.RemoteAccessMsg;
@@ -142,7 +139,7 @@ public class DeviceIR_SEC_SAFETYDoorLock extends Device {
                                     DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_DOOR_LOCK, "SET", klass_cmd, "", "");
 
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                     }
                 };
@@ -167,7 +164,7 @@ public class DeviceIR_SEC_SAFETYDoorLock extends Device {
                                     DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_DOOR_LOCK, klass_cmd, DeviceIR_SEC_SAFETYDoorLock.cmd_klass_ASSOCIATION_ONOFF_GROUP, "1", "1");
 
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                     }
                 };
@@ -192,7 +189,7 @@ public class DeviceIR_SEC_SAFETYDoorLock extends Device {
                                         DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_USER_CODE, "SET", "1", DeviceIR_SEC_SAFETYDoorLock.this.getKlass_SENSOR_USER_CODE_STATE_ACCUPIED, DeviceIR_SEC_SAFETYDoorLock.this.viewer_user_code_1_et_code.getText().toString());
 
 
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                         }
                     });
@@ -253,7 +250,7 @@ public class DeviceIR_SEC_SAFETYDoorLock extends Device {
                                     DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_CONFIGURATION, "SET", klass_cmd, value, "");
 
 
-                        MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                        MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                     }
                 };
@@ -291,7 +288,7 @@ public class DeviceIR_SEC_SAFETYDoorLock extends Device {
                                 e.printStackTrace();
                             }
 
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                         }
                     });
@@ -311,7 +308,7 @@ public class DeviceIR_SEC_SAFETYDoorLock extends Device {
                                         DeviceIR_SEC_SAFETYDoorLock.klass_SENSOR_CONFIGURATION, "SET", DeviceIR_SEC_SAFETYDoorLock.cmd_klass_CONFIGURATION_PIN_LENGTH, pin_len, "");
 
 
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                         }
                     });
@@ -335,7 +332,7 @@ public class DeviceIR_SEC_SAFETYDoorLock extends Device {
                                 e.printStackTrace();
                             }
 
-                            MQTTWrapper.PublishRemoteAccessMsg(MainActivity.topic, message);
+                            MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
 
                         }
                     });
