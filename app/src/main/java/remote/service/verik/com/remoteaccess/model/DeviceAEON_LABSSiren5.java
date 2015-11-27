@@ -81,7 +81,7 @@ public class DeviceAEON_LABSSiren5 extends SwitchBinary implements IcmdConfigura
                             if (((CheckBox)v).isChecked())
                                 associationSetNode(id, DeviceAEON_LABSSiren5.cmd_klass_ASSOCIATION_ONOFF_GROUP, "1");
                             else
-                                associationNodeRemove(id, DeviceAEON_LABSSiren5.cmd_klass_ASSOCIATION_ONOFF_GROUP, "1");
+                                associationRemoveNode(id, DeviceAEON_LABSSiren5.cmd_klass_ASSOCIATION_ONOFF_GROUP, "1");
 
                         }
                     });
@@ -89,10 +89,10 @@ public class DeviceAEON_LABSSiren5 extends SwitchBinary implements IcmdConfigura
 
 
 
-                final EditText ed_nodeID = (EditText) rootView.findViewById(R.id.et_node_id);
+                final EditText ed_nodeID = (EditText) rootView.findViewById(R.id.et_node_id1);
 
 
-                Button button_ass_add = (Button) rootView.findViewById(R.id.button_association_group_node_add);
+                Button button_ass_add = (Button) rootView.findViewById(R.id.button_association_group_node_add1);
                 if (button_ass_add != null) {
                     button_ass_add.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -104,14 +104,14 @@ public class DeviceAEON_LABSSiren5 extends SwitchBinary implements IcmdConfigura
                     });
                 }
 
-                Button button_ass_remove = (Button) rootView.findViewById(R.id.button_association_group_node_remove);
+                Button button_ass_remove = (Button) rootView.findViewById(R.id.button_association_group_node_remove1);
                 if (button_ass_remove != null) {
                     button_ass_remove.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             String nodeID = ed_nodeID.getText().toString();
 
-                            associationNodeRemove(id, DeviceAEON_LABSSiren5.cmd_klass_ASSOCIATION_ONOFF_GROUP, nodeID);
+                            associationRemoveNode(id, DeviceAEON_LABSSiren5.cmd_klass_ASSOCIATION_ONOFF_GROUP, nodeID);
                         }
                     });
                 }
@@ -351,7 +351,7 @@ public class DeviceAEON_LABSSiren5 extends SwitchBinary implements IcmdConfigura
     }
 
     @Override
-    public int associationNodeRemove(String id, String groupID, String nodeID) {
+    public int associationRemoveNode(String id, String groupID, String nodeID) {
         MqttMessage message = null;
         message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, id, "ASSOCIATION", "REMOVE", groupID, nodeID, "");
         MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);

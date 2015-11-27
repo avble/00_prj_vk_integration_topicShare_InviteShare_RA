@@ -96,7 +96,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
-                android:id="@+id/et_node_id"
+                android:id="@+id/et_node_id1"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content" />
 
@@ -108,14 +108,14 @@
         <TableRow>
             <LinearLayout>
             <Button
-                android:id="@+id/button_association_group_node_add"
+                android:id="@+id/button_association_group_node_add1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Add" />
 
                 <Button
-                    android:id="@+id/button_association_group_node_remove"
+                    android:id="@+id/button_association_group_node_remove1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"

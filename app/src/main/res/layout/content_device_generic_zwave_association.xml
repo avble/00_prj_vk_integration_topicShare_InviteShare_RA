@@ -7,7 +7,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:showIn="@layout/activity_device_type_sensor_multilevel5"
     tools:context="remote.service.verik.com.remoteaccess.*">
 
 
@@ -20,13 +19,11 @@
 
 
         <TableRow
-            android:id="@+id/tableRow511"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="1px" >
 
             <TextView
-                android:id="@+id/sensor_multilevel5_association_tw_association"
                 android:layout_width="500px"
                 android:layout_height="wrap_content"
                 android:text="ASSOCIATION"
@@ -96,7 +93,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <EditText
-                android:id="@+id/et_node_id"
+                android:id="@+id/et_node_id1"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content" />
 
@@ -108,14 +105,14 @@
         <TableRow>
             <LinearLayout>
             <Button
-                android:id="@+id/button_association_group_node_add"
+                android:id="@+id/button_association_group_node_add1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="Add" />
 
                 <Button
-                    android:id="@+id/button_association_group_node_remove"
+                    android:id="@+id/button_association_group_node_remove1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -140,7 +137,7 @@
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <EditText
-                    android:id="@+id/et_node_id_2"
+                    android:id="@+id/et_node_id2"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content" />
 
@@ -152,14 +149,14 @@
         <TableRow>
             <LinearLayout>
                 <Button
-                    android:id="@+id/button_association_group_node_add_2"
+                    android:id="@+id/button_association_group_node_add2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Add" />
 
                 <Button
-                    android:id="@+id/button_association_group_node_remove_2"
+                    android:id="@+id/button_association_group_node_remove2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"

@@ -7,5 +7,5 @@ public interface IcmdAssociation {
 
     int associationSetNode(String id, String groupID, String nodeID);
     int associationGetNode(String id, String groupID);
-    int associationNodeRemove(String id, String groupID, String nodeID);
+    int associationRemoveNode(String id, String groupID, String nodeID);
 }

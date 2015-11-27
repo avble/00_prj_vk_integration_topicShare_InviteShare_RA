@@ -10,16 +10,10 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import remote.service.verik.com.remoteaccess.DeviceTypeProtocol;
-import remote.service.verik.com.remoteaccess.MainActivity;
 import remote.service.verik.com.remoteaccess.R;
-import remote.service.verik.com.remoteaccess.RemoteAccessMsg;
 import remote.service.verik.com.remoteaccess.Vtransport.genericDevice.NotificationSensor;
 import remote.service.verik.com.remoteaccess.Vtransport.zwaveBatteryMsg;
 import remote.service.verik.com.remoteaccess.Vtransport.zwaveConfigurationMsg;
@@ -112,7 +106,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends NotificationSensor impleme
             @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-                View rootView = inflater.inflate(R.layout.content_device_generic_sensor_multilevel5_association, container, false);
+                View rootView = inflater.inflate(R.layout.content_device_aeon_labs_multilevel5_association, container, false);
 
 
                 // association test
@@ -128,10 +122,10 @@ public class DeviceAEON_LABSMultilevelSensor5 extends NotificationSensor impleme
                     });
                 }
 
-                final EditText ed_nodeID = (EditText) rootView.findViewById(R.id.et_node_id);
+                final EditText ed_nodeID = (EditText) rootView.findViewById(R.id.et_node_id1);
 
 
-                Button button_ass_add = (Button) rootView.findViewById(R.id.button_association_group_node_add);
+                Button button_ass_add = (Button) rootView.findViewById(R.id.button_association_group_node_add1);
                 if (button_ass_add != null) {
                     button_ass_add.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -143,14 +137,14 @@ public class DeviceAEON_LABSMultilevelSensor5 extends NotificationSensor impleme
                     });
                 }
 
-                Button button_ass_remove = (Button) rootView.findViewById(R.id.button_association_group_node_remove);
+                Button button_ass_remove = (Button) rootView.findViewById(R.id.button_association_group_node_remove1);
                 if (button_ass_remove != null) {
                     button_ass_remove.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             String nodeID = ed_nodeID.getText().toString();
 
-                            associationNodeRemove(id, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, nodeID);
+                            associationRemoveNode(id, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, nodeID);
                         }
                     });
                 }
@@ -167,7 +161,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends NotificationSensor impleme
                             if (((CheckBox) v).isChecked())
                                 associationSetNode(id, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID);
                             else
-                                associationNodeRemove(id, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID);
+                                associationRemoveNode(id, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor5.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID);
 
                         }
                     });
@@ -189,7 +183,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends NotificationSensor impleme
             @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-                View rootView = inflater.inflate(R.layout.content_device_generic_sensor_multilevel5_multilevel, container, false);
+                View rootView = inflater.inflate(R.layout.content_device_aeon_labs_multilevel5_multilevel, container, false);
 
 
                 Button button_temp = (Button) rootView.findViewById(R.id.sensor_multilevel5_multilevel_button_temp);
@@ -254,7 +248,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends NotificationSensor impleme
             @Override
             public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-                View rootView = inflater.inflate(R.layout.content_device_generic_sensor_multilevel5_configuration, container, false);
+                View rootView = inflater.inflate(R.layout.content_device_aeon_labs_multilevel5_configuration, container, false);
 
                 // Timer
 

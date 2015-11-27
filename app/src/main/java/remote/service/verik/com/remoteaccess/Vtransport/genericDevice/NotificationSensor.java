@@ -38,7 +38,7 @@ public class NotificationSensor extends Device implements IcmdAssociation{
     }
 
     @Override
-    public int associationNodeRemove(String id, String groupID, String nodeID) {
+    public int associationRemoveNode(String id, String groupID, String nodeID) {
         MqttMessage message = null;
         message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, id, "ASSOCIATION", "REMOVE", groupID, nodeID, "");
         MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);

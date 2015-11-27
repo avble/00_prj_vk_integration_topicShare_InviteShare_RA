@@ -31,7 +31,7 @@ import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor5;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor6;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSSiren5;
-import remote.service.verik.com.remoteaccess.model.DeviceAEOTEC_Door_Window_Sensor;
+import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSDoor_Window_Sensor;
 import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
 import remote.service.verik.com.remoteaccess.model.DeviceIR_SEC_SAFETYDoorLock;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdAssociationResp;
@@ -160,7 +160,7 @@ public class MqttCallbackHandler implements MqttCallback {
                                 new_device = new DeviceIR_SEC_SAFETYDoorLock(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
                             } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_AEOTEC_Door_Window_Sensor) == 0) {
 
-                                new_device = new DeviceAEOTEC_Door_Window_Sensor(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                                new_device = new DeviceAEON_LABSDoor_Window_Sensor(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
                             } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_Siren_Alarm_Sensor) == 0) {
 
                                 new_device = new DeviceAEON_LABSSiren5(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
