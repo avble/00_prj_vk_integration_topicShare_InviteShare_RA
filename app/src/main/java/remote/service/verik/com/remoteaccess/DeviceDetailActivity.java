@@ -8,8 +8,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -18,12 +16,12 @@ import android.widget.TextView;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import remote.service.verik.com.remoteaccess.model.Device;
+import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor5;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSDoor_Window_Sensor;
 import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor6;
-import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
-import remote.service.verik.com.remoteaccess.model.DeviceIR_SEC_SAFETYDoorLock;
+import remote.service.verik.com.remoteaccess.model.DeviceSchlageSAFETYDoorLock;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSSiren5;
 
 public class DeviceDetailActivity extends FragmentActivity implements ActionBar.TabListener {
@@ -174,90 +172,10 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
 
                 }
             });
-        }
-        if (device instanceof DeviceAEON_LABSHeavyDutySmart) {
-            setContentView(R.layout.content_device_aeon_labs_heavy_duty_smart);
-
-            final DeviceAEON_LABSHeavyDutySmart device_heavy_duty_smart = (DeviceAEON_LABSHeavyDutySmart) device;
-
-            TextView tw_heavy_duty_smart_device = (TextView) findViewById(R.id.heavy_duty_smart_device_name);
-            tw_heavy_duty_smart_device.setText(device.getName());
-
-
-            device_heavy_duty_smart.viewer_tw_multilevel_humi = (TextView) findViewById(R.id.heavy_duty_smart_tw_humi);
-            if (device_heavy_duty_smart.viewer_tw_multilevel_humi != null) {
-                device_heavy_duty_smart.viewer_tw_multilevel_humi.setText(Double.toString(device_heavy_duty_smart.multilevel_sensor_humi));
-            }
-
-            device_heavy_duty_smart.viewer_tw_multilevel_temp = (TextView) findViewById(R.id.heavy_duty_smart_tw_temp);
-            if (device_heavy_duty_smart.viewer_tw_multilevel_temp != null) {
-                device_heavy_duty_smart.viewer_tw_multilevel_temp.setText(Double.toString(device_heavy_duty_smart.multilevel_sensor_humi));
-            }
-
-
-            device_heavy_duty_smart.viewer_tw_meter_power = (TextView) findViewById(R.id.heavy_duty_smart_tw_meter);
-            if (device_heavy_duty_smart.viewer_tw_meter_power != null) {
-                device_heavy_duty_smart.viewer_tw_meter_power.setText(Double.toString(device_heavy_duty_smart.meter_power));
-            }
-
-
-            Button button_temp = (Button) findViewById(R.id.heavy_duty_smart_button_temp);
-            button_temp.setTag(device);
-
-            button_temp.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Device device = (Device) v.getTag();
-                    MqttMessage message = null;
-                    if (device.type.contentEquals("zwave"))
-                        message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_TEMP, "2A", "1/10");
-
-                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
-
-                }
-            });
-
-
-            Button button_humi = (Button) findViewById(R.id.heavy_duty_smart_button_humi);
-            button_humi.setTag(device);
-            button_humi.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Device device = (Device) v.getTag();
-                    MqttMessage message = null;
-                    if (device.type.contentEquals("zwave"))
-                        message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_SENSOR_MULTILEVEL, "GET", DeviceAEON_LABSHeavyDutySmart.type_SENSOR_MULTILEVEL_HUMI, "", "");
-
-                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
-
-                }
-            });
-
-
-            Button button_metter = (Button) findViewById(R.id.heavy_duty_smart_button_meter);
-            button_metter.setTag(device);
-            button_metter.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Device device = (Device) v.getTag();
-                    MqttMessage message = null;
-                    if (device.type.contentEquals("zwave"))
-                        message = RemoteAccessMsg.CreateGetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(), DeviceAEON_LABSHeavyDutySmart.klass_METER, "GET", DeviceAEON_LABSHeavyDutySmart.type_METER_POWER, "", "");
-
-
-                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
-
-                }
-            });
-
         } else if (device instanceof DeviceAEON_LABSMultilevelSensor6 || device instanceof DeviceAEON_LABSMultilevelSensor5
-                || device instanceof DeviceIR_SEC_SAFETYDoorLock || device instanceof DeviceAEON_LABSSiren5
-                || device instanceof  DeviceAEON_LABSDoor_Window_Sensor) {
+                || device instanceof DeviceSchlageSAFETYDoorLock || device instanceof DeviceAEON_LABSSiren5
+                || device instanceof  DeviceAEON_LABSDoor_Window_Sensor || device instanceof DeviceGenericDimmer
+                || device instanceof DeviceAEON_LABSHeavyDutySmart) {
 
 
             setContentView(R.layout.device_detail);
@@ -306,129 +224,6 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
             }
 
         }
-// else if (device instanceof DeviceAEON_LABSDoor_Window_Sensor) {
-//
-//
-//            final DeviceAEON_LABSDoor_Window_Sensor device_door_window = (DeviceAEON_LABSDoor_Window_Sensor) device;
-//
-//            setContentView(R.layout.content_device_aeon_labs_door_window_configuration);
-//
-//            View.OnClickListener checkbox_configuration_determine = new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                    String klass_cmd = "";
-//                    String value = "00";
-//                    CheckBox cb_tmp = (CheckBox) v;
-//
-//                    switch (v.getId()) {
-//                        case R.id.sensor_ir_sec_safety_aeotec_door_window_cb_determines_basic_set:
-//                            if (cb_tmp.isChecked())
-//                                value = DeviceAEON_LABSDoor_Window_Sensor.getCmd_klass_CONFIGURATION_DETERMINES_VALUES_BASIC_SET_RP;
-//                            else
-//                                value = DeviceAEON_LABSDoor_Window_Sensor.getCmd_klass_CONFIGURATION_DETERMINES_VALUES_DISABLE;
-//
-//                            break;
-//                        case R.id.sensor_ir_sec_safety_aeotec_door_window_cb_determines_binary_sensor:
-//                            if (cb_tmp.isChecked())
-//                                value = DeviceAEON_LABSDoor_Window_Sensor.getCmd_klass_CONFIGURATION_DETERMINES_VALUES_BINARY_SENSOR_RP;
-//                            else
-//                                value = DeviceAEON_LABSDoor_Window_Sensor.getCmd_klass_CONFIGURATION_DETERMINES_VALUES_DISABLE;
-//                            break;
-//
-//                    }
-//
-//                    MqttMessage message = null;
-//
-//                    if (device.type.contentEquals("zwave"))
-//                        message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-//                                DeviceAEON_LABSDoor_Window_Sensor.klass_SENSOR_CONFIGURATION, "SET", DeviceAEON_LABSDoor_Window_Sensor.cmd_klass_CONFIGURATION_DETERMINES, value, "");
-//
-//
-//                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-//
-//                }
-//            };
-//
-//
-//            CheckBox checkbox_binary_sensor = (CheckBox) findViewById(R.id.sensor_ir_sec_safety_aeotec_door_window_cb_determines_binary_sensor);
-//            checkbox_binary_sensor.setOnClickListener(checkbox_configuration_determine);
-//
-//            CheckBox checkbox_basic_set = (CheckBox) findViewById(R.id.sensor_ir_sec_safety_aeotec_door_window_cb_determines_basic_set);
-//            checkbox_basic_set.setOnClickListener(checkbox_configuration_determine);
-//
-//
-//            View.OnClickListener checkbox_configuration_set_report = new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                    String klass_cmd = "";
-//                    String value = "00";
-//                    CheckBox cb_tmp = (CheckBox) v;
-//
-//                    switch (v.getId()) {
-//                        case R.id.sensor_ir_sec_safety_aeotec_door_window_cb_bainary_sensor:
-//                            klass_cmd = DeviceAEON_LABSDoor_Window_Sensor.cmd_klass_CONFIGURATION_BINARY_SENSOR;
-//                            if (cb_tmp.isChecked()) {
-//                                value = "1";
-//                            } else {
-//                                value = "0";
-//                            }
-//                            break;
-//                        case R.id.sensor_ir_sec_safety_aeotec_door_window_cb_basic_set:
-//                            klass_cmd = DeviceAEON_LABSDoor_Window_Sensor.cmd_klass_CONFIGURATION_BASIC_SET;
-//                            if (cb_tmp.isChecked())
-//                                value = "1";
-//                            else
-//                                value = "0";
-//                            break;
-//
-//                    }
-//
-//                    MqttMessage message = null;
-//                    if (device.type.contentEquals("zwave"))
-//                        message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-//                                DeviceAEON_LABSDoor_Window_Sensor.klass_SENSOR_CONFIGURATION, "SET", klass_cmd, value, "");
-//
-//
-//                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-//
-//                }
-//            };
-//
-//
-//            CheckBox checkbox_binary_sensor_set = (CheckBox) findViewById(R.id.sensor_ir_sec_safety_aeotec_door_window_cb_basic_set);
-//            checkbox_binary_sensor_set.setOnClickListener(checkbox_configuration_set_report);
-//
-//            CheckBox checkbox_basic_set_set = (CheckBox) findViewById(R.id.sensor_ir_sec_safety_aeotec_door_window_cb_bainary_sensor);
-//            checkbox_basic_set_set.setOnClickListener(checkbox_configuration_set_report);
-//
-//
-//            View.OnClickListener association_listener = new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//
-//                    String klass_cmd = "REMOVE";
-//                    CheckBox cb_tmp = (CheckBox) v;
-//
-//                    if (cb_tmp.isChecked())
-//                        klass_cmd = "SET";
-//
-//                    MqttMessage message = null;
-//                    if (device.type.contentEquals("zwave"))
-//                        message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, device.getId(),
-//                                DeviceAEON_LABSDoor_Window_Sensor.klass_SENSOR_ASSOCIATION, klass_cmd, DeviceAEON_LABSDoor_Window_Sensor.cmd_klass_ASSOCIATION_ONOFF_GROUP, "1", "");
-//
-//                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-//
-//                }
-//            };
-//
-//            CheckBox checkbox_association = (CheckBox) findViewById(R.id.sensor_ir_sec_safety_aeotec_door_window_cb_association_add_group);
-//            checkbox_association.setOnClickListener(association_listener);
-//
-//
-//        }
 
 
     }

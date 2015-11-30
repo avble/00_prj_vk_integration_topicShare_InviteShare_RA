@@ -22,7 +22,7 @@ public class RemoteAccessMsg {
 
     // TODO:
     // this ID number should be unique
-    public final static String uuid  = UUID.randomUUID().toString();
+    public final static String uuid = UUID.randomUUID().toString();
 
     // Zwave based services
     public final static String commandGetListDevice = "list_devices";
@@ -45,20 +45,17 @@ public class RemoteAccessMsg {
     public final static String commandSetSpecificationR = "write_specR";
 
     public final static String commandSetSecureSpec = "set_secure_spec";
-    public final static String commandSetSecureSpecR = "set_secure_specR";
+    public final static String commandSetSecureSpecR = "write_s_specR";
 
     public final static String commandGetSecureSpec = "get_secure_spec";
-    public final static String commandGetSecureSpecR = "get_secure_specR";
+    public final static String commandGetSecureSpecR = "read_s_specR";
 
     public final static String commandReset = "reset";
     public final static String commandResetR = "resetR";
 
 
-
-
-
     // XML based library
-    public static Document getDomElement(String xml){
+    public static Document getDomElement(String xml) {
         Document doc = null;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
@@ -83,12 +80,12 @@ public class RemoteAccessMsg {
         return doc;
     }
 
-    public static final String getElementValue( Node elem ) {
+    public static final String getElementValue(Node elem) {
         Node child;
-        if( elem != null){
-            if (elem.hasChildNodes()){
-                for( child = elem.getFirstChild(); child != null; child = child.getNextSibling() ){
-                    if( child.getNodeType() == Node.TEXT_NODE  ){
+        if (elem != null) {
+            if (elem.hasChildNodes()) {
+                for (child = elem.getFirstChild(); child != null; child = child.getNextSibling()) {
+                    if (child.getNodeType() == Node.TEXT_NODE) {
                         return child.getNodeValue();
                     }
                 }
@@ -100,8 +97,7 @@ public class RemoteAccessMsg {
 
     //
 
-    public static boolean isMyMessage(String messsage)
-    {
+    public static boolean isMyMessage(String messsage) {
         try {
             JSONObject jason = new JSONObject(messsage);
             String uuid = (String) jason.get("uuid");
@@ -209,10 +205,10 @@ public class RemoteAccessMsg {
     public static MqttMessage CreateZwaveGetBinaryMsg(DeviceTypeProtocol device_type, String id) {
         MqttMessage message = new MqttMessage();
 
-            //message.setId(1);
-            message.setQos(0);
-            message.setRetained(false);
-            JSONObject jason_get_list = new JSONObject();
+        //message.setId(1);
+        message.setQos(0);
+        message.setRetained(false);
+        JSONObject jason_get_list = new JSONObject();
         try {
             jason_get_list.put("method", RemoteAccessMsg.commandGetBinary);
             jason_get_list.put("type", "zwave");
@@ -231,7 +227,7 @@ public class RemoteAccessMsg {
         return message;
     }
 
-    public static MqttMessage CreateGetSpecificationMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String type, String scale, String force)  {
+    public static MqttMessage CreateGetSpecificationMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String type, String scale, String force) {
         MqttMessage message = new MqttMessage();
         //message.setId(1);
         message.setQos(0);
@@ -254,8 +250,7 @@ public class RemoteAccessMsg {
             jason_get_list.put("data0", type);
             jason_get_list.put("data1", scale);
             jason_get_list.put("data2", force);
-        } catch (JSONException e)
-        {
+        } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
@@ -264,7 +259,7 @@ public class RemoteAccessMsg {
     }
 
 
-    public static MqttMessage CreateSetSpecificationMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2)  {
+    public static MqttMessage CreateSetSpecificationMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2) {
         MqttMessage message = new MqttMessage();
         //message.setId(1);
         message.setQos(0);
@@ -286,8 +281,7 @@ public class RemoteAccessMsg {
             jason_get_list.put("data0", data0);
             jason_get_list.put("data1", data1);
             jason_get_list.put("data2", data2);
-        } catch (JSONException e)
-        {
+        } catch (JSONException e) {
             e.printStackTrace();
             return null;
         }
@@ -297,58 +291,59 @@ public class RemoteAccessMsg {
     }
 
 
-    public static MqttMessage CreateSetSecureMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2)  {
+    public static MqttMessage CreateSetSecureMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2) {
         MqttMessage message = new MqttMessage();
         //message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
-        try
-        {
-        jason_get_list.put("method", RemoteAccessMsg.commandSetSecureSpec);
-        jason_get_list.put("uuid", uuid);
-        jason_get_list.put("type", "zwave");
-        if (device_type == DeviceTypeProtocol.ZIGBEE)
-            jason_get_list.put("type", "zigbee");
-        else if (device_type == DeviceTypeProtocol.UPNP)
-            jason_get_list.put("type", "upnp");
+        try {
+            jason_get_list.put("method", RemoteAccessMsg.commandSetSecureSpec);
+            jason_get_list.put("uuid", uuid);
+            jason_get_list.put("type", "zwave");
+            if (device_type == DeviceTypeProtocol.ZIGBEE)
+                jason_get_list.put("type", "zigbee");
+            else if (device_type == DeviceTypeProtocol.UPNP)
+                jason_get_list.put("type", "upnp");
 
-        jason_get_list.put("id", id);
-        jason_get_list.put("class", klass);
-        jason_get_list.put("cmd", cmd);
-        jason_get_list.put("data0", data0);
-        jason_get_list.put("data1", data1);
-        jason_get_list.put("data2", data2);
-    } catch (JSONException e)
-    {
-        e.printStackTrace();
-    }
+            jason_get_list.put("id", id);
+            jason_get_list.put("class", klass);
+            jason_get_list.put("cmd", cmd);
+            jason_get_list.put("data0", data0);
+            jason_get_list.put("data1", data1);
+            jason_get_list.put("data2", data2);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
 
         message.setPayload(jason_get_list.toString().getBytes());
         return message;
     }
 
 
-    public static MqttMessage CreateGetSecureMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2)  throws JSONException {
+    public static MqttMessage CreateGetSecureMsg(DeviceTypeProtocol device_type, String id, String klass, String cmd, String data0, String data1, String data2) {
         MqttMessage message = new MqttMessage();
         //message.setId(1);
         message.setQos(0);
         message.setRetained(false);
         JSONObject jason_get_list = new JSONObject();
-        jason_get_list.put("method", RemoteAccessMsg.commandGetSecureSpec);
-        jason_get_list.put("uuid", uuid);
-        jason_get_list.put("type", "zwave");
-        if (device_type == DeviceTypeProtocol.ZIGBEE)
-            jason_get_list.put("type", "zigbee");
-        else if (device_type == DeviceTypeProtocol.UPNP)
-            jason_get_list.put("type", "upnp");
+        try {
+            jason_get_list.put("method", RemoteAccessMsg.commandGetSecureSpec);
+            jason_get_list.put("uuid", uuid);
+            jason_get_list.put("type", "zwave");
 
-        jason_get_list.put("id", id);
-        jason_get_list.put("class", klass);
-        jason_get_list.put("cmd", cmd);
-        jason_get_list.put("data0", data0);
-        jason_get_list.put("data1", data1);
-        jason_get_list.put("data2", data2);
+            jason_get_list.put("id", id);
+            jason_get_list.put("class", klass);
+            jason_get_list.put("cmd", cmd);
+            jason_get_list.put("data0", data0);
+            jason_get_list.put("data1", data1);
+            jason_get_list.put("data2", data2);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
 
         message.setPayload(jason_get_list.toString().getBytes());
         return message;
@@ -371,8 +366,7 @@ public class RemoteAccessMsg {
         return message;
     }
 
-    public static boolean IsCommandGetListDevice(String command)
-    {
+    public static boolean IsCommandGetListDevice(String command) {
         if (getCommand(command).equals(RemoteAccessMsg.commandGetListDevice))
             return true;
         return false;
@@ -406,8 +400,7 @@ public class RemoteAccessMsg {
     }
 
 
-    public static String getuuid(String command)
-    {
+    public static String getuuid(String command) {
         try {
             JSONObject jason = new JSONObject(command);
             String method = (String) jason.get("uuid");

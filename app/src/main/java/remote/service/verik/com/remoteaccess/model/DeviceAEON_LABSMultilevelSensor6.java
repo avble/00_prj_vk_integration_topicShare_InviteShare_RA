@@ -735,50 +735,6 @@ public class DeviceAEON_LABSMultilevelSensor6 extends genericMultilevelSensor im
                     });
                 }
 
-//
-//
-//
-//                View rootView = inflater.inflate(R.layout.content_device_aeon_labs_multilevel6_association, container, false);
-//
-//
-//                // association test
-//
-//                final CheckBox cb_association_notification = (CheckBox) rootView.findViewById(R.id.sensor_multilevel6_cb_association_add_group);
-//                if (cb_association_notification != null)
-// {
-//                    cb_association_notification.setOnClickListener(new View.OnClickListener() {
-//
-//                        @Override
-//                        public void onClick(View v) {
-//
-//
-//                            if (cb_association_notification.isChecked()) {
-//
-//                                MqttMessage message = null;
-//
-//                                if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
-//                                    message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_ASSOCIATION,
-//                                            "SET", DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
-//
-//
-//                                MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-//
-//                            } else {
-//                                MqttMessage message = null;
-//
-//                                if (DeviceAEON_LABSMultilevelSensor6.this.type.contentEquals("zwave"))
-//                                    message = RemoteAccessMsg.CreateSetSpecificationMsg(DeviceTypeProtocol.ZWAVE, DeviceAEON_LABSMultilevelSensor6.this.getId(), DeviceAEON_LABSMultilevelSensor6.klass_SENSOR_ASSOCIATION,
-//                                            "REMOVE", DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP, DeviceAEON_LABSMultilevelSensor6.cmd_klass_ASSOCIATION_ONOFF_GROUP_CONTROLLER_ID, "");
-//
-//
-//                                MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-//
-//
-//                            }
-//
-//                        }
-//                    });
-//                }
                 return rootView;
 
             }

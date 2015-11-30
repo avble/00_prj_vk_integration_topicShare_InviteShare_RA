@@ -4,9 +4,9 @@ import remote.service.verik.com.remoteaccess.Vtransport.zwaveBinarySwitchMsg;
 import remote.service.verik.com.remoteaccess.model.Device;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBinarySwitchResp;
 
-public class SwitchBinary extends Device implements IcmdBinarySwitchResp {
+public class genericSwitchBinary extends Device implements IcmdBinarySwitchResp {
 
-    public SwitchBinary(String id, String friendlyName, boolean turnOn, boolean available, String device_type)
+    public genericSwitchBinary(String id, String friendlyName, boolean turnOn, boolean available, String device_type)
     {
         super(id, friendlyName, turnOn, available, device_type);
 

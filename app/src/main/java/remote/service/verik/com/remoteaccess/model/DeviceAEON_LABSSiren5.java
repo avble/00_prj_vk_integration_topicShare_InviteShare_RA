@@ -21,9 +21,9 @@ import remote.service.verik.com.remoteaccess.Vtransport.zwaveConfigurationMsg;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdAssociation;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdAssociationResp;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdConfigurationResp;
-import remote.service.verik.com.remoteaccess.Vtransport.genericDevice.SwitchBinary;
+import remote.service.verik.com.remoteaccess.Vtransport.genericDevice.genericSwitchBinary;
 
-public class DeviceAEON_LABSSiren5 extends SwitchBinary implements IcmdConfigurationResp, IcmdAssociationResp, IcmdAssociation {
+public class DeviceAEON_LABSSiren5 extends genericSwitchBinary implements IcmdConfigurationResp, IcmdAssociationResp, IcmdAssociation {
 
 
     // configuration class

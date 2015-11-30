@@ -40,7 +40,7 @@ import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSDoor_Window_Se
 import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor6;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
-import remote.service.verik.com.remoteaccess.model.DeviceIR_SEC_SAFETYDoorLock;
+import remote.service.verik.com.remoteaccess.model.DeviceSchlageSAFETYDoorLock;
 
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSSiren5;
 import remote.service.verik.com.remoteaccess.mqtt.VConnection;
@@ -462,7 +462,7 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                                 new_device = new DeviceAEON_LABSMultilevelSensor5(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
                             } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_Door_Lock) == 0) {
 
-                                new_device = new DeviceIR_SEC_SAFETYDoorLock(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                                new_device = new DeviceSchlageSAFETYDoorLock(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
                             } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_AEOTEC_Door_Window_Sensor) == 0) {
 
                                 new_device = new DeviceAEON_LABSDoor_Window_Sensor(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);

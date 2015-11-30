@@ -256,6 +256,7 @@ public class DeviceAEON_LABSDoor_Window_Sensor extends NotificationSensor implem
         return fragment;
     }
 
+
     @Override
     public void Update(String property) {
         super.Update(property);
