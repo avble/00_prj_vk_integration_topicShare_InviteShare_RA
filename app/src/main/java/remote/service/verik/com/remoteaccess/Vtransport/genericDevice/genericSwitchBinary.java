@@ -2,9 +2,10 @@ package remote.service.verik.com.remoteaccess.Vtransport.genericDevice;
 
 import remote.service.verik.com.remoteaccess.Vtransport.zwaveBinarySwitchMsg;
 import remote.service.verik.com.remoteaccess.model.Device;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBinarySwitch;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBinarySwitchResp;
 
-public class genericSwitchBinary extends Device implements IcmdBinarySwitchResp {
+public class genericSwitchBinary extends Device implements IcmdBinarySwitch {
 
     public genericSwitchBinary(String id, String friendlyName, boolean turnOn, boolean available, String device_type)
     {
@@ -14,29 +15,43 @@ public class genericSwitchBinary extends Device implements IcmdBinarySwitchResp 
 
     public void binarySwitchSetOn()
     {
-        zwaveBinarySwitchMsg binaryMSG  = new zwaveBinarySwitchMsg();
-        binaryMSG.binarySwitchSetOn(id);
+        binarySwitchSetOn(id);
 
     }
 
 
     public void binarySwitchSetOff()
     {
-        zwaveBinarySwitchMsg binaryMSG  = new zwaveBinarySwitchMsg();
-        binaryMSG.binarySwitchSetOff(id);
-
+        binarySwitchSetOff(id);
     }
 
 
     public void binarySwitchGet()
     {
-        zwaveBinarySwitchMsg binaryMSG  = new zwaveBinarySwitchMsg();
-        binaryMSG.binarySwitchGet(id);
+        binarySwitchGet(id);
+
     }
 
 
     @Override
-    public void onBinarySwitchGetResp(String status, String value) {
+    public int binarySwitchSetOn(String id) {
+        zwaveBinarySwitchMsg binaryMSG  = new zwaveBinarySwitchMsg();
+        binaryMSG.binarySwitchSetOn(id);
+        return 0;
+    }
 
+    @Override
+    public int binarySwitchSetOff(String id) {
+
+        zwaveBinarySwitchMsg binaryMSG  = new zwaveBinarySwitchMsg();
+        binaryMSG.binarySwitchSetOff(id);
+        return 0;
+    }
+
+    @Override
+    public int binarySwitchGet(String id) {
+        zwaveBinarySwitchMsg binaryMSG  = new zwaveBinarySwitchMsg();
+        binaryMSG.binarySwitchGet(id);
+        return 0;
     }
 }

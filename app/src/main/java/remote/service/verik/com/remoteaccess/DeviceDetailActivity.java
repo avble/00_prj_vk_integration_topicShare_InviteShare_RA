@@ -19,7 +19,7 @@ import remote.service.verik.com.remoteaccess.model.Device;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor5;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSDoor_Window_Sensor;
-import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
+import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSSmartDimmerG2;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor6;
 import remote.service.verik.com.remoteaccess.model.DeviceSchlageSAFETYDoorLock;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSSiren5;
@@ -85,96 +85,98 @@ public class DeviceDetailActivity extends FragmentActivity implements ActionBar.
         super.onCreate(savedInstanceState);
 
 
-        if (device instanceof DeviceGenericDimmer) {
-            setContentView(R.layout.content_device_generic_dimmer);
-
-            final DeviceGenericDimmer device_dimmer = (DeviceGenericDimmer) device;
-
-            TextView tw_dimmer_device = (TextView) findViewById(R.id.dimmer_device_name);
-            tw_dimmer_device.setText(device.getName());
-
-            SeekBar dimmer_seek_bar = (SeekBar) findViewById(R.id.dimmer_seekbar);
-            dimmer_seek_bar.setTag(device);
-
-            if (device.type.contains("zwave"))
-                dimmer_seek_bar.setMax(63);
-            else if (device.type.contains("zigbee"))
-                dimmer_seek_bar.setMax(255);
-            dimmer_seek_bar.setProgress(device_dimmer.dimmer_value);
-
-
-            dimmer_seek_bar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-
-                public int dimer_progress = device_dimmer.dimmer_value;
-
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    dimer_progress = progress;
-
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-
-                    MqttMessage message = null;
-                    if (device.type.contentEquals("zwave"))
-                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device_dimmer.getId(), dimer_progress);
-                    else if (device.type.contains("zigbee"))
-                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device_dimmer.getId(), dimer_progress);
-                    else if (device.type.contains("upnp"))
-                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device_dimmer.getId(), dimer_progress);
-
-
-                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
-
-
-                }
-            });
-
-
-            ImageView dimmer_bulb = (ImageView) findViewById(R.id.dimmer_bulb);
-            dimmer_bulb.setTag(device);
-
-            dimmer_bulb.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    Device device = (Device) v.getTag();
-                    MqttMessage message = null;
-                    int value = 1;
-                    if (device.isTurnOn())
-                        value = 0;
-
-                    if (device.type.contentEquals("zwave"))
-                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
-                    else if (device.type.contains("zigbee"))
-                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), value);
-                    else if (device.type.contains("upnp"))
-                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId(), value);
-
-                    boolean on = true;
-                    if (value == 0)
-                        on = false;
-
-                    device.setTurnOn(on);
-
-
-                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
-
-
-
-                }
-            });
-        } else if (device instanceof DeviceAEON_LABSMultilevelSensor6 || device instanceof DeviceAEON_LABSMultilevelSensor5
+//        if (device instanceof DeviceAEON_LABSSmartDimmerG2) {
+//
+//            setContentView(R.layout.content_device_zwave_switch_multilevel);
+//
+//            final DeviceAEON_LABSSmartDimmerG2 device_dimmer = (DeviceAEON_LABSSmartDimmerG2) device;
+//
+//            TextView tw_dimmer_device = (TextView) findViewById(R.id.dimmer_device_name);
+//            tw_dimmer_device.setText(device.getName());
+//
+//            SeekBar dimmer_seek_bar = (SeekBar) findViewById(R.id.dimmer_seekbar);
+//            dimmer_seek_bar.setTag(device);
+//
+//            if (device.type.contains("zwave"))
+//                dimmer_seek_bar.setMax(63);
+//            else if (device.type.contains("zigbee"))
+//                dimmer_seek_bar.setMax(255);
+//            dimmer_seek_bar.setProgress(device_dimmer.dimmer_value);
+//
+//
+//            dimmer_seek_bar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+//
+//                public int dimer_progress = device_dimmer.dimmer_value;
+//
+//                @Override
+//                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                    dimer_progress = progress;
+//
+//                }
+//
+//                @Override
+//                public void onStartTrackingTouch(SeekBar seekBar) {
+//
+//                }
+//
+//                @Override
+//                public void onStopTrackingTouch(SeekBar seekBar) {
+//
+//
+//                    MqttMessage message = null;
+//                    if (device.type.contentEquals("zwave"))
+//                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device_dimmer.getId(), dimer_progress);
+//                    else if (device.type.contains("zigbee"))
+//                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device_dimmer.getId(), dimer_progress);
+//                    else if (device.type.contains("upnp"))
+//                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device_dimmer.getId(), dimer_progress);
+//
+//
+//                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
+//
+//
+//
+//                }
+//            });
+//
+//
+//            ImageView dimmer_bulb = (ImageView) findViewById(R.id.dimmer_bulb);
+//            dimmer_bulb.setTag(device);
+//
+//            dimmer_bulb.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                    Device device = (Device) v.getTag();
+//                    MqttMessage message = null;
+//                    int value = 1;
+//                    if (device.isTurnOn())
+//                        value = 0;
+//
+//                    if (device.type.contentEquals("zwave"))
+//                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
+//                    else if (device.type.contains("zigbee"))
+//                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), value);
+//                    else if (device.type.contains("upnp"))
+//                        message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.UPNP, device.getId(), value);
+//
+//                    boolean on = true;
+//                    if (value == 0)
+//                        on = false;
+//
+//                    device.setTurnOn(on);
+//
+//
+//                    MainActivity.mqtt_client.PublishRemoteAccessMsg(MainActivity.topic, message);
+//
+//
+//
+//                }
+//            });
+//        } else
+        if (device instanceof DeviceAEON_LABSMultilevelSensor6 || device instanceof DeviceAEON_LABSMultilevelSensor5
                 || device instanceof DeviceSchlageSAFETYDoorLock || device instanceof DeviceAEON_LABSSiren5
-                || device instanceof  DeviceAEON_LABSDoor_Window_Sensor || device instanceof DeviceGenericDimmer
+                || device instanceof  DeviceAEON_LABSDoor_Window_Sensor || device instanceof DeviceAEON_LABSSmartDimmerG2
                 || device instanceof DeviceAEON_LABSHeavyDutySmart) {
 
 

@@ -27,23 +27,15 @@ import org.alljoyn.bus.SessionListener;
 import org.alljoyn.bus.SessionOpts;
 import org.alljoyn.bus.Status;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import remote.service.verik.com.remoteaccess.model.Adapter;
 import remote.service.verik.com.remoteaccess.model.Device;
-import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor5;
-import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSDoor_Window_Sensor;
-import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
-import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor6;
-import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSHeavyDutySmart;
-import remote.service.verik.com.remoteaccess.model.DeviceSchlageSAFETYDoorLock;
 
-import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSSiren5;
 import remote.service.verik.com.remoteaccess.mqtt.VConnection;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBinarySwitch;
 
 
 public class MainActivity extends ActionBarActivity implements View.OnCreateContextMenuListener, httpWrapperInterface {
@@ -98,8 +90,16 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
             if (device.isTurnOn())
                 value = 0;
 
-            if (device.type.contentEquals("zwave"))
-                message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
+            if (device.type.contentEquals("zwave")) {
+                if (device instanceof IcmdBinarySwitch)
+                {
+                    if (value == 1) {
+                        ((IcmdBinarySwitch) device).binarySwitchSetOn(device.getId());
+                    }else
+                        ((IcmdBinarySwitch) device).binarySwitchSetOff(device.getId());
+                }
+                //message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZWAVE, device.getId(), value);
+            }
             else if (device.type.contains("zigbee"))
                 message = RemoteAccessMsg.CreateZwaveSetBinaryMsg(DeviceTypeProtocol.ZIGBEE, device.getId(), value);
             else if (device.type.contains("upnp"))
@@ -404,142 +404,6 @@ public class MainActivity extends ActionBarActivity implements View.OnCreateCont
                 return true;
             default:
                 return super.onContextItemSelected(item);
-        }
-
-    }
-
-
-    public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
-
-
-        Log.d(TAG, "Received data from topic: " + topic + ", Mqtt message: " + mqttMessage.toString());
-
-        if (RemoteAccessMsg.isMyMessage(mqttMessage.toString()))
-            return;
-
-        String command = RemoteAccessMsg.getCommand(mqttMessage.toString());
-        String protocol = RemoteAccessMsg.getType(mqttMessage.toString());
-
-        JSONObject jason;
-
-        if (command != null) {
-            switch (command) {
-                case RemoteAccessMsg.commandGetListDeviceR:
-                    // fine-tuning the GUI
-                    jason = new JSONObject(mqttMessage.toString());
-
-                    JSONArray deviceList = jason.getJSONArray("devicesList");
-
-                    devices = new ArrayList<>();
-                    adapter.clear();
-
-                    if (protocol.equals("zwave")) {
-
-                        for (int i = 0; i < deviceList.length(); i++) {
-                            JSONObject device = deviceList.getJSONObject(i);
-
-                            String friendlyName = (String) device.get("FriendlyName");
-
-                            String ID = (String) device.get("ID");
-                            String serialNumber = (String) device.get("Serial");
-
-                            String type = "zwave";
-
-                            Device new_device;
-
-                            if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Aeotec_Smartdimmer)
-                                    || Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Smart_Dimmer)) {
-                                new_device = new DeviceGenericDimmer(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-
-                            } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Heavy_Duty_Smart_Switch)) {
-                                new_device = new DeviceAEON_LABSHeavyDutySmart(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-
-                            } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Sensor_Multilevel_6)) {
-
-                                new_device = new DeviceAEON_LABSMultilevelSensor6(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-                            } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Sensor_Multilevel_Gen5)) {
-
-                                new_device = new DeviceAEON_LABSMultilevelSensor5(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-                            } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_Door_Lock) == 0) {
-
-                                new_device = new DeviceSchlageSAFETYDoorLock(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-                            } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_AEOTEC_Door_Window_Sensor) == 0) {
-
-                                new_device = new DeviceAEON_LABSDoor_Window_Sensor(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-                            } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_Siren_Alarm_Sensor) == 0) {
-
-                                new_device = new DeviceAEON_LABSSiren5(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-                            }else {
-
-                                new_device = new Device(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-
-                            }
-                            new_device.serialNumber = serialNumber;
-
-                            String capabilityID = (String) device.get("Capability");
-                            new_device.setCapabilityID(capabilityID);
-                            devices.add(new_device);
-
-                        }
-                    } else if (protocol.equals("upnp")) {
-
-                        for (int i = 0; i < deviceList.length(); i++) {
-                            JSONObject device = deviceList.getJSONObject(i);
-
-                            String friendlyName = (String) device.get("FriendlyName");
-
-                            String ID = (String) device.get("RealName");
-                            String serialNumber = (String) device.get("UDN");
-
-                            String type = "upnp";
-                            Device new_device = new Device(ID, "[UPnP] " + friendlyName + " " + String.valueOf(i + 1), false, true, type);
-                            new_device.serialNumber = serialNumber;
-
-                            devices.add(new_device);
-
-                        }
-
-                        Toast.makeText(getApplicationContext(), "Just Received a MQTT message: " + mqttMessage.toString(), Toast.LENGTH_LONG).show();
-                    }
-
-                    ListView list = (ListView) findViewById(R.id.list);
-                    adapter = new Adapter(this, devices);
-                    list.setAdapter(adapter);
-
-                    break;
-                case RemoteAccessMsg.commandAddDeviceR:
-                case RemoteAccessMsg.commandRemoveDeviceR:
-                case RemoteAccessMsg.commandSetBinaryR:
-                case RemoteAccessMsg.commandGetBinaryR:
-                case RemoteAccessMsg.commandGetSecureSpecR:
-                case RemoteAccessMsg.commandSetSecureSpecR:
-                case RemoteAccessMsg.commandSetSpecificationR:
-                case RemoteAccessMsg.commandGetSpecificationR:
-                    // fine-tuning the GUI
-                    jason = new JSONObject(mqttMessage.toString());
-                    // get NodeID
-                    String node_id = jason.getString("deviceid");
-
-                    for (int i = 0; i < devices.size(); i++) {
-                        Device device_tmp = devices.get(i);
-                        if (device_tmp.getId().equals(node_id)) {
-                            device_tmp.Update(mqttMessage.toString());
-                            break;
-
-                        }
-                    }
-
-                    break;
-
-
-                case RemoteAccessMsg.commandResetR:
-                default:
-                    Toast.makeText(getApplicationContext(), "Just Received a MQTT message: " + mqttMessage.toString(), Toast.LENGTH_LONG).show();
-                    break;
-            }
-        } else {
-            Toast.makeText(getApplicationContext(), "Just Received a MQTT message: " + mqttMessage.toString(), Toast.LENGTH_LONG).show();
-
         }
 
     }

@@ -18,24 +18,34 @@ public class Device {
 
     // extract from manu_product.h (zwavehandler-cli modue)
 
-	public static String DEVICE_TYPE_Zwave_Door_Window_Sensor                   = "01020059"; /**/
-	public static String DEVICE_TYPE_Zwave_AEOTEC_Door_Window_Sensor                  = "00860002001D";
-	public static String DEVICE_TYPE_Zwave_FIBARO_Door_Window_Sensor                  = "010f07002000";/**/
-	public static String DEVICE_TYPE_Zwave_ECOLINK_Door_Window_Sensor                  = "011f00010002";/**/
-    public static String DEVICE_TYPE_Zwave_DWZ_Door_Window_Sensor                  = "014a00010002";/**/
-	public static String DEVICE_TYPE_Zwave_Sensor_Multilevel_6                  = "008601020064"; /**/
-	public static String DEVICE_TYPE_Zwave_Smart_Outlet                         = "49523031";/**/
-	public static String DEVICE_TYPE_Zwave_Smart_Dimmer                         = "006349443031";/**/
-	public static String DEVICE_TYPE_Zwave_Heavy_Duty_Smart_Switch              = "00860103004E";/**/
-	public static String DEVICE_TYPE_Zwave_Led                                  = "00040001";/**/
-	public static String DEVICE_TYPE_Zwave_Outlet_Lamp_Module                   = "44503030";/**/
-	public static String DEVICE_TYPE_Zwave_Motion_Sensor_Ecolink                = "00010001";/**/
-	public static String DEVICE_TYPE_Zwave_Sensor_Multilevel_Gen5               = "00860102004A";/**/
-	public static String DEVICE_TYPE_Zwave_Siren_Alarm_Sensor                   = "008601040050";/**/
-	public static String DEVICE_TYPE_Zwave_Aeotec_Smartdimmer                   = "008600030019";/**/
-	public static String DEVICE_TYPE_Zwave_Smart_Switch                         = "4F503031";/**/
-	public static String DEVICE_TYPE_Zwave_Door_Lock                            = "003b63495044";/**/
-	public static String DEVICE_TYPE_Zwave_Hue_Bulb                             = "00020002";/**/
+	public static String DEVICE_TYPE_Zwave_Door_Window_Sensor                   = "01020059";
+    // Aeotec devices
+	public static String DEVICE_TYPE_Zwave_Aeotec_Door_Window_Sensor = "00860002001D";
+    public static String DEVICE_TYPE_Zwave_Aeotec_Sensor_Multilevel_5 = "00860102004A";
+    public static String DEVICE_TYPE_Zwave_Aeotec_Sensor_Multilevel_6 = "008601020064";
+    public static String DEVICE_TYPE_Zwave_Aeotec_Heavy_Duty_Smart_Switch = "00860103004E";
+    public static String DEVICE_TYPE_Zwave_Aeotec_Siren_Alarm_Sensor = "008601040050";
+    public static String DEVICE_TYPE_Zwave_Aeotec_SmartDimmerG2 = "008600030019";
+
+
+    // Everspring devices
+    public static String DEVICE_TYPE_Zwave_EverSpring_ScrewInLamp_Socket = "006000040001";
+
+	public static String DEVICE_TYPE_Zwave_FIBARO_Door_Window_Sensor                  = "010f07002000";
+	public static String DEVICE_TYPE_Zwave_ECOLINK_Door_Window_Sensor                  = "011f00010002";
+    public static String DEVICE_TYPE_Zwave_DWZ_Door_Window_Sensor                  = "014a00010002";
+	public static String DEVICE_TYPE_Zwave_Smart_Outlet                         = "49523031";
+	public static String DEVICE_TYPE_Zwave_Smart_Dimmer                         = "006349443031";
+
+	public static String DEVICE_TYPE_Zwave_Led                                  = "00040001";
+	public static String DEVICE_TYPE_Zwave_Outlet_Lamp_Module                   = "44503030";
+	public static String DEVICE_TYPE_Zwave_Motion_Sensor_Ecolink                = "00010001";
+
+
+	public static String DEVICE_TYPE_Zwave_Smart_Switch                         = "4F503031";
+	public static String DEVICE_TYPE_Zwave_Door_Lock                            = "003b63495044";
+	public static String DEVICE_TYPE_Zwave_Hue_Bulb                             = "00020002";
+
 
     // UPnP (WEMO) device
     public static String DEVICE_TYPE_UPNP_WEMO_INSIGHT = "insight";

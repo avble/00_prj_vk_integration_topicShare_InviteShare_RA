@@ -32,7 +32,8 @@ import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSens
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSMultilevelSensor6;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSSiren5;
 import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSDoor_Window_Sensor;
-import remote.service.verik.com.remoteaccess.model.DeviceGenericDimmer;
+import remote.service.verik.com.remoteaccess.model.DeviceEverspringScrewinLampSocket;
+import remote.service.verik.com.remoteaccess.model.DeviceAEON_LABSSmartDimmerG2;
 import remote.service.verik.com.remoteaccess.model.DeviceSchlageSAFETYDoorLock;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdAssociationResp;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBatteryResp;
@@ -143,28 +144,31 @@ public class MqttCallbackHandler implements MqttCallback {
 
                             Device new_device;
 
-                            if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Aeotec_Smartdimmer)
+                            if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Aeotec_SmartDimmerG2)
                                     || Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Smart_Dimmer)) {
-                                new_device = new DeviceGenericDimmer(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                                new_device = new DeviceAEON_LABSSmartDimmerG2(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
 
-                            } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Heavy_Duty_Smart_Switch)) {
+                            } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Aeotec_Heavy_Duty_Smart_Switch)) {
                                 new_device = new DeviceAEON_LABSHeavyDutySmart(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
 
-                            } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Sensor_Multilevel_6)) {
+                            } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Aeotec_Sensor_Multilevel_6)) {
 
                                 new_device = new DeviceAEON_LABSMultilevelSensor6(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-                            } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Sensor_Multilevel_Gen5)) {
+                            } else if (Device.getDeviceTypeFromSerial(serialNumber).equals(Device.DEVICE_TYPE_Zwave_Aeotec_Sensor_Multilevel_5)) {
 
                                 new_device = new DeviceAEON_LABSMultilevelSensor5(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
                             } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_Door_Lock) == 0) {
 
                                 new_device = new DeviceSchlageSAFETYDoorLock(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-                            } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_AEOTEC_Door_Window_Sensor) == 0) {
+                            } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_Aeotec_Door_Window_Sensor) == 0) {
 
                                 new_device = new DeviceAEON_LABSDoor_Window_Sensor(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
-                            } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_Siren_Alarm_Sensor) == 0) {
+                            } else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_Aeotec_Siren_Alarm_Sensor) == 0) {
 
                                 new_device = new DeviceAEON_LABSSiren5(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
+                            }else if (Device.getDeviceTypeFromSerial(serialNumber).compareToIgnoreCase(Device.DEVICE_TYPE_Zwave_EverSpring_ScrewInLamp_Socket) == 0) {
+
+                                new_device = new DeviceEverspringScrewinLampSocket(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);
                             }else {
 
                                 new_device = new Device(ID, friendlyName + " " + String.valueOf(i + 1), false, true, type);

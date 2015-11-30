@@ -11,13 +11,11 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.SeekBar;
 
-import org.json.JSONObject;
-
 import remote.service.verik.com.remoteaccess.R;
 import remote.service.verik.com.remoteaccess.Vtransport.genericDevice.NotificationSensor;
 import remote.service.verik.com.remoteaccess.Vtransport.zwaveBatteryMsg;
 import remote.service.verik.com.remoteaccess.Vtransport.zwaveConfigurationMsg;
-import remote.service.verik.com.remoteaccess.Vtransport.zwaveMultilevelMsg;
+import remote.service.verik.com.remoteaccess.Vtransport.zwaveSensorMultilevelMsg;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdAssociationResp;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdBatteryResp;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdConfigurationResp;
@@ -191,7 +189,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends NotificationSensor impleme
                 button_temp.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        zwaveMultilevelMsg multielvel = new zwaveMultilevelMsg();
+                        zwaveSensorMultilevelMsg multielvel = new zwaveSensorMultilevelMsg();
                         multielvel.multilevelGet(id, type_SENSOR_MULTILEVEL_TEMP);
                     }
                 });
@@ -202,7 +200,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends NotificationSensor impleme
                     @Override
                     public void onClick(View v) {
 
-                        zwaveMultilevelMsg multielvel = new zwaveMultilevelMsg();
+                        zwaveSensorMultilevelMsg multielvel = new zwaveSensorMultilevelMsg();
                         multielvel.multilevelGet(id, type_SENSOR_MULTILEVEL_HUMI);
 
                     }
@@ -215,7 +213,7 @@ public class DeviceAEON_LABSMultilevelSensor5 extends NotificationSensor impleme
                     @Override
                     public void onClick(View v) {
 
-                        zwaveMultilevelMsg multielvel = new zwaveMultilevelMsg();
+                        zwaveSensorMultilevelMsg multielvel = new zwaveSensorMultilevelMsg();
                         multielvel.multilevelGet(id, type_SENSOR_MULTILEVEL_LUMI);
 
                     }

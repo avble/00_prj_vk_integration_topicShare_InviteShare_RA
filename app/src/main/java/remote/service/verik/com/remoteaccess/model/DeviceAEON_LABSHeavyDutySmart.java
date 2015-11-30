@@ -11,16 +11,11 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import remote.service.verik.com.remoteaccess.R;
-import remote.service.verik.com.remoteaccess.RemoteAccessMsg;
 import remote.service.verik.com.remoteaccess.Vtransport.genericDevice.genericSwitchBinary;
 import remote.service.verik.com.remoteaccess.Vtransport.zwaveAssociationMsg;
-import remote.service.verik.com.remoteaccess.Vtransport.zwaveBatteryMsg;
 import remote.service.verik.com.remoteaccess.Vtransport.zwaveMeterMsg;
-import remote.service.verik.com.remoteaccess.Vtransport.zwaveMultilevelMsg;
+import remote.service.verik.com.remoteaccess.Vtransport.zwaveSensorMultilevelMsg;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdAssociationResp;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdMeterResp;
 import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdMultilevelResp;
@@ -77,7 +72,7 @@ public class DeviceAEON_LABSHeavyDutySmart extends genericSwitchBinary implement
                 button_temp.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        zwaveMultilevelMsg multielvel = new zwaveMultilevelMsg();
+                        zwaveSensorMultilevelMsg multielvel = new zwaveSensorMultilevelMsg();
                         multielvel.multilevelGet(id, type_SENSOR_MULTILEVEL_TEMP);
                     }
                 });

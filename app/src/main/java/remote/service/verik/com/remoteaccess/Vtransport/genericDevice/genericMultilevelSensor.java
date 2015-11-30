@@ -1,13 +1,13 @@
 package remote.service.verik.com.remoteaccess.Vtransport.genericDevice;
 
-import remote.service.verik.com.remoteaccess.Vtransport.zwaveMultilevelMsg;
+import remote.service.verik.com.remoteaccess.Vtransport.zwaveSensorMultilevelMsg;
 import remote.service.verik.com.remoteaccess.model.Device;
-import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdMultilevel;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdSensorMultilevel;
 
 /**
  * Created by huyle on 11/27/15.
  */
-public class genericMultilevelSensor extends Device implements IcmdMultilevel {
+public class genericMultilevelSensor extends Device implements IcmdSensorMultilevel {
 
 
     public genericMultilevelSensor(String id, String friendlyName, boolean turnOn, boolean available, String device_type)
@@ -18,7 +18,7 @@ public class genericMultilevelSensor extends Device implements IcmdMultilevel {
 
     @Override
     public int multilevelGet(String id, String sensorType) {
-        zwaveMultilevelMsg multilevelMsg = new zwaveMultilevelMsg();
+        zwaveSensorMultilevelMsg multilevelMsg = new zwaveSensorMultilevelMsg();
         multilevelMsg.multilevelGet(id, sensorType);
         return 0;
     }

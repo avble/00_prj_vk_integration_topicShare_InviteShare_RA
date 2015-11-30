@@ -5,12 +5,12 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import remote.service.verik.com.remoteaccess.DeviceTypeProtocol;
 import remote.service.verik.com.remoteaccess.MainActivity;
 import remote.service.verik.com.remoteaccess.RemoteAccessMsg;
-import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdMultilevel;
+import remote.service.verik.com.remoteaccess.zwave.cmdClass.IcmdSensorMultilevel;
 
 /**
  * Created by huyle on 11/27/15.
  */
-public class zwaveMultilevelMsg implements IcmdMultilevel {
+public class zwaveSensorMultilevelMsg implements IcmdSensorMultilevel {
     @Override
     public int multilevelGet(String id, String sensorType) {
         MqttMessage message = null;
